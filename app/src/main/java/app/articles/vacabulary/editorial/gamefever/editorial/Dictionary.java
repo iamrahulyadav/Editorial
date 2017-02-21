@@ -25,7 +25,10 @@ public class Dictionary {
     private String wordMeaning;
     private String wordUsage;
     private String wordPartOfSpeech;
-    private String wordExtra;
+    private String[] wordsynonym;
+    private boolean meaningFetched;
+    private boolean synonymsFetched;
+
 
     public Dictionary(String word) {
         this.word = word;
@@ -34,12 +37,12 @@ public class Dictionary {
     public Dictionary() {
     }
 
-    public Dictionary(String word, String wordMeaning, String wordUsage, String wordPartOfSpeech, String wordExtra) {
+    public Dictionary(String word, String wordMeaning, String wordUsage, String wordPartOfSpeech, String[] wordsynonym) {
         this.word = word;
         this.wordMeaning = wordMeaning;
         this.wordUsage = wordUsage;
         this.wordPartOfSpeech = wordPartOfSpeech;
-        this.wordExtra = wordExtra;
+        this.wordsynonym = wordsynonym;
     }
 
 
@@ -75,12 +78,52 @@ public class Dictionary {
         this.wordPartOfSpeech = wordPartOfSpeech;
     }
 
-    public String getWordExtra() {
-        return wordExtra;
+    public String[] getWordsynonym() {
+        return wordsynonym;
     }
 
-    public void setWordExtra(String wordExtra) {
-        this.wordExtra = wordExtra;
+    public void setWordsynonym(String[] wordsynonym) {
+        this.wordsynonym = wordsynonym;
+    }
+
+    public boolean isMeaningFetched() {
+        return meaningFetched;
+    }
+
+    public void setMeaningFetched(boolean meaningFetched) {
+        this.meaningFetched = meaningFetched;
+        if(!meaningFetched){
+            intializemeaning();
+        }
+
+    }
+
+
+
+    public boolean isSynonymsFetched() {
+        return synonymsFetched;
+    }
+
+    public void setSynonymsFetched(boolean synonymsFetched) {
+        this.synonymsFetched = synonymsFetched;
+        if(!synonymsFetched) {
+            intializeSynonms();
+        }
+    }
+
+    private void intializeSynonms() {
+
+        setWordsynonym(new String[]{"null"});
+
+    }
+
+    private void intializemeaning() {
+        setWord(word);
+        setWordMeaning("null");
+        setWordPartOfSpeech("null");
+        setWordUsage("null");
+
+
     }
 
 
@@ -91,32 +134,36 @@ public class Dictionary {
                 ", wordMeaning='" + wordMeaning + '\'' +
                 ", wordUsage='" + wordUsage + '\'' +
                 ", wordPartOfSpeech='" + wordPartOfSpeech + '\'' +
-                ", wordExtra='" + wordExtra + '\'' +
+                ", wordExtra='" + wordsynonym + '\'' +
                 '}';
     }
 
 
     public void getWordMeaning(String mword) {
+        this.setWord(mword.trim());
+        new GetWordMeaning().execute();
+        Log.d("My TAg", "after Getwordmeaning call");
+        new GetRelatedWord().execute();
+        Log.d("My TAg", "after GetWordSynonym call");
 
     }
 
-    public void getMeaningFromJSON(String jsonString) {
-
-    }
 
     public void processWordMeaning() {
     }
 
 
-    public  void completeFetching()
-    {
+    public void completeFetching() {
+
+        if (isMeaningFetched() && isSynonymsFetched()) {
+
+            /*call activity method and inform dictionary mening done fetching*/
+        }
 
     }
 
 
-
-
-    private class LongRunningGetIO extends AsyncTask<Void, Void, String> {
+    private class GetWordMeaning extends AsyncTask<Void, Void, String> {
 
         protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
             InputStream in = entity.getContent();
@@ -140,12 +187,14 @@ public class Dictionary {
         @Override
         protected String doInBackground(Void... params) {
 
+
             Log.d("My TAg", "doInBackground: calling rest");
             HttpClient httpClient = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com/v4/word.json/group/definitions?limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com/v4/word.json/"+getWord()+"/definitions?limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
             String text = null;
 
@@ -170,22 +219,107 @@ public class Dictionary {
                     JSONArray jsonArray = new JSONArray(results);
                     JSONObject jsonObj = jsonArray.getJSONObject(0);
 
-                    Dictionary dictionary = new Dictionary(jsonObj.getString("word"));
-                    dictionary.setWordMeaning(jsonObj.getString("text"));
-                    dictionary.processWordMeaning();
-                    dictionary.setWordPartOfSpeech(jsonObj.getString("partOfSpeech"));
 
-
+                    setWord(jsonObj.getString("word"));
+                    setWordMeaning(jsonObj.getString("text"));
+                    setWordPartOfSpeech(jsonObj.getString("partOfSpeech"));
+                    processWordMeaning();
 
 
                 } catch (JSONException je) {
                     je.printStackTrace();
                 }
                 //et.setText(allKey);
+                setMeaningFetched(true);
                 completeFetching();
-                Log.d("my text", "onPostExecute: Executed");
+                Log.d("my text", "onPostExecute meaning: Executed");
+            }else{
+                setMeaningFetched(false);
+                completeFetching();
             }
 
+
+        }
+
+
+    }
+
+
+    private class GetRelatedWord extends AsyncTask<Void, Void, String> {
+
+        protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
+            InputStream in = entity.getContent();
+
+
+            StringBuffer out = new StringBuffer();
+            int n = 1;
+            while (n > 0) {
+                byte[] b = new byte[4096];
+                n = in.read(b);
+
+
+                if (n > 0) out.append(new String(b, 0, n));
+            }
+
+
+            return out.toString();
+        }
+
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+
+            Log.d("My TAg", "doInBackground: calling rest");
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpContext localContext = new BasicHttpContext();
+            // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com/v4/word.json/"+getWord()+"/relatedWords?useCanonical=false&relationshipTypes=synonym&limitPerRelationshipType=3&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+            String text = null;
+
+            try {
+                Log.d("My TAg", "doInBackground: going to call rest");
+                HttpResponse response = httpClient.execute(httpGet, localContext);
+
+                Log.d("My TAg", "doInBackground: done calling rest");
+                HttpEntity entity = response.getEntity();
+                text = getASCIIContentFromEntity(entity);
+
+            } catch (Exception e) {
+                return e.getLocalizedMessage();
+            }
+            return text;
+        }
+
+
+        protected void onPostExecute(String results) {
+            if (results != null) {
+                try {
+                    JSONArray jsonArray = new JSONArray(results);
+                    JSONObject jsonObj = jsonArray.getJSONObject(0);
+                    jsonArray = jsonObj.getJSONArray("words");
+                    String[] stringarr = new String[jsonArray.length()];
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        stringarr[i] = jsonArray.getString(i);
+                    }
+                    setWordsynonym(stringarr);
+
+                } catch (JSONException je) {
+                    je.printStackTrace();
+                }
+                //et.setText(allKey);
+                setSynonymsFetched(true);
+                completeFetching();
+                Log.d("my text", "onPostExecute synonyms: Executed");
+            }
+            else{
+                setSynonymsFetched(false);
+                completeFetching();
+                Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
+            }
 
         }
 
