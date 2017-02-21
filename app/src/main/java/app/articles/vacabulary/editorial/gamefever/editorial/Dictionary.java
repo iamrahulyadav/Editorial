@@ -134,12 +134,12 @@ public class Dictionary {
                 ", wordMeaning='" + wordMeaning + '\'' +
                 ", wordUsage='" + wordUsage + '\'' +
                 ", wordPartOfSpeech='" + wordPartOfSpeech + '\'' +
-                ", wordExtra='" + wordsynonym + '\'' +
+                ", wordsynonyms='" + wordsynonym + '\'' +
                 '}';
     }
 
 
-    public void getWordMeaning(String mword) {
+    public void fetchWordMeaning(String mword)  {
         this.setWord(mword.trim());
         new GetWordMeaning().execute();
         Log.d("My TAg", "after Getwordmeaning call");
@@ -156,6 +156,7 @@ public class Dictionary {
     public void completeFetching() {
 
         if (isMeaningFetched() && isSynonymsFetched()) {
+            Log.d("Tag", "completeFetching: "+toString());
 
             /*call activity method and inform dictionary mening done fetching*/
         }
@@ -216,6 +217,7 @@ public class Dictionary {
         protected void onPostExecute(String results) {
             if (results != null) {
                 try {
+                    Log.d("Tag", "onPostExecute: "+results);
                     JSONArray jsonArray = new JSONArray(results);
                     JSONObject jsonObj = jsonArray.getJSONObject(0);
 
@@ -297,6 +299,7 @@ public class Dictionary {
         protected void onPostExecute(String results) {
             if (results != null) {
                 try {
+                    Log.d("Tag", "onPostExecute: "+results);
                     JSONArray jsonArray = new JSONArray(results);
                     JSONObject jsonObj = jsonArray.getJSONObject(0);
                     jsonArray = jsonObj.getJSONArray("words");
