@@ -21,6 +21,8 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void btn2OnClick(View view) {
+        Translation translation =new Translation("not");
+        translation.fetchTranslation();
     }
 
     public void btn3OnClick(View view) {
