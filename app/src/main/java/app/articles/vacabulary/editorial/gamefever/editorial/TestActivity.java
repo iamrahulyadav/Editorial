@@ -15,7 +15,7 @@ public class TestActivity extends AppCompatActivity {
 
     public void btn1OnClick(View view) {
         Dictionary dictionary =new Dictionary();
-        dictionary.fetchWordMeaning("clean");
+        //dictionary.fetchWordMeaning("clean");
     }
 
     public void signInWithGoogle(View view) {

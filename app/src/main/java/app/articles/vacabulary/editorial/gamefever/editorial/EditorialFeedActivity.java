@@ -108,11 +108,24 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
     }
 
-    public void updateDictionaryText(Dictionary dictionary){}
+    public void updateDictionaryText(Dictionary dictionary){
+        TextView tv ;
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_meaning_textview);
+        tv.setText(dictionary.getWordMeaning());
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_partspeech_textview);
+        tv.setText(dictionary.getWordPartOfSpeech());
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_synonyms_textview);
+        String synonymstring="";
+        for(int i =0 ; i<dictionary.getWordsynonym().length ;i++) {
+            synonymstring=synonymstring+dictionary.getWordsynonym()[i] +" , ";
+        }
+        tv.setText(synonymstring);
+    }
 
     public void onDictionaryClick(View v){
         //Intent i =new Intent(this ,);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        openBottomSheet(true);
         Dictionary dictionary = new Dictionary(selectedWord);
         dictionary.fetchWordMeaning(selectedWord ,this);
 
@@ -120,6 +133,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv.setText(translateText.getText());
 
 
+    }
+
+    private void openBottomSheet(boolean b) {
+
+        TextView tv ;
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_meaning_textview);
+        tv.setText("Loading...");
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_partspeech_textview);
+        tv.setText("Loading...");
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_synonyms_textview);
+
+        tv.setText("Loading...");
     }
 
     @Override

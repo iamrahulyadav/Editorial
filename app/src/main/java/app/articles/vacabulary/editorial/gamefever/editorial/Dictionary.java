@@ -32,10 +32,15 @@ public class Dictionary {
 
 
     public Dictionary(String word) {
+        intializemeaning();
+        intializeSynonms();
         this.word = word;
+
     }
 
     public Dictionary() {
+        intializemeaning();
+        intializeSynonms();
     }
 
     public Dictionary(String word, String wordMeaning, String wordUsage, String wordPartOfSpeech, String[] wordsynonym) {
