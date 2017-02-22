@@ -28,6 +28,7 @@ public class Dictionary {
     private String[] wordsynonym;
     private boolean meaningFetched;
     private boolean synonymsFetched;
+    private EditorialFeedActivity editorialFeedActivity;
 
 
     public Dictionary(String word) {
@@ -139,8 +140,9 @@ public class Dictionary {
     }
 
 
-    public void fetchWordMeaning(String mword)  {
+    public void fetchWordMeaning(String mword , EditorialFeedActivity activity)  {
         this.setWord(mword.trim());
+        editorialFeedActivity =activity;
         new GetWordMeaning().execute();
         Log.d("My TAg", "after Getwordmeaning call");
         new GetRelatedWord().execute();
@@ -158,6 +160,7 @@ public class Dictionary {
         if (isMeaningFetched() && isSynonymsFetched()) {
             Log.d("Tag", "completeFetching: "+toString());
 
+            editorialFeedActivity.updateDictionaryText(this);
             /*call activity method and inform dictionary mening done fetching*/
         }
 

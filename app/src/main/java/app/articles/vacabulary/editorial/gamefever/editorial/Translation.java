@@ -38,6 +38,7 @@ import static java.lang.System.in;
 public class Translation {
     String word ;
     String wordTranslation;
+    EditorialFeedActivity editorialFeedActivity;
 
     public Translation(String word) {
         this.word = word;
@@ -64,11 +65,12 @@ public class Translation {
     }
 
 
-    public void fetchTranslation(){
+    public void fetchTranslation(EditorialFeedActivity activity){
 
 
         new Hinditranslation().execute();
 
+        editorialFeedActivity =activity;
         Log.d("tag", "fetchTranslation: After fetching translation");
 
     }
@@ -76,6 +78,9 @@ public class Translation {
     public void completeFetching(){
         /*call desired method and notify it that translation is fetched sucesfully*/
         Log.d("TAG", "doInBackground: "+wordTranslation);
+        if(!wordTranslation.equalsIgnoreCase("null")) {
+            editorialFeedActivity.updateTranslateText(this);
+        }
     }
 
 
@@ -139,18 +144,18 @@ public class Translation {
         }
 
         protected void onPostExecute(String results) {
+            wordTranslation = "null";
             if (results != null) {
 
                 try {
                     JSONObject jsonObj = new JSONObject(results);
 
                     JSONArray jsonarray =jsonObj.getJSONArray("text");
+
                     if(jsonObj.getInt("code") == 200) {
 
                         wordTranslation = jsonarray.getString(0);
 
-                    }else{
-                        wordTranslation = "null";
                     }
 
 
