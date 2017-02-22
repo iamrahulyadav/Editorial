@@ -41,7 +41,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         translateText =(TextView)findViewById(R.id.editorial_feed_cardview_textview);
 
-        init();
+        init(editorialText);
 
         View bottomSheet = findViewById( R.id.editorial_activity_bottom_sheet );
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -49,8 +49,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-    private void init() {
-        String definition = editorialText;
+    private void init(String textToShow) {
+        String definition = textToShow;
         TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
         definitionView.setMovementMethod(LinkMovementMethod.getInstance());
         definitionView.setText(definition, TextView.BufferType.SPANNABLE);
@@ -67,6 +67,27 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
+    }
+
+    public void fetchEditorial(String id){
+      //call to fetch editorial object from firebase db
+    }
+
+    public void updateEditorialFetch(String editorial){
+
+        TextView tv ;
+        tv=(TextView)findViewById(R.id.editorial_heading_textview);
+//initialize heading
+        tv =(TextView)findViewById(R.id.editorial_date_textview);
+//initialize date
+        tv =(TextView)findViewById(R.id.editorial_source_textview);
+//initialize source
+        tv =(TextView)findViewById(R.id.editorial_text_textview);
+//initialize text
+        init(editorialText);
+
+
+
     }
 
     private ClickableSpan getClickableSpan(final String word) {
@@ -162,7 +183,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (status == TextToSpeech.SUCCESS) {
 
-            int result = tts.setLanguage(Locale.US);
+            int result = tts.setLanguage(Locale.ENGLISH);
 
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
