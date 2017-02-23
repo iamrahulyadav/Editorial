@@ -186,7 +186,8 @@ public class TestActivity extends AppCompatActivity {
 
 
     public void signInWithGoogle(View view) {
-        fetchmore();
+        Intent i = new Intent(this ,VacabularyActivity.class);
+        startActivity(i);
     }
 
     public void btn2OnClick(View view) {

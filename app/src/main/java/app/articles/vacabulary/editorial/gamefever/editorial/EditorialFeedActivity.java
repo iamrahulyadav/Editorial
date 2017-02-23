@@ -12,6 +12,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -157,7 +158,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
     }
 
-    public void updateDictionaryText(Dictionary dictionary){
+    public void updateDictionaryText(final Dictionary dictionary){
         TextView tv ;
         tv=(TextView)findViewById(R.id.editorial_bottomsheet_meaning_textview);
         tv.setText(dictionary.getWordMeaning());
@@ -169,6 +170,20 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             synonymstring=synonymstring+dictionary.getWordsynonym()[i] +" , ";
         }
         tv.setText(synonymstring);
+
+        Button bt=(Button) findViewById(R.id.editorial_bottomSheet_add_button);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler databaseHandler =new DatabaseHandler(EditorialFeedActivity.this);
+                databaseHandler.addToDictionary(dictionary);
+                Toast.makeText(EditorialFeedActivity.this, "Word Added To Dictionary", Toast.LENGTH_SHORT).show();
+
+
+
+
+            }
+        });
     }
 
     public void onDictionaryClick(View v){
@@ -237,5 +252,23 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
        init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
 
+    }
+
+    public void addToDictionary(View view) {
+        DatabaseHandler databaseHandler =new DatabaseHandler(this);
+Dictionary dictionary =new Dictionary(selectedWord);
+
+        TextView tv;
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_meaning_textview);
+        dictionary.setWordMeaning(tv.getText().toString());
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_partspeech_textview);
+        dictionary.setWordPartOfSpeech(tv.getText().toString());
+
+        tv=(TextView)findViewById(R.id.editorial_bottomsheet_synonyms_textview);
+        dictionary.setWordsynonym(new String[]{ tv.getText().toString()});
+
+
+
+        databaseHandler.addToDictionary(dictionary);
     }
 }

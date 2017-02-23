@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorialFeedActivity" />
-        <activity android:name=".EditorialListActivity"></activity>
+        <activity android:name=".EditorialListActivity" />
+        <activity android:name=".VacabularyActivity"></activity>
     </application>
 
 </manifest>
