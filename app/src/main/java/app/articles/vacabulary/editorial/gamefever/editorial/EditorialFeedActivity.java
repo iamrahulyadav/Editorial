@@ -38,6 +38,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_editorial_feed);
 
         tts = new TextToSpeech(this, this);
+        Intent i = getIntent();
+        intialiseViewAndFetch(i);
 
         translateText =(TextView)findViewById(R.id.editorial_feed_cardview_textview);
 
@@ -46,6 +48,32 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         View bottomSheet = findViewById( R.id.editorial_activity_bottom_sheet );
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+
+
+    }
+
+    private void intialiseViewAndFetch(Intent i) {
+    EditorialGeneralInfo editorialGeneralInfo = new EditorialGeneralInfo();
+        editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
+        editorialGeneralInfo.setEditorialDate(i.getExtras().getString("editorialDate"));
+        editorialGeneralInfo.setEditorialHeading(i.getExtras().getString("editorialHeading"));
+        editorialGeneralInfo.setEditorialSource(i.getExtras().getString("editorialSource"));
+        editorialGeneralInfo.setEditorialSubHeading(i.getExtras().getString("editorialSubheading"));
+        editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
+
+        DBHelperFirebase dbHelper = new DBHelperFirebase();
+        dbHelper.getEditorialFullInfoByID(editorialGeneralInfo , this);
+
+        TextView tv = (TextView)findViewById(R.id.editorial_heading_textview);
+        tv.setText(editorialGeneralInfo.getEditorialHeading());
+         tv = (TextView)findViewById(R.id.editorial_source_textview);
+        tv.setText(editorialGeneralInfo.getEditorialSource());
+         tv = (TextView)findViewById(R.id.editorial_date_textview);
+        tv.setText(editorialGeneralInfo.getEditorialDate());
+
+
+
 
     }
 
@@ -205,4 +233,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
+
+       init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
+
+    }
 }

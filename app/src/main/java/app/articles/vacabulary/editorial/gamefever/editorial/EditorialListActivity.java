@@ -1,5 +1,6 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,6 +22,7 @@ public class EditorialListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editorial_list);
+        fetchEditorialGeneralList();
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
@@ -35,11 +37,15 @@ public class EditorialListActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
 
+
         recyclerView.addOnItemTouchListener(
                 new RecyclerTouchListener(this, recyclerView ,new RecyclerTouchListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
-                        Toast.makeText(EditorialListActivity.this, "Item clicked "+editorialListArrayList.get(position).getEditorialHeading(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditorialListActivity.this, "Item clicked "+position+editorialListArrayList.get(position).getEditorialHeading(), Toast.LENGTH_SHORT).show();
+
+                        onRecyclerViewItemClick(position);
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -48,9 +54,34 @@ public class EditorialListActivity extends AppCompatActivity {
                 })
         );
 
-        prepareMovieData();
+
+
+
 
     }
+
+    private void onRecyclerViewItemClick(int position) {
+        EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
+        Intent i = new Intent(this , EditorialFeedActivity.class);
+        i.putExtra("editorialID",editorialgenralInfo.getEditorialID());
+        i.putExtra("editorialDate",editorialgenralInfo.getEditorialDate());
+        i.putExtra("editorialHeading",editorialgenralInfo.getEditorialHeading());
+        i.putExtra("editorialSource",editorialgenralInfo.getEditorialSource());
+        i.putExtra("editorialSubheading",editorialgenralInfo.getEditorialSubHeading());
+        i.putExtra("editorialTag",editorialgenralInfo.getEditorialTag());
+
+        startActivity(i);
+
+
+    }
+
+    public void fetchEditorialGeneralList(){
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+        dbHelperFirebase.fetchEditorialList(20 ,"" ,this , true);
+
+    }
+
+
 
     private void prepareMovieData() {
 
@@ -160,6 +191,19 @@ public class EditorialListActivity extends AppCompatActivity {
         editorialListArrayList.add(editorial);
 
 
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void loadMoreClick(View view) {
+    }
+
+    public void onFetchEditorialGeneralInfo(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist) {
+
+        int insertPosition = editorialListArrayList.size();
+
+        for (EditorialGeneralInfo editorialGeneralInfo : editorialGeneralInfoArraylist){
+            editorialListArrayList.add(insertPosition ,editorialGeneralInfo);
+        }
         mAdapter.notifyDataSetChanged();
     }
 }

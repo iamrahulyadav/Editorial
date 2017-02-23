@@ -22,7 +22,7 @@ public class DBHelperFirebase {
     }
 
 
-    public EditorialFullInfo getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo , final TestActivity activity) {
+    public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo , final TestActivity activity) {
         /*Return Full editorial object using editorial general info */
 
         DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialGeneralInfo.getEditorialID());
@@ -44,8 +44,33 @@ public class DBHelperFirebase {
             }
         });
 
-        return new EditorialFullInfo();
     }
+
+
+    public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo , final EditorialFeedActivity activity) {
+        /*Return Full editorial object using editorial general info */
+
+        DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialGeneralInfo.getEditorialID());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                EditorialExtraInfo editorialExtraInfo =  dataSnapshot.getValue(EditorialExtraInfo.class);
+
+                EditorialFullInfo editorialFullInfo = new EditorialFullInfo(editorialGeneralInfo, editorialExtraInfo);
+
+
+                onEditorialFullInfoById(editorialFullInfo);
+                activity.onGetEditorialFullInfo(editorialFullInfo);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
 
     private void onEditorialFullInfoById(EditorialFullInfo editorialFullInfo) {
     /*callback Function notifying data is fetched succesfully*/
@@ -99,6 +124,46 @@ public class DBHelperFirebase {
                 }
 
                 onFetchEditorialList(editorialGeneralInfoArraylist, activity);
+                activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+    public void fetchEditorialList(int limit, String end, final EditorialListActivity activity, boolean isFirst) {
+        /*return list of editorial of size limit which end at end*/
+
+        DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
+        Query query;
+        if (isFirst) {
+            query = myRef2.orderByChild("editorialID").limitToLast(limit);
+        } else {
+            query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
+
+
+
+        }
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo =  ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
                 activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
 
             }
