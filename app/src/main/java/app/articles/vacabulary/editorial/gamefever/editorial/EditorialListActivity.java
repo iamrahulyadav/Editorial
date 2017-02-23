@@ -7,6 +7,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,6 +20,10 @@ public class EditorialListActivity extends AppCompatActivity {
     private List<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
     private RecyclerView recyclerView;
     private EditorialGeneralInfoAdapter mAdapter;
+
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mDrawerAdapter;
+    Button addMoreButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,20 @@ public class EditorialListActivity extends AppCompatActivity {
         );
 
 
+        mDrawerList = (ListView)findViewById(R.id.editoriallist_activity_drawer_listview);
+        initializeNavDrawer();
+
+        addMoreButton = (Button)findViewById(R.id.editoriallist_activity_add_button);
+        addMoreButton.setVisibility(View.INVISIBLE);
 
 
+
+    }
+
+    public void initializeNavDrawer(){
+        String[] osArray = { "Android", "iOS", "Windows", "OS X", "Linux" };
+        mDrawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mDrawerAdapter);
 
     }
 
@@ -208,5 +227,7 @@ public class EditorialListActivity extends AppCompatActivity {
             editorialListArrayList.add(insertPosition ,editorialGeneralInfo);
         }
         mAdapter.notifyDataSetChanged();
+        addMoreButton.setVisibility(View.VISIBLE);
+
     }
 }
