@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "533438781965",
+    "firebase_url": "https://editorial-8cbf6.firebaseio.com",
+    "project_id": "editorial-8cbf6",
+    "storage_bucket": "editorial-8cbf6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533438781965:android:73c4e6f3d40a1d54",
+        "android_client_info": {
+          "package_name": "app.articles.vacabulary.editorial.gamefever.editorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533438781965-kr2q1lqvrdm3hegmpo0e5eve6e07ot1d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.articles.vacabulary.editorial.gamefever.editorial",
+            "certificate_hash": "565f2b177e8a9849eff176dc83c2f120e56e26c9"
+          }
+        },
+        {
+          "client_id": "533438781965-sg00f56c5drqirheatv0q6nhrsh40tmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAleZ0V6oBpbXKW134Nf-GaMC_ZpKkg74w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533438781965-sg00f56c5drqirheatv0q6nhrsh40tmp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

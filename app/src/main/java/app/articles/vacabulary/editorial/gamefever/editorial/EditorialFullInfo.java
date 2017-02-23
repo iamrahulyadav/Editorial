@@ -5,40 +5,22 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
  */
 
 public class EditorialFullInfo {
-    private String editorialText ,editorialId ;
     private EditorialGeneralInfo editorialGeneralInfo;
+    private EditorialExtraInfo editorialExtraInfo;
 
     public EditorialFullInfo() {
+        this.setEditorialExtraInfo(new EditorialExtraInfo());
+        this.setEditorialGeneralInfo(new EditorialGeneralInfo());
 
     }
 
 
-    public EditorialFullInfo(String editorialId) {
-        this.editorialId = editorialId;
+
+    public EditorialFullInfo(EditorialGeneralInfo editorialGeneralInfo, EditorialExtraInfo editorialExtraInfo) {
+        this.editorialGeneralInfo = editorialGeneralInfo;
+        this.editorialExtraInfo = editorialExtraInfo;
     }
 
-    public EditorialFullInfo(String editorialText, String editorialId, EditorialGeneralInfo EditorialGeneralInfo) {
-        this.editorialText = editorialText;
-        this.editorialId = editorialId;
-        this.editorialGeneralInfo = EditorialGeneralInfo;
-    }
-
-
-    public String getEditorialId() {
-        return editorialId;
-    }
-
-    public void setEditorialId(String editorialId) {
-        this.editorialId = editorialId;
-    }
-
-    public String getEditorialText() {
-        return editorialText;
-    }
-
-    public void setEditorialText(String editorialText) {
-        this.editorialText = editorialText;
-    }
 
     public EditorialGeneralInfo getEditorialGeneralInfo() {
         return editorialGeneralInfo;
@@ -53,12 +35,20 @@ public class EditorialFullInfo {
       * true mean correct data
       * false mean incorrect*/
 
-        if (editorialId.equalsIgnoreCase(editorialGeneralInfo.getEditorialID())){
+        if (editorialExtraInfo.getEditorialId().equalsIgnoreCase(editorialGeneralInfo.getEditorialID())){
             return true;
         }else{
             return false;
         }
 
 
+    }
+
+    public EditorialExtraInfo getEditorialExtraInfo() {
+        return editorialExtraInfo;
+    }
+
+    public void setEditorialExtraInfo(EditorialExtraInfo editorialExtraInfo) {
+        this.editorialExtraInfo = editorialExtraInfo;
     }
 }
