@@ -195,6 +195,9 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
     public void loadMoreClick(View view) {
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+        dbHelperFirebase.fetchEditorialList(20 ,editorialListArrayList.get(editorialListArrayList.size()-1).getEditorialID() ,this ,false);
+    
     }
 
     public void onFetchEditorialGeneralInfo(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist) {
