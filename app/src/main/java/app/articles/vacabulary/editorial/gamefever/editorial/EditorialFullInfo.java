@@ -5,7 +5,6 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
  */
 
 public class EditorialFullInfo {
-
     private String editorialText ,editorialId ;
     private EditorialGeneralInfo editorialGeneralInfo;
 
@@ -18,10 +17,10 @@ public class EditorialFullInfo {
         this.editorialId = editorialId;
     }
 
-    public EditorialFullInfo(String editorialText, String editorialId, EditorialGeneralInfo editorialGeneralInfo) {
+    public EditorialFullInfo(String editorialText, String editorialId, EditorialGeneralInfo EditorialGeneralInfo) {
         this.editorialText = editorialText;
         this.editorialId = editorialId;
-        this.editorialGeneralInfo = editorialGeneralInfo;
+        this.editorialGeneralInfo = EditorialGeneralInfo;
     }
 
 
@@ -41,12 +40,12 @@ public class EditorialFullInfo {
         this.editorialText = editorialText;
     }
 
-    public EditorialGeneralInfo geteditorialGeneralInfo() {
+    public EditorialGeneralInfo getEditorialGeneralInfo() {
         return editorialGeneralInfo;
     }
 
-    public void seteditorialGeneralInfo(EditorialGeneralInfo editorialGeneralInfo) {
-        this.editorialGeneralInfo = editorialGeneralInfo;
+    public void setEditorialGeneralInfo(EditorialGeneralInfo EditorialGeneralInfo) {
+        this.editorialGeneralInfo = EditorialGeneralInfo;
     }
 
     public boolean checkEditorialText(){
@@ -62,5 +61,4 @@ public class EditorialFullInfo {
 
 
     }
-
 }

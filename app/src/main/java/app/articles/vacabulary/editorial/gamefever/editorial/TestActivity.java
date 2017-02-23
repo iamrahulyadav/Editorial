@@ -32,5 +32,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void btn4OnClick(View view) {
+        Intent i =new Intent(this , EditorialListActivity.class);
+        startActivity(i);
     }
 }

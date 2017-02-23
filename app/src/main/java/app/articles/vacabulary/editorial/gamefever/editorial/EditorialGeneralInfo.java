@@ -5,8 +5,6 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
  */
 
 public class EditorialGeneralInfo {
-
-
     private String editorialHeading ,editorialDate ,editorialSource ,editorialID ,editorialSubHeading ,editorialTag ;
 
     public EditorialGeneralInfo() {
@@ -69,5 +67,4 @@ public class EditorialGeneralInfo {
     public void setEditorialTag(String editorialTag) {
         this.editorialTag = editorialTag;
     }
-
 }
