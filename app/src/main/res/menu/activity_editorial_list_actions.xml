@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Search / will display always -->
+    <item android:id="@+id/action_about"
+        android:icon="@drawable/common_google_signin_btn_icon_light"
+        android:title="About"
+        app:showAsAction="never"/>
+
+    <!-- Location Found -->
+    <item android:id="@+id/action_share"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Share"
+        app:showAsAction="ifRoom" />
+
+    <!-- Refresh -->
+    <item android:id="@+id/action_refresh"
+        android:icon="@drawable/common_google_signin_btn_icon_light_pressed"
+        android:title="Refresh"
+        app:showAsAction="always" />
+
+    <!-- Help -->
+    <item android:id="@+id/action_setting"
+        android:icon="@drawable/common_google_signin_btn_text_dark"
+        android:title="Setting"
+        app:showAsAction="never"/>
+    <!-- Help -->
+    <item android:id="@+id/action_vacabulary"
+        android:icon="@drawable/common_google_signin_btn_text_dark"
+        android:title="Setting"
+        app:showAsAction="never"/>
+
+
+
+</menu>

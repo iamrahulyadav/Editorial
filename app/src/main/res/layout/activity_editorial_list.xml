@@ -4,15 +4,15 @@
     android:id="@+id/activity_editorial_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-android:background="#ffffff"
+    android:background="#ffffff"
     tools:context="app.articles.vacabulary.editorial.gamefever.editorial.EditorialListActivity">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,28 +27,26 @@ android:background="#ffffff"
 
             </android.support.v7.widget.RecyclerView>
 
+
+
             <Button
+                android:id="@+id/editoriallist_activity_add_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Load More"
-                android:id="@+id/editoriallist_activity_add_button"
                 android:onClick="loadMoreClick"
-                />
+                android:text="Load More" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editoriallist_activity_progressbar" />
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
 
-    <ListView
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:id="@+id/editoriallist_activity_drawer_listview"
-        android:layout_gravity="start"
-        android:background="#4f80e9"
-        android:divider="@color/heading_color"
-        >
 
-    </ListView>
 
 </android.support.v4.widget.DrawerLayout>

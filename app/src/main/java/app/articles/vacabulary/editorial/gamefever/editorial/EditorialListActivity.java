@@ -1,15 +1,20 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,12 +29,18 @@ public class EditorialListActivity extends AppCompatActivity {
     private ListView mDrawerList;
     private ArrayAdapter<String> mDrawerAdapter;
     Button addMoreButton;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editorial_list);
         fetchEditorialGeneralList();
+
+        ActionBar actionBar = getActionBar();
+
+// set the icon
+        //actionBar.setIcon(R.drawable.common_google_signin_btn_icon_dark);
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
@@ -62,12 +73,14 @@ public class EditorialListActivity extends AppCompatActivity {
         );
 
 
-        mDrawerList = (ListView)findViewById(R.id.editoriallist_activity_drawer_listview);
-        initializeNavDrawer();
+       // mDrawerList = (ListView)findViewById(R.id.editoriallist_activity_drawer_listview);
+       // initializeNavDrawer();
 
         addMoreButton = (Button)findViewById(R.id.editoriallist_activity_add_button);
         addMoreButton.setVisibility(View.INVISIBLE);
 
+        progressBar=(ProgressBar)findViewById(R.id.editoriallist_activity_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
 
     }
@@ -216,7 +229,10 @@ public class EditorialListActivity extends AppCompatActivity {
     public void loadMoreClick(View view) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         dbHelperFirebase.fetchEditorialList(20 ,editorialListArrayList.get(editorialListArrayList.size()-1).getEditorialID() ,this ,false);
-    
+
+        addMoreButton.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
     }
 
     public void onFetchEditorialGeneralInfo(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist) {
@@ -228,6 +244,73 @@ public class EditorialListActivity extends AppCompatActivity {
         }
         mAdapter.notifyDataSetChanged();
         addMoreButton.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // search action
+                onAboutClick();
+                return true;
+            case R.id.action_setting:
+                // location found
+                onSettingClick();
+                return true;
+            case R.id.action_refresh:
+                // refresh
+                onRefreashClick();
+                return true;
+            case R.id.action_share:
+                // help action
+                onShareClick();
+                return true;
+            case R.id.action_vacabulary:
+                // help action
+                onVacabularyClick();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onVacabularyClick() {
+        Intent i = new Intent(this ,VacabularyActivity.class);
+        startActivity(i);
+
+    }
+
+    private void onShareClick() {
+    }
+
+    private void onSettingClick() {
+    }
+
+    private void onAboutClick() {
+    }
+
+    private void onRefreashClick() {
+
+        editorialListArrayList.clear();
+        mAdapter.notifyDataSetChanged();
+        addMoreButton.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        fetchEditorialGeneralList();
+
+    }
+
+
 }
