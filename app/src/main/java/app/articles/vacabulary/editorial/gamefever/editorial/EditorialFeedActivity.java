@@ -84,6 +84,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv.setText(editorialGeneralInfo.getEditorialSource());
          tv = (TextView)findViewById(R.id.editorial_date_textview);
         tv.setText(editorialGeneralInfo.getEditorialDate());
+        tv = (TextView)findViewById(R.id.editorial_tag_textview);
+        tv.setText(editorialGeneralInfo.getEditorialTag());
+
 
 
 
