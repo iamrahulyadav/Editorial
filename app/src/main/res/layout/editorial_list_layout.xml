@@ -20,14 +20,26 @@
             android:id="@+id/editorial_list_layout_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="8dp"
             android:text="This is heading text for demo purpose and testing layout"
             android:textAlignment="center"
-            android:textStyle="bold"
             android:textColor="@color/heading_color"
             android:textSize="24sp"
 
-            android:elevation="8dp"
+            android:textStyle="bold"
             tools:elevation="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
+
+            android:id="@+id/textView" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,63 +47,83 @@
             android:orientation="horizontal">
 
 
-            <android.support.v7.widget.CardView
+            <TextView
+                android:id="@+id/editorial_list_layout_source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#4c32f7"
-                app:cardCornerRadius="4dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                android:text="source"
+                android:textAlignment="center"
+
+                android:textSize="16sp"
+
+                android:textStyle="italic"
+
+                />
+
+
+            <TextView
+                android:id="@+id/editorial_list_layout_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
 
                 android:padding="4dp"
+                android:text="date"
 
-                android:layout_marginLeft="16dp"
-                >
+                android:textAlignment="center"
 
-                <TextView
-                    android:id="@+id/editorial_list_layout_source"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="source"
-                    android:textColor="@color/white"
-                    android:textAlignment="center"
-                    android:textSize="16sp" />
+                android:textSize="16sp"
 
-            </android.support.v7.widget.CardView>
+                />
+
+
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
 
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#ff1269"
-                app:cardCornerRadius="4dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
+                app:cardBackgroundColor="#ff1269"
+                app:cardCornerRadius="4dp"
 
                 >
 
 
                 <TextView
-                    android:id="@+id/editorial_list_layout_date"
+                    android:id="@+id/editorial_list_layout_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
                     android:layout_weight="1"
-                    android:text="date"
-                    android:textColor="@color/white"
-
+                    android:text="Tag"
                     android:textAlignment="center"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
 
             </android.support.v7.widget.CardView>
 
 
         </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            android:layout_height="2dp">
+
+        </android.support.v7.widget.CardView>
 
 
     </LinearLayout>
