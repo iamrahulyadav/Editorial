@@ -30,6 +30,7 @@ public class EditorialListActivity extends AppCompatActivity {
     private ArrayAdapter<String> mDrawerAdapter;
     Button addMoreButton;
     ProgressBar progressBar;
+    private boolean isRefreshing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,6 +246,7 @@ public class EditorialListActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         addMoreButton.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
+        isRefreshing =false;
 
     }
 
@@ -308,7 +310,10 @@ public class EditorialListActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        fetchEditorialGeneralList();
+        if(!isRefreshing) {
+            fetchEditorialGeneralList();
+            isRefreshing =true;
+        }
 
     }
 
