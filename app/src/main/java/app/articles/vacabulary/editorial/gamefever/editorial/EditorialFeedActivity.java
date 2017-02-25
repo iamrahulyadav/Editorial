@@ -239,7 +239,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (status == TextToSpeech.SUCCESS) {
 
-            int result = tts.setLanguage(Locale.ENGLISH);
+            int result = tts.setLanguage(Locale.US);
 
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -311,6 +311,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onShareClick() {
+
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "The best Editorial App ";
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     private void onSettingClick() {

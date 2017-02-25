@@ -31,7 +31,7 @@ public class VacabularyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("Vacabulary");
+        getSupportActionBar().setSubtitle("Vocabulary");
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
 
@@ -132,6 +132,12 @@ public class VacabularyActivity extends AppCompatActivity {
     }
 
     private void onShareClick() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "The best Editorial App ";
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     private void onSettingClick() {

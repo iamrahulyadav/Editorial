@@ -380,7 +380,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/editorial_bottomsheet_parofspeech_layout"
             android:background="@color/white"
-            android:text="ADD To Vacabulary" />
+            android:text="ADD To Vocabulary" />
 
 
     </RelativeLayout>

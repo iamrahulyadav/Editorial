@@ -78,7 +78,6 @@ public class EditorialListActivity extends AppCompatActivity {
                 new RecyclerTouchListener(this, recyclerView ,new RecyclerTouchListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
-                        Toast.makeText(EditorialListActivity.this, "Item clicked "+position+editorialListArrayList.get(position).getEditorialHeading(), Toast.LENGTH_SHORT).show();
 
                         onRecyclerViewItemClick(position);
 
@@ -322,6 +321,12 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
     private void onShareClick() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "The best Editorial App ";
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     private void onSettingClick() {

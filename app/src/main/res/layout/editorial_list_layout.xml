@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="false"
     android:focusable="true"
     android:orientation="vertical"
-    android:layout_marginTop="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     app:cardBackgroundColor="@color/editorialListBGColor"
     app:cardCornerRadius="2dp">
 
@@ -33,18 +33,17 @@
             tools:elevation="8dp" />
 
         <TextView
+            android:id="@+id/editorial_list_layout_subheading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="32dp"
             android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
             android:layout_marginTop="8dp"
-            android:textSize="12sp"
+            android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
             android:textColor="@color/heading_color"
 
-            android:textStyle="italic"
-            android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
-
-            android:id="@+id/textView" />
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,12 +77,12 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/heading_color"
-
                 android:padding="4dp"
-                android:text="date"
 
+                android:text="date"
                 android:textAlignment="center"
+
+                android:textColor="@color/heading_color"
 
                 android:textSize="16sp"
 
@@ -96,30 +95,26 @@
                 android:layout_weight="1" />
 
 
+            <TextView
+                android:id="@+id/editorial_list_layout_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                android:text="Tag"
 
 
-
-                <TextView
-                    android:id="@+id/editorial_list_layout_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:layout_weight="1"
-                    android:text="Tag"
-
-
-                    android:textAlignment="center"
-                    android:textColor="@color/editorialListTagColor"
-                    android:textSize="16sp" />
-
+                android:textAlignment="center"
+                android:textColor="@color/editorialListTagColor"
+                android:textSize="16sp" />
 
 
         </LinearLayout>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            app:cardBackgroundColor="@color/colorPrimaryDark"
-            android:layout_height="2dp">
+            android:layout_height="2dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark">
 
         </android.support.v7.widget.CardView>
 

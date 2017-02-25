@@ -18,7 +18,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialG
     private List<EditorialGeneralInfo> EditorialGeneralInfoList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView heading, date, source ,tag;
+        public TextView heading, date, source ,tag,subheading;
 
         public MyViewHolder(View view) {
             super(view);
@@ -26,6 +26,8 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialG
             date = (TextView) view.findViewById(R.id.editorial_list_layout_date);
             source = (TextView) view.findViewById(R.id.editorial_list_layout_source);
             tag = (TextView) view.findViewById(R.id.editorial_list_layout_tag);
+            subheading = (TextView) view.findViewById(R.id.editorial_list_layout_subheading);
+
 
         }
     }
@@ -50,6 +52,8 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialG
         holder.date.setText(EditorialGeneralInfo.getEditorialDate());
         holder.source.setText(EditorialGeneralInfo.getEditorialSource());
         holder.tag.setText(EditorialGeneralInfo.getEditorialTag());
+        holder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
+
 
     }
 
