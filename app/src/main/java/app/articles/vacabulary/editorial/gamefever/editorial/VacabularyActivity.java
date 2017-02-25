@@ -32,6 +32,7 @@ public class VacabularyActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setSubtitle("Vacabulary");
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
 
         ListView listView =(ListView)findViewById(R.id.vacabulary_activity_listview);

@@ -11,13 +11,13 @@
 
     <!-- Location Found -->
     <item android:id="@+id/action_share"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_action_share"
         android:title="Share"
         app:showAsAction="ifRoom" />
 
     <!-- Refresh -->
     <item android:id="@+id/action_refresh"
-        android:icon="@drawable/common_google_signin_btn_icon_light_pressed"
+        android:icon="@drawable/ic_action_refresh"
         android:title="Refresh"
         app:showAsAction="always" />
 

@@ -5,7 +5,7 @@
     android:id="@+id/activity_editorial_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#030303"
+    android:background="@color/editorialListActivityBGColor"
     android:orientation="vertical"
     tools:context="app.articles.vacabulary.editorial.gamefever.editorial.EditorialListActivity">
 

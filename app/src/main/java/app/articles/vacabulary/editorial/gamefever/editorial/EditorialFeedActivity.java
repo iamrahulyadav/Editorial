@@ -26,10 +26,7 @@ import java.util.Locale;
 public class EditorialFeedActivity extends AppCompatActivity implements
         TextToSpeech.OnInitListener{
 
-    String editorialText = "this is a demo9 editorialo text nothing moch jus to show how this will look in this activty and other things \n some more text is shown for testing purpose and other thins \n please dont read it and waste yourtime instead go n watch some cool movies or go for a walk ,chill out with buddy \n this will go on and on and on for ever\n this is a demo9 editorialo text nothing moch jus to show how this will look in this activty and other things \n" +
-            " some more text is shown for testing purpose and other thins \n" +
-            " please dont read it and waste yourtime instead go n watch some cool movies or go for a walk ,chill out with buddy \n" +
-            " this will go on and on and on for ever";
+    String editorialText = "";
 
     private TextToSpeech tts;
 
@@ -47,6 +44,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setSubtitle("Feeds");
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
 
 
@@ -266,6 +264,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
        init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
+        findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.INVISIBLE);
 
     }
 

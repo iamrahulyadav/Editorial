@@ -58,7 +58,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 // set the icon
-        //actionBar.setIcon(R.drawable.common_google_signin_btn_icon_dark);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
