@@ -22,14 +22,14 @@
         app:showAsAction="always" />
 
     <!-- Help -->
-    <item android:id="@+id/action_setting"
+   <!-- <item android:id="@+id/action_setting"
         android:icon="@drawable/common_google_signin_btn_text_dark"
         android:title="Setting"
-        app:showAsAction="never"/>
+        app:showAsAction="never"/>-->
     <!-- Help -->
     <item android:id="@+id/action_vacabulary"
         android:icon="@drawable/common_google_signin_btn_text_dark"
-        android:title="Setting"
+        android:title="Vacabulary"
         app:showAsAction="never"/>
 
 

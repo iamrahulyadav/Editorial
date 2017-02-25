@@ -1,8 +1,13 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +26,13 @@ public class VacabularyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vacabulary);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.vacabulary_activity_toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setSubtitle("Vacabulary");
+
 
         ListView listView =(ListView)findViewById(R.id.vacabulary_activity_listview);
         mAdapter =new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayListword);
@@ -73,5 +85,70 @@ public class VacabularyActivity extends AppCompatActivity {
 
 
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // search action
+                onAboutClick();
+                return true;
+
+            case R.id.action_refresh:
+                // refresh
+                onRefreashClick();
+                return true;
+            case R.id.action_share:
+                // help action
+                onShareClick();
+                return true;
+            case R.id.action_vacabulary:
+                // help action
+                onVacabularyClick();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onVacabularyClick() {
+        Intent i = new Intent(this ,VacabularyActivity.class);
+        startActivity(i);
+
+    }
+
+    private void onShareClick() {
+    }
+
+    private void onSettingClick() {
+    }
+
+    private void onAboutClick() {
+    }
+
+    private void onRefreashClick() {
+
+
+
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 
 }

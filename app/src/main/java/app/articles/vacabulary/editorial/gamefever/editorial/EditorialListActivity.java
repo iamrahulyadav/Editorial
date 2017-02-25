@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,17 +29,33 @@ public class EditorialListActivity extends AppCompatActivity {
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mDrawerAdapter;
-    Button addMoreButton;
+    View addMoreButton;
     ProgressBar progressBar;
     private boolean isRefreshing = true;
+    private  boolean isSplashScreenVisible =true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editorial_list);
+
+
         fetchEditorialGeneralList();
 
-        ActionBar actionBar = getActionBar();
+        initializeSplashScreen();
+
+
+    }
+
+    public void initializeActivity(){
+
+        setContentView(R.layout.activity_editorial_list);
+        isSplashScreenVisible=false;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.editoriallist_activity_toolbar);
+        setSupportActionBar(toolbar);
+
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 // set the icon
         //actionBar.setIcon(R.drawable.common_google_signin_btn_icon_dark);
@@ -74,24 +91,29 @@ public class EditorialListActivity extends AppCompatActivity {
         );
 
 
-       // mDrawerList = (ListView)findViewById(R.id.editoriallist_activity_drawer_listview);
-       // initializeNavDrawer();
+        // mDrawerList = (ListView)findViewById(R.id.editoriallist_activity_drawer_listview);
+        // initializeNavDrawer();
 
-        addMoreButton = (Button)findViewById(R.id.editoriallist_activity_add_button);
+        addMoreButton = (View) findViewById(R.id.editoriallist_activity_add_button);
         addMoreButton.setVisibility(View.INVISIBLE);
 
         progressBar=(ProgressBar)findViewById(R.id.editoriallist_activity_progressbar);
         progressBar.setVisibility(View.VISIBLE);
 
 
-    }
 
-    public void initializeNavDrawer(){
-        String[] osArray = { "Android", "iOS", "Windows", "OS X", "Linux" };
-        mDrawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
-        mDrawerList.setAdapter(mDrawerAdapter);
 
     }
+
+
+    public void initializeSplashScreen(){
+
+        setContentView(R.layout.splashlayout);
+
+    }
+
+
+
 
     private void onRecyclerViewItemClick(int position) {
         EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
@@ -238,12 +260,19 @@ public class EditorialListActivity extends AppCompatActivity {
 
     public void onFetchEditorialGeneralInfo(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist) {
 
+        if(isSplashScreenVisible) {
+            initializeActivity();
+        }
+
         int insertPosition = editorialListArrayList.size();
 
         for (EditorialGeneralInfo editorialGeneralInfo : editorialGeneralInfoArraylist){
             editorialListArrayList.add(insertPosition ,editorialGeneralInfo);
         }
         mAdapter.notifyDataSetChanged();
+
+
+
         addMoreButton.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
         isRefreshing =false;
@@ -267,10 +296,7 @@ public class EditorialListActivity extends AppCompatActivity {
                 // search action
                 onAboutClick();
                 return true;
-            case R.id.action_setting:
-                // location found
-                onSettingClick();
-                return true;
+
             case R.id.action_refresh:
                 // refresh
                 onRefreashClick();

@@ -6,11 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,6 +41,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editorial_feed);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.editorialfeed_activity_toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setSubtitle("Feeds");
+
+
 
         tts = new TextToSpeech(this, this);
         Intent i = getIntent();
@@ -254,6 +266,63 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // search action
+                onAboutClick();
+                return true;
+
+            case R.id.action_refresh:
+                // refresh
+                onRefreashClick();
+                return true;
+            case R.id.action_share:
+                // help action
+                onShareClick();
+                return true;
+            case R.id.action_vacabulary:
+                // help action
+                onVacabularyClick();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onVacabularyClick() {
+        Intent i = new Intent(this ,VacabularyActivity.class);
+        startActivity(i);
+
+    }
+
+    private void onShareClick() {
+    }
+
+    private void onSettingClick() {
+    }
+
+    private void onAboutClick() {
+    }
+
+    private void onRefreashClick() {
+
+
+
+    }
+
     public void addToDictionary(View view) {
         DatabaseHandler databaseHandler =new DatabaseHandler(this);
 Dictionary dictionary =new Dictionary(selectedWord);
@@ -270,5 +339,10 @@ Dictionary dictionary =new Dictionary(selectedWord);
 
 
         databaseHandler.addToDictionary(dictionary);
+    }
+
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

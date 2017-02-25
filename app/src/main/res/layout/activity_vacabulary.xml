@@ -6,17 +6,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="app.articles.vacabulary.vacabulary.gamefever.vacabulary.VacabularyActivity">
+    tools:context="app.articles.vacabulary.editorial.gamefever.editorial.VacabularyActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/vacabulary_activity_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+    </android.support.design.widget.AppBarLayout>
+
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:id="@+id/vacabulary_activity_listview"
+
         >
 
 
     </ListView>
+
+
+
+    </LinearLayout>
 
 
 

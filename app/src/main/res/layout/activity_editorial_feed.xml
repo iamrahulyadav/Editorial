@@ -7,9 +7,38 @@
     android:layout_height="match_parent"
     tools:context="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity">
 
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:orientation="vertical">
+
+
+     <android.support.design.widget.AppBarLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+
+         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+         <android.support.v7.widget.Toolbar
+             android:id="@+id/editorialfeed_activity_toolbar"
+             android:layout_width="match_parent"
+             android:layout_height="?attr/actionBarSize"
+             android:background="?attr/colorPrimary"
+             app:layout_scrollFlags="scroll|enterAlways"
+             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+     </android.support.design.widget.AppBarLayout>
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
+
+
         <!-- layout of bottom  translation cardview  -->
         <android.support.v7.widget.CardView
             android:id="@+id/editorial_feed_cardview"
@@ -19,7 +48,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             app:cardBackgroundColor="@color/colorPrimary"
-            app:cardCornerRadius="0dp">
+            app:cardCornerRadius="0dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,19 +131,32 @@
                                 app:cardBackgroundColor="#e72f5a"
                                 app:cardCornerRadius="4dp">
 
-                                <TextView
-                                    android:id="@+id/editorial_source_textview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="4dp"
-                                    android:text="Source NAme"
-                                    android:textColor="@color/white"
-
-                                    android:textSize="16sp" />
-
 
                             </android.support.v7.widget.CardView>
 
+                            <TextView
+                                android:id="@+id/editorial_source_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:layout_weight="1"
+                                android:text="Source NAme"
+                                android:textColor="@color/white"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:textStyle="italic" />
+
+                            <TextView
+                                android:id="@+id/editorial_date_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:layout_weight="1"
+                                android:text="Date"
+                                android:textColor="@color/white"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:textStyle="italic" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -124,21 +167,20 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="8dp"
-                                app:cardBackgroundColor="#b115ff"
+                                app:cardBackgroundColor="#ff1852"
                                 app:cardCornerRadius="4dp"
 
                                 >
 
 
                                 <TextView
-                                    android:id="@+id/editorial_date_textview"
+                                    android:id="@+id/editorial_tag_textview"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_margin="4dp"
-                                    android:layout_marginLeft="200dp"
-                                    android:text="Date"
-                                    android:textColor="@color/white"
-                                    android:textSize="16sp" />
+                                    android:layout_margin="8dp"
+                                    android:text="Tag"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/white" />
 
                             </android.support.v7.widget.CardView>
 
@@ -151,13 +193,30 @@
 
                 </android.support.v7.widget.CardView>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:text="----------------------------------------------------------------------------------------------------"
+                    android:textAlignment="center" />
+
 
                 <TextView
                     android:id="@+id/editorial_text_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:layout_margin="12dp"
+                    android:layout_margin="8dp"
                     android:text="this is a demo9 editorialo text nothing moch jus to show how this will look in this activty and other things \n some more text is shown for testing purpose and other thins \n please dont read it and waste yourtime instead go n watch some cool movies or go for a walk ,chill out with buddy \n this will go on and on and on for ever"
                     android:textColor="@color/heading_color"
                     android:textColorLink="@color/heading_color"
@@ -169,6 +228,7 @@
 
     </RelativeLayout>
 
+ </LinearLayout>
 
     <!--layout of bottom sheet for showing word meaning and translation-->
     <RelativeLayout
@@ -268,10 +328,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/editorial_bottomsheet_parofspeech_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/editorial_bottomsheet_synonyms_layout"
-            android:id="@+id/editorial_bottomsheet_parofspeech_layout"
 
             android:orientation="vertical">
 
@@ -305,21 +365,15 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/editorial_bottomSheet_add_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ADD To Vacabulary"
-            android:background="@color/white"
             android:layout_below="@+id/editorial_bottomsheet_parofspeech_layout"
-            android:id="@+id/editorial_bottomSheet_add_button"
-            />
-
-
+            android:background="@color/white"
+            android:text="ADD To Vacabulary" />
 
 
     </RelativeLayout>
-
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>
