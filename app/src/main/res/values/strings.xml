@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Editorial</string>
+
+
+    <string name="banner_ad_unit_id">ca-app-pub-8455191357100024/2064940399/</string>
+    <string name="editorialList_banner_ad_unit_id">ca-app-pub-8455191357100024/2064940399/</string>
+
 </resources>

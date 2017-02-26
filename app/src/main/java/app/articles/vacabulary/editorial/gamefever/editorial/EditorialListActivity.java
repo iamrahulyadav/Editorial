@@ -18,6 +18,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ public class EditorialListActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private boolean isRefreshing = true;
     private  boolean isSplashScreenVisible =true;
+    public static boolean isShowingAd =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,9 @@ public class EditorialListActivity extends AppCompatActivity {
 
         progressBar=(ProgressBar)findViewById(R.id.editoriallist_activity_progressbar);
         progressBar.setVisibility(View.VISIBLE);
-
+        if(isShowingAd) {
+            initializeAds();
+        }
 
 
 
@@ -273,7 +280,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
         addMoreButton.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         isRefreshing =false;
 
     }
@@ -345,6 +352,17 @@ public class EditorialListActivity extends AppCompatActivity {
             fetchEditorialGeneralList();
             isRefreshing =true;
         }
+
+    }
+
+
+    public void initializeAds(){
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
+        mAdView.setVisibility(View.VISIBLE);
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        mAdView.loadAd(adRequest);
 
     }
 

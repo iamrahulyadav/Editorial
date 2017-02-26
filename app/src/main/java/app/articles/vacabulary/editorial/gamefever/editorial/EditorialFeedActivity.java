@@ -20,6 +20,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.text.BreakIterator;
 import java.util.Locale;
 
@@ -59,6 +64,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         View bottomSheet = findViewById( R.id.editorial_activity_bottom_sheet );
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        if(EditorialListActivity.isShowingAd) {
+            initializeAds();
+        }
 
 
 
@@ -264,7 +273,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
        init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
-        findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.INVISIBLE);
+        findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
 
     }
 
@@ -353,5 +362,15 @@ Dictionary dictionary =new Dictionary(selectedWord);
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void initializeAds(){
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        AdView mAdView = (AdView) findViewById(R.id.editorialfeed_activity_adView);
+        mAdView.setVisibility(View.VISIBLE);
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        mAdView.loadAd(adRequest);
+
     }
 }
