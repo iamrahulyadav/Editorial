@@ -323,9 +323,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        String shareBody = "The best Editorial App ";
+
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 

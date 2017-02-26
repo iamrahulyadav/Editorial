@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>isShowingAd</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>listLimit</key>
+        <value>20</value>
+    </entry>
+    <entry>
+        <key>shareLink</key>
+        <value>no Link</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->
