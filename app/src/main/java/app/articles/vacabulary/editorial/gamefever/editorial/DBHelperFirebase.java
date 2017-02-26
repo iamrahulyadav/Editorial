@@ -144,7 +144,7 @@ public class DBHelperFirebase {
         DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
         Query query;
         if (isFirst) {
-            query = myRef2.orderByChild("editorialID").limitToLast(limit);
+            query = myRef2.limitToLast(limit);
         } else {
             query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
 
