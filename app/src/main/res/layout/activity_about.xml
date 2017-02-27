@@ -121,6 +121,7 @@
                     android:background="@color/colorPrimary"
                     android:text="Email Us"
                     android:textColor="@color/colorAccent"
+                    android:onClick="sendEmailToCraftyStudio"
 
                     />
 

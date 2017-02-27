@@ -1,8 +1,10 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -24,6 +26,20 @@ public class AboutActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void sendEmailToCraftyStudio(View view) {
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"acraftystudio@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion for Editorial App");
+        intent.putExtra(Intent.EXTRA_TEXT, "Your suggestion here \n");
+
+        intent.setType("message/rfc822");
+
+        startActivity(Intent.createChooser(intent, "Select Email Sending App"));
+
     }
 
 }
