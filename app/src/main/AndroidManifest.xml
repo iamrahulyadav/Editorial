@@ -21,6 +21,11 @@
         </activity>
         <activity android:name=".VacabularyActivity"></activity>
         <activity android:name=".AboutActivity"></activity>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
+
     </application>
 
 </manifest>
