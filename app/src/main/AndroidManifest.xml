@@ -9,24 +9,18 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme"         >
-        <activity android:name=".TestActivity">
-
-        </activity>
-        <activity android:name=".EditorialFeedActivity"
-            />
-        <activity android:name=".EditorialListActivity"  >
+        android:theme="@style/MyMaterialTheme">
+        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".EditorialFeedActivity" />
+        <activity android:name=".EditorialListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VacabularyActivity"
-
-            >
-
-        </activity>
+        <activity android:name=".VacabularyActivity"></activity>
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>

@@ -333,6 +333,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onAboutClick() {
+        Intent i = new Intent(this ,AboutActivity.class);
+        startActivity(i);
     }
 
     private void onRefreashClick() {

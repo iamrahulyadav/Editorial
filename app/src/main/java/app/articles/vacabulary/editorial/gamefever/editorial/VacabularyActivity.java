@@ -143,6 +143,8 @@ public class VacabularyActivity extends AppCompatActivity {
     }
 
     private void onAboutClick() {
+        Intent i = new Intent(this ,AboutActivity.class);
+        startActivity(i);
     }
 
     private void onRefreashClick() {
