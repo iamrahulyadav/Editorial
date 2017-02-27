@@ -24,6 +24,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class EditorialListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private EditorialGeneralInfoAdapter mAdapter;
 
-    private ListView mDrawerList;
-    private ArrayAdapter<String> mDrawerAdapter;
+   // private ListView mDrawerList;
+   // private ArrayAdapter<String> mDrawerAdapter;
     View addMoreButton;
     ProgressBar progressBar;
     private boolean isRefreshing = true;
@@ -63,6 +64,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_editorial_list);
         isSplashScreenVisible=false;
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.editoriallist_activity_toolbar);
         setSupportActionBar(toolbar);
@@ -411,6 +413,7 @@ public class EditorialListActivity extends AppCompatActivity {
          EditorialListActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
 
         try{
+            FirebaseCrash.log("Value of isShowingad isWrong");
             EditorialListActivity.isShowingAd =Boolean.valueOf( mFirebaseRemoteConfig.getString("isShowingAd"));
 
         }catch(Exception e){
@@ -419,6 +422,7 @@ public class EditorialListActivity extends AppCompatActivity {
         }
 
         try{
+            FirebaseCrash.log("Value of listLimit isWrong");
             EditorialListActivity.listLimit =Integer.valueOf( mFirebaseRemoteConfig.getString("listLimit"));
 
         }catch(Exception e){

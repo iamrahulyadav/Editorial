@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.text.BreakIterator;
 import java.util.Locale;
@@ -96,23 +97,32 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void init(String textToShow) {
-        String definition = textToShow;
-        TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
-        definitionView.setMovementMethod(LinkMovementMethod.getInstance());
-        definitionView.setText(definition, TextView.BufferType.SPANNABLE);
-        Spannable spans = (Spannable) definitionView.getText();
-        BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
-        iterator.setText(definition);
-        int start = iterator.first();
-        for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
-                .next()) {
-            String possibleWord = definition.substring(start, end);
-            if (Character.isLetterOrDigit(possibleWord.charAt(0))) {
-                ClickableSpan clickSpan = getClickableSpan(possibleWord);
-                spans.setSpan(clickSpan, start, end,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        try {
+            FirebaseCrash.log("Showing spannable text");
+            String definition = textToShow;
+            TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+            definitionView.setMovementMethod(LinkMovementMethod.getInstance());
+            definitionView.setText(definition, TextView.BufferType.SPANNABLE);
+            Spannable spans = (Spannable) definitionView.getText();
+            BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
+            iterator.setText(definition);
+            int start = iterator.first();
+            for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
+                    .next()) {
+                String possibleWord = definition.substring(start, end);
+                if (Character.isLetterOrDigit(possibleWord.charAt(0))) {
+                    ClickableSpan clickSpan = getClickableSpan(possibleWord);
+                    spans.setSpan(clickSpan, start, end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
+        }catch(Exception e){
+            TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+            definitionView.setText(textToShow);
+
         }
+
     }
 
     public void fetchEditorial(String id) {
@@ -334,6 +344,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
+/*
 
     public void addToDictionary(View view) {
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
@@ -351,6 +362,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         databaseHandler.addToDictionary(dictionary);
     }
+*/
 
     public boolean onSupportNavigateUp() {
         onBackPressed();

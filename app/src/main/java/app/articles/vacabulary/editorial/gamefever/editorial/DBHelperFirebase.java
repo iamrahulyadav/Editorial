@@ -1,5 +1,6 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,13 +60,13 @@ public class DBHelperFirebase {
                 EditorialFullInfo editorialFullInfo = new EditorialFullInfo(editorialGeneralInfo, editorialExtraInfo);
 
 
-                onEditorialFullInfoById(editorialFullInfo);
+                //onEditorialFullInfoById(editorialFullInfo);
                 activity.onGetEditorialFullInfo(editorialFullInfo);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                FirebaseCrash.report(new Exception("article cannot be loadede"));
             }
         });
 
@@ -170,6 +171,8 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+
 
             }
         });
