@@ -1,6 +1,9 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -83,6 +86,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         DBHelperFirebase dbHelper = new DBHelperFirebase();
         dbHelper.getEditorialFullInfoByID(editorialGeneralInfo, this);
+
+        if(!isNetworkAvailable()){
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+        }
 
         TextView tv = (TextView) findViewById(R.id.editorial_heading_textview);
         tv.setText(editorialGeneralInfo.getEditorialHeading());
@@ -382,4 +389,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void readFullArticle(View view) {
         speakOutWord(editorialText);
     }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 }

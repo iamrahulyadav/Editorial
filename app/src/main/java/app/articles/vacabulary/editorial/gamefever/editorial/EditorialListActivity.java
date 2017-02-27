@@ -1,8 +1,12 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -54,6 +58,10 @@ public class EditorialListActivity extends AppCompatActivity {
         initializeRemoteConfig();
 
         fetchEditorialGeneralList();
+
+        if(!isNetworkAvailable()){
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+        }
 
         initializeSplashScreen();
 
@@ -431,6 +439,16 @@ public class EditorialListActivity extends AppCompatActivity {
         }
 
     }
+
+
+
+        private boolean isNetworkAvailable() {
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }
+
 
 
 }
