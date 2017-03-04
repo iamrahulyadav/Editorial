@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="All" />
+
+        <item
+            android:id="@+id/nav_the_hindu"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="The Hindu" />
+        <item
+            android:id="@+id/nav_financial_express"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Financial Express" />
+        <item
+            android:id="@+id/nav_economic_times"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Economic Times" />
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+
+            <item
+                android:id="@+id/nav_vacabulary"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Vacublary" />
+
+
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+
+            <item
+                android:id="@+id/nav_hindu_daily_note"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Hindu Daily Notes" />
+
+            <item
+                android:id="@+id/nav_about_us"
+                android:icon="@drawable/ic_menu_send"
+                android:title="About Us" />
+
+            <item
+                android:id="@+id/nav_tutorial"
+                android:icon="@drawable/ic_menu_send"
+                android:title="How to Use" />
+
+        </menu>
+    </item>
+
+</menu>

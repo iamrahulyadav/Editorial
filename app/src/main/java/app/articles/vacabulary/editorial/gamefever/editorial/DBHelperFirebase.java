@@ -180,10 +180,55 @@ public class DBHelperFirebase {
 
     }
 
-    private void onFetchEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist, TestActivity activity) {
+
+
+    public void fetchEditorialList(int limit, String end, final EditorialListWithNavActivity activity, final boolean isFirst) {
+        /*return list of editorial of size limit which end at end*/
+
+        DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
+        Query query;
+        if (isFirst) {
+            query = myRef2.limitToLast(limit);
+        } else {
+            query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
+
+
+
+        }
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo =  ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
+                activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist , isFirst);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+
+
+            }
+        });
+
 
     }
 
+
+
+
+    private void onFetchEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist, TestActivity activity) {
+
+    }
 
 
 

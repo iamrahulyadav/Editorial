@@ -5,5 +5,11 @@
     <string name="banner_ad_unit_id">ca-app-pub-8455191357100024/2064940399/</string>
     <string name="editorialList_banner_ad_unit_id">ca-app-pub-8455191357100024/2064940399/</string>
     <string name="aboutActivity_craftyStudio_contactString">For any issue related to app Contact us At</string>
+    <string name="title_activity_editorial_list_with_nav">EditorialListWithNavActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>
