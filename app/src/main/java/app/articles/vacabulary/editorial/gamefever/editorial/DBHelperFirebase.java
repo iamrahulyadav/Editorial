@@ -35,7 +35,7 @@ public class DBHelperFirebase {
                 EditorialFullInfo editorialFullInfo = new EditorialFullInfo(editorialGeneralInfo, editorialExtraInfo);
 
 
-                onEditorialFullInfoById(editorialFullInfo);
+
                 activity.onGetEditorialFullInfo(editorialFullInfo);
             }
 
@@ -57,6 +57,7 @@ public class DBHelperFirebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 EditorialExtraInfo editorialExtraInfo =  dataSnapshot.getValue(EditorialExtraInfo.class);
 
+
                 EditorialFullInfo editorialFullInfo = new EditorialFullInfo(editorialGeneralInfo, editorialExtraInfo);
 
 
@@ -73,9 +74,6 @@ public class DBHelperFirebase {
     }
 
 
-    private void onEditorialFullInfoById(EditorialFullInfo editorialFullInfo) {
-    /*callback Function notifying data is fetched succesfully*/
-    }
 
     public void insertEditorial(EditorialFullInfo editorialFullInfo) {
         /*insert editorials detail to two diffirent node
@@ -124,7 +122,6 @@ public class DBHelperFirebase {
                     editorialGeneralInfoArraylist.add(editorialGeneralInfo);
                 }
 
-                onFetchEditorialList(editorialGeneralInfoArraylist, activity);
                 activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
 
             }
@@ -225,9 +222,10 @@ public class DBHelperFirebase {
 
 
 
+    public void insertComment(String editorialID , Comment userComment){
 
-    private void onFetchEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist, TestActivity activity) {
-
+        DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialID +"/"+"Comments" );
+        myRef.push().setValue(userComment);
     }
 
 

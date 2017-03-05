@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +32,18 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
 public class EditorialFeedActivity extends AppCompatActivity implements
         TextToSpeech.OnInitListener {
 
-    String editorialText = "";
+
+    EditorialFullInfo currentEditorialFullInfo = new EditorialFullInfo(new EditorialGeneralInfo( ),new EditorialExtraInfo());
 
     private TextToSpeech tts;
 
@@ -62,7 +70,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         translateText = (TextView) findViewById(R.id.editorial_feed_cardview_textview);
 
-        init(editorialText);
+
 
         View bottomSheet = findViewById(R.id.editorial_activity_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -87,8 +95,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         DBHelperFirebase dbHelper = new DBHelperFirebase();
         dbHelper.getEditorialFullInfoByID(editorialGeneralInfo, this);
 
+        currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
+
         if(!isNetworkAvailable()){
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+            Snackbar.make(translateText, "No Network", Snackbar.LENGTH_LONG)
+                    .setAction("No action", null).show();
         }
 
         TextView tv = (TextView) findViewById(R.id.editorial_heading_textview);
@@ -132,25 +144,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-    public void fetchEditorial(String id) {
-        //call to fetch editorial object from firebase db
-    }
-
-    public void updateEditorialFetch(String editorial) {
-
-        TextView tv;
-        tv = (TextView) findViewById(R.id.editorial_heading_textview);
-//initialize heading
-        tv = (TextView) findViewById(R.id.editorial_date_textview);
-//initialize date
-        tv = (TextView) findViewById(R.id.editorial_source_textview);
-//initialize source
-        tv = (TextView) findViewById(R.id.editorial_text_textview);
-//initialize text
-        init(editorialText);
 
 
-    }
 
     private ClickableSpan getClickableSpan(final String word) {
         return new ClickableSpan() {
@@ -282,8 +277,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
         init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
-        editorialText =editorialFullInfo.getEditorialExtraInfo().getEditorialText();
+        currentEditorialFullInfo =editorialFullInfo;
         findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
+        initializeCommentList();
+
 
     }
 
@@ -351,25 +348,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
-/*
 
-    public void addToDictionary(View view) {
-        DatabaseHandler databaseHandler = new DatabaseHandler(this);
-        Dictionary dictionary = new Dictionary(selectedWord);
-
-        TextView tv;
-        tv = (TextView) findViewById(R.id.editorial_bottomsheet_meaning_textview);
-        dictionary.setWordMeaning(tv.getText().toString());
-        tv = (TextView) findViewById(R.id.editorial_bottomsheet_partspeech_textview);
-        dictionary.setWordPartOfSpeech(tv.getText().toString());
-
-        tv = (TextView) findViewById(R.id.editorial_bottomsheet_synonyms_textview);
-        dictionary.setWordsynonym(new String[]{tv.getText().toString()});
-
-
-        databaseHandler.addToDictionary(dictionary);
-    }
-*/
 
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -387,7 +366,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void readFullArticle(View view) {
-        speakOutWord(editorialText);
+        speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
     }
 
 
@@ -396,6 +375,27 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+
+
+
     }
+
+    public void initializeCommentList(){
+        ListView commentListView =(ListView) findViewById(R.id.editorialFeed_comments_listView);
+
+        Toast.makeText(this, "commentList", Toast.LENGTH_SHORT).show();
+        ArrayList<Comment> commentList =new ArrayList<>();
+        for (Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values()){
+            commentList.add(comment);
+        }
+
+        CommentsListViewAdapter mCommentAdapter =new CommentsListViewAdapter(this , commentList);
+        Toast.makeText(this, "content "+commentList.get(0).getCommentText(), Toast.LENGTH_SHORT).show();
+        commentListView.setAdapter(mCommentAdapter);
+
+    }
+
+
+
 
 }
