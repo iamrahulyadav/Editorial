@@ -4,8 +4,343 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_editorial_feed"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/editorialfeed_activity_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+        </android.support.design.widget.AppBarLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <!-- layout of bottom  translation cardview  -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/editorial_feed_cardview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/ic_lock_silent_mode_off"
+                        android:onClick="readFullArticle" />
+
+                    <TextView
+                        android:id="@+id/editorial_feed_cardview_textview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onDictionaryClick"
+                        android:text="Tap on Word"
+                        android:textAlignment="center"
+                        android:textColor="#ffffff"
+                        android:textSize="24sp" />
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <!-- layout of full activity heading + source + date + texts textview included-->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/editorial_feed_cardview"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/editorialFeed_heading_cardview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="@color/editorialFeedHeadingBGColor"
+                        app:cardCornerRadius="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/editorial_heading_textview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:onClick="readFullArticle"
+                                android:text="Heading text is shown here inh this textview do you get this"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:textColor="@color/white"
+                                android:textSize="25sp" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    app:cardBackgroundColor="#e72f5a"
+                                    app:cardCornerRadius="4dp">
+
+
+                                </android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:id="@+id/editorial_source_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:layout_weight="1"
+                                    android:text="Source NAme"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:textStyle="italic" />
+
+                                <TextView
+                                    android:id="@+id/editorial_date_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:layout_weight="1"
+                                    android:text="Date"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+
+                                    android:textStyle="italic" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:layout_marginRight="6dp"
+                                    app:cardBackgroundColor="#ff1852"
+                                    app:cardCornerRadius="4dp"
+
+                                    >
+
+                                </android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:id="@+id/editorial_tag_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="4dp"
+                                    android:text="Tag"
+                                    android:textColor="@color/editorialListTagColor"
+                                    android:textSize="20sp" />
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                    </android.support.v7.widget.CardView>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="----------------------------------------------------------------------------------------------------"
+                        android:textAlignment="center" />
+
+
+                    <TextView
+                        android:id="@+id/editorial_text_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_margin="8dp"
+                        android:text=""
+                        android:textColor="@color/heading_color"
+                        android:textColorLink="@color/heading_color"
+                        android:textSize="20sp" />
+
+                    <ProgressBar
+                        android:id="@+id/editorialfeed_activity_progressbar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:background="@color/editorialFeedHeadingBGColor" />
+
+                    <com.google.android.gms.ads.AdView
+                        android:id="@+id/editorialfeed_activity_adView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="gone"
+                        app:adSize="BANNER"
+                        app:adUnitId="@string/banner_ad_unit_id">
+
+                    </com.google.android.gms.ads.AdView>
+
+                    <LinearLayout
+                        android:id="@+id/editorialFeed_commentsystem_linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:cardBackgroundColor="@color/editorialFeedHeadingBGColor">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:text="Comments"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="24dp" />
+
+
+
+
+
+                        </android.support.v7.widget.CardView>
+
+                        <ListView
+                            android:id="@+id/editorialFeed_comments_listView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:nestedScrollingEnabled="true"
+                            android:isScrollContainer="false">
+
+                        </ListView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20sp"
+                            app:cardBackgroundColor="@color/editorialFeedHeadingBGColor">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="12dp"
+                                    android:text="Add Comment"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/white"
+                                    android:textSize="16dp" />
+
+                                <EditText
+                                    android:id="@+id/editorialFeed_commenttext_edittext"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Write your comment"
+                                    android:inputType="text"
+                                    android:maxLines="5"
+                                    android:minLines="2"
+                                    android:textColor="@color/white"
+                                    android:textColorHint="@color/white" />
+
+                                <EditText
+                                    android:id="@+id/editorialFeed_commentemail_edittext"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Your Email"
+                                    android:inputType="textEmailAddress"
+                                    android:maxLines="5"
+                                    android:minLines="2"
+                                    android:requiresFadingEdge="vertical"
+                                    android:textColor="@color/white"
+                                    android:textColorHint="@color/white" />
+
+                                <Button
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:onClick="insertCommentBtnClick"
+                                    android:text="Post"
+                                    android:textColor="@color/editorialFeedHeadingBGColor" />
+
+
+                            </LinearLayout>
+
+
+                        </android.support.v7.widget.CardView>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
+
+
+
+
+    </LinearLayout>
 
     <!--layout of bottom sheet for showing word meaning and translation-->
     <RelativeLayout
@@ -151,250 +486,5 @@
 
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/editorialfeed_activity_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-
-        </android.support.design.widget.AppBarLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <!-- layout of bottom  translation cardview  -->
-            <android.support.v7.widget.CardView
-                android:id="@+id/editorial_feed_cardview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/ic_lock_silent_mode_off"
-                        android:onClick="readFullArticle" />
-
-                    <TextView
-                        android:id="@+id/editorial_feed_cardview_textview"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="onDictionaryClick"
-                        android:text="Tap on Word"
-                        android:textAlignment="center"
-                        android:textColor="#ffffff"
-                        android:textSize="24sp" />
-
-
-                </LinearLayout>
-
-
-            </android.support.v7.widget.CardView>
-
-            <!-- layout of full activity heading + source + date + texts textview included-->
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/editorial_feed_cardview"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/editorialFeed_heading_cardview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="@color/editorialFeedHeadingBGColor"
-                        app:cardCornerRadius="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/editorial_heading_textview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:onClick="readFullArticle"
-                                android:text="Heading text is shown here inh this textview do you get this"
-                                android:textAlignment="center"
-                                android:textAllCaps="true"
-                                android:textColor="@color/white"
-                                android:textSize="25sp"
-
-                                />
-
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <android.support.v7.widget.CardView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    app:cardBackgroundColor="#e72f5a"
-                                    app:cardCornerRadius="4dp">
-
-
-                                </android.support.v7.widget.CardView>
-
-                                <TextView
-                                    android:id="@+id/editorial_source_textview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:layout_weight="1"
-                                    android:text="Source NAme"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/white"
-                                    android:textSize="16sp"
-                                    android:textStyle="italic" />
-
-                                <TextView
-                                    android:id="@+id/editorial_date_textview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:layout_weight="1"
-                                    android:text="Date"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/white"
-                                    android:textSize="16sp"
-
-                                    android:textStyle="italic" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1" />
-
-                                <android.support.v7.widget.CardView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginRight="6dp"
-                                    app:cardBackgroundColor="#ff1852"
-                                    app:cardCornerRadius="4dp"
-
-                                    >
-
-                                </android.support.v7.widget.CardView>
-
-                                <TextView
-                                    android:id="@+id/editorial_tag_textview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="4dp"
-                                    android:text="Tag"
-                                    android:textColor="@color/editorialListTagColor"
-                                    android:textSize="20sp" />
-
-
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-
-
-                    </android.support.v7.widget.CardView>
-
-
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:text="----------------------------------------------------------------------------------------------------"
-                        android:textAlignment="center" />
-
-
-                    <TextView
-                        android:id="@+id/editorial_text_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:layout_margin="8dp"
-                        android:text=""
-                        android:textColor="@color/heading_color"
-                        android:textColorLink="@color/heading_color"
-                        android:textSize="20sp" />
-
-                    <ProgressBar
-                        android:id="@+id/editorialfeed_activity_progressbar"
-                        style="?android:attr/progressBarStyle"
-                        android:background="@color/editorialFeedHeadingBGColor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="25dp" />
-
-                    <com.google.android.gms.ads.AdView
-                        android:id="@+id/editorialfeed_activity_adView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:visibility="gone"
-                        app:adSize="BANNER"
-                        app:adUnitId="@string/banner_ad_unit_id">
-
-                    </com.google.android.gms.ads.AdView>
-
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="400dp"
-                        android:id="@+id/editorialFeed_comments_listView"
-
-                        >
-
-                    </ListView>
-
-
-                </LinearLayout>
-
-            </ScrollView>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>

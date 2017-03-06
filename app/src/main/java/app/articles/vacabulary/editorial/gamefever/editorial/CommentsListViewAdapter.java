@@ -23,7 +23,7 @@ public class CommentsListViewAdapter extends ArrayAdapter<Comment>{
 
 
     public CommentsListViewAdapter(Activity context ,ArrayList<Comment> commentList) {
-        super(context, R.layout.comment_listview_item_layout);
+        super(context, R.layout.comment_listview_item_layout ,commentList);
         this.commentList =commentList;
         this.context = context;
     }
@@ -42,5 +42,18 @@ public class CommentsListViewAdapter extends ArrayAdapter<Comment>{
 
         return  listViewItem;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

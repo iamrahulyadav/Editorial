@@ -20,7 +20,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +47,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         TextToSpeech.OnInitListener {
 
 
-    EditorialFullInfo currentEditorialFullInfo = new EditorialFullInfo(new EditorialGeneralInfo( ),new EditorialExtraInfo());
+    EditorialFullInfo currentEditorialFullInfo = new EditorialFullInfo(new EditorialGeneralInfo(), new EditorialExtraInfo());
 
     private TextToSpeech tts;
 
@@ -71,12 +75,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         translateText = (TextView) findViewById(R.id.editorial_feed_cardview_textview);
 
 
-
         View bottomSheet = findViewById(R.id.editorial_activity_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        if (EditorialListActivity.isShowingAd) {
+        if ( EditorialListActivity.isShowingAd ) {
             initializeAds();
         }
 
@@ -97,7 +100,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
 
-        if(!isNetworkAvailable()){
+        if ( !isNetworkAvailable() ) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
             Snackbar.make(translateText, "No Network", Snackbar.LENGTH_LONG)
                     .setAction("No action", null).show();
@@ -127,24 +130,22 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
             iterator.setText(definition);
             int start = iterator.first();
-            for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
-                    .next()) {
+            for ( int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
+                    .next() ) {
                 String possibleWord = definition.substring(start, end);
-                if (Character.isLetterOrDigit(possibleWord.charAt(0))) {
+                if ( Character.isLetterOrDigit(possibleWord.charAt(0)) ) {
                     ClickableSpan clickSpan = getClickableSpan(possibleWord);
                     spans.setSpan(clickSpan, start, end,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
             definitionView.setText(textToShow);
 
         }
 
     }
-
-
 
 
     private ClickableSpan getClickableSpan(final String word) {
@@ -181,7 +182,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void updateTranslateText(Translation translation) {
-        if (translation.word.equalsIgnoreCase(translateText.getText().toString().trim())) {
+        if ( translation.word.equalsIgnoreCase(translateText.getText().toString().trim()) ) {
             translateText.setText(translation.word + " = " + translation.wordTranslation);
         }
     }
@@ -194,7 +195,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv.setText(dictionary.getWordPartOfSpeech());
         tv = (TextView) findViewById(R.id.editorial_bottomsheet_synonyms_textview);
         String synonymstring = "";
-        for (int i = 0; i < dictionary.getWordsynonym().length; i++) {
+        for ( int i = 0; i < dictionary.getWordsynonym().length; i++ ) {
             synonymstring = synonymstring + dictionary.getWordsynonym()[i] + " , ";
         }
         tv.setText(synonymstring);
@@ -240,7 +241,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Don't forget to shutdown tts!
-        if (tts != null) {
+        if ( tts != null ) {
             tts.stop();
             tts.shutdown();
         }
@@ -250,12 +251,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     public void onInit(int status) {
 
-        if (status == TextToSpeech.SUCCESS) {
+        if ( status == TextToSpeech.SUCCESS ) {
 
             int result = tts.setLanguage(Locale.US);
 
-            if (result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            if ( result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED ) {
                 Log.e("TTS", "This Language is not supported");
             } else {
                 // btnSpeak.setEnabled(true);
@@ -277,7 +278,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
         init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
-        currentEditorialFullInfo =editorialFullInfo;
+        currentEditorialFullInfo = editorialFullInfo;
         findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
         initializeCommentList();
 
@@ -377,25 +378,63 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
 
-
     }
 
-    public void initializeCommentList(){
-        ListView commentListView =(ListView) findViewById(R.id.editorialFeed_comments_listView);
+    public void initializeCommentList() {
 
-        Toast.makeText(this, "commentList", Toast.LENGTH_SHORT).show();
-        ArrayList<Comment> commentList =new ArrayList<>();
-        for (Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values()){
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_commentsystem_linearLayout);
+        linearLayout.setVisibility(View.VISIBLE);
+
+        ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
+
+        ArrayList<Comment> commentList = new ArrayList<>();
+        if(currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null){
+            Comment comment =new Comment();
+            comment.setCommentText("No Comment");
+            comment.seteMailID("");
             commentList.add(comment);
+        }else {
+            for ( Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values() ) {
+                commentList.add(comment);
+            }
         }
 
-        CommentsListViewAdapter mCommentAdapter =new CommentsListViewAdapter(this , commentList);
-        Toast.makeText(this, "content "+commentList.get(0).getCommentText(), Toast.LENGTH_SHORT).show();
+        CommentsListViewAdapter mCommentAdapter = new CommentsListViewAdapter(this, commentList);
         commentListView.setAdapter(mCommentAdapter);
+
+
+
+
 
     }
 
 
+    public void insertCommentBtnClick(View view) {
+
+        EditText editText = (EditText) findViewById(R.id.editorialFeed_commentemail_edittext);
+        String emailString = editText.getText().toString();
+        EditText editText2 = (EditText) findViewById(R.id.editorialFeed_commenttext_edittext);
+        String commentString = editText2.getText().toString();
+
+        if ( emailString.length() > 5 && commentString.length() > 10 ) {
+            DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+            Comment commentToPost = new Comment();
+            commentToPost.setCommentText(commentString);
+            commentToPost.seteMailID(emailString);
+
+            dbHelperFirebase.insertComment(currentEditorialFullInfo.getEditorialGeneralInfo()
+                    .getEditorialID(), commentToPost);
+
+            editText.setText("");
+            editText2.setText("");
+            Toast.makeText(this, "Posting", Toast.LENGTH_SHORT).show();
 
 
+
+        }else{
+            Toast.makeText(this, "Comment Size is small", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 }

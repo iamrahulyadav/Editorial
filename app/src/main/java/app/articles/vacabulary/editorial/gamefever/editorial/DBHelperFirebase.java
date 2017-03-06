@@ -224,7 +224,8 @@ public class DBHelperFirebase {
 
     public void insertComment(String editorialID , Comment userComment){
 
-        DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialID +"/"+"Comments" );
+        DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialID
+                +"/"+"comments" );
         myRef.push().setValue(userComment);
     }
 
