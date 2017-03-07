@@ -4,24 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -29,18 +28,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.text.BreakIterator;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class EditorialFeedActivity extends AppCompatActivity implements
@@ -54,6 +51,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     TextView translateText;
     private BottomSheetBehavior mBottomSheetBehavior;
     public String selectedWord = "null";
+
+    CommentsListViewAdapter mCommentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +158,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onClick(View widget) {
                 Log.d("tapped on:", mWord);
+
 
                 onWordTap(mWord);
             }
@@ -388,23 +388,61 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
 
         ArrayList<Comment> commentList = new ArrayList<>();
-        if(currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null){
-            Comment comment =new Comment();
+
+        if ( currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null ) {
+            Comment comment = new Comment();
             comment.setCommentText("No Comment");
             comment.seteMailID("");
             commentList.add(comment);
-        }else {
+
+
+        } else {
             for ( Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values() ) {
                 commentList.add(comment);
             }
         }
 
-        CommentsListViewAdapter mCommentAdapter = new CommentsListViewAdapter(this, commentList);
+         mCommentAdapter = new CommentsListViewAdapter(this, commentList);
         commentListView.setAdapter(mCommentAdapter);
 
+        resizeCommentListView();
 
 
 
+    }
+
+    private void resizeCommentListView() {
+        ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
+
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+
+        switch (mCommentAdapter.getCount()) {
+
+            case 1:
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50,
+                        getResources()
+                                .getDisplayMetrics());
+                break;
+
+            case 2:
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
+                        getResources()
+                                .getDisplayMetrics());
+                break;
+            case 3:
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150,
+                        getResources()
+                                .getDisplayMetrics());
+                break;
+
+
+        }
+
+        ViewGroup.LayoutParams layoutParams = commentListView.getLayoutParams();
+
+        layoutParams.height = height;
+
+        commentListView.setLayoutParams(layoutParams);
 
     }
 
@@ -416,11 +454,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         EditText editText2 = (EditText) findViewById(R.id.editorialFeed_commenttext_edittext);
         String commentString = editText2.getText().toString();
 
-        if ( emailString.length() > 5 && commentString.length() > 10 ) {
+        if ( emailString.length() > 5 && commentString.length() > 3 ) {
             DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
             Comment commentToPost = new Comment();
             commentToPost.setCommentText(commentString);
             commentToPost.seteMailID(emailString);
+
+            commentToPost.setCommentDate(SimpleDateFormat.getDateInstance().format(Calendar.getInstance().getTime()));
+
 
             dbHelperFirebase.insertComment(currentEditorialFullInfo.getEditorialGeneralInfo()
                     .getEditorialID(), commentToPost);
@@ -429,9 +470,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             editText2.setText("");
             Toast.makeText(this, "Posting", Toast.LENGTH_SHORT).show();
 
+            mCommentAdapter.add(commentToPost);
+            mCommentAdapter.notifyDataSetChanged();
+            resizeCommentListView();
 
 
-        }else{
+        } else {
             Toast.makeText(this, "Comment Size is small", Toast.LENGTH_SHORT).show();
         }
 

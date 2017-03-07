@@ -34,10 +34,13 @@ public class CommentsListViewAdapter extends ArrayAdapter<Comment>{
         View listViewItem = inflater.inflate(R.layout.comment_listview_item_layout, null, true);
         TextView textViewEmail = (TextView) listViewItem.findViewById(R.id.commentItem_eMail_textView);
         TextView textViewCommentText = (TextView) listViewItem.findViewById(R.id.commentItem_commentText_textView);
+        TextView textViewCommentDate = (TextView) listViewItem.findViewById(R.id
+                .commentItem_date_textView);
 
 
         textViewEmail.setText(commentList.get(position).geteMailID());
         textViewCommentText.setText(commentList.get(position).getCommentText());
+        textViewCommentDate.setText(commentList.get(position).getCommentDate());
 
 
         return  listViewItem;

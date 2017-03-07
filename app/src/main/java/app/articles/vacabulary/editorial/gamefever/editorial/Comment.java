@@ -5,9 +5,28 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
  */
 
 public class Comment {
-    private String eMailID ,commentText ;
+    private String eMailID;
+    private String commentText;
+
+    public Comment(String commentDate, String eMailID) {
+        this.commentDate = commentDate;
+        this.eMailID = eMailID;
+    }
+
+    public String getCommentDate() {
+        return commentDate;
+    }
+
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
+    }
+
+    private String commentDate ;
 
     public Comment() {
+        this.commentDate="";
+        this.commentText="";
+        this.eMailID="";
     }
 
     public String geteMailID() {
