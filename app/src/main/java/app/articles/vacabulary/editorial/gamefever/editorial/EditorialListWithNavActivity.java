@@ -84,14 +84,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Editorial");
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -175,14 +168,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void fetchEditorialGeneralList() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListActivity.listLimit, "", this, true);
+        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, "", this, true);
 
     }
 
 
     public void loadMoreClick(View view) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
+        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get
+                (editorialListArrayList.size() - 1).getEditorialID(), this, false);
 
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -392,9 +386,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onShareClick();
                 break;
 
-            case R.id.nav_hindu_daily_note:
-                onTheHinduNoteClick();
-                break;
+
 
             case R.id.nav_about_us:
                 onAboutClick();

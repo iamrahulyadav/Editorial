@@ -319,15 +319,17 @@
 
 
     <!--layout of bottom sheet for showing word meaning and translation-->
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/editorial_activity_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_orange_light"
+        android:background="@color/editorialFeedDictionaryBottomsheetcolor"
         android:clipToPadding="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
+        android:orientation="vertical"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+
 
         >
 
@@ -342,18 +344,12 @@
             android:textSize="30sp"/>
 
 
-        <LinearLayout
-            android:id="@+id/editorial_bottomsheet_meaning_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editorial_bottomsheet_heading_textview"
-            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:cardBackgroundColor="#e72f5a"
+                app:cardBackgroundColor="@color/editorialFeedBottomsheetheadingbgcolor"
                 app:cardCornerRadius="4dp">
 
                 <TextView
@@ -376,21 +372,13 @@
                 android:text="meaning"
                 android:textAlignment="center"
                 android:textSize="20sp"/>
-        </LinearLayout>
 
-
-        <LinearLayout
-            android:id="@+id/editorial_bottomsheet_synonyms_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editorial_bottomsheet_meaning_layout"
-            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:cardBackgroundColor="#e72f5a"
+                app:cardBackgroundColor="@color/editorialFeedBottomsheetheadingbgcolor"
                 app:cardCornerRadius="4dp">
 
                 <TextView
@@ -413,21 +401,14 @@
                 android:text="synonyms"
                 android:textAlignment="center"
                 android:textSize="20sp"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/editorial_bottomsheet_parofspeech_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editorial_bottomsheet_synonyms_layout"
 
-            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:cardBackgroundColor="#e72f5a"
+                app:cardBackgroundColor="@color/editorialFeedBottomsheetheadingbgcolor"
                 app:cardCornerRadius="4dp">
 
                 <TextView
@@ -450,7 +431,6 @@
                 android:text="part of speech"
                 android:textAlignment="center"
                 android:textSize="20sp"/>
-        </LinearLayout>
 
         <Button
             android:id="@+id/editorial_bottomSheet_add_button"
@@ -458,9 +438,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/editorial_bottomsheet_parofspeech_layout"
             android:background="@color/white"
+            android:textColor="@color/colorPrimary"
+
             android:text="ADD To Vocabulary"/>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

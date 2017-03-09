@@ -13,10 +13,8 @@
     <color name="editorialHeadingWhiteTextColor">#ffffff</color>
     <color name="editorialNormalTextColor">#000000</color>
     <color name="editorialFeedHeadingBGColor">#EF5350</color>
-
-
-
-
+    <color name="editorialFeedDictionaryBottomsheetcolor">#FF8A80</color>
+    <color name="editorialFeedBottomsheetheadingbgcolor">#EF5350</color>
 
 
 </resources>
