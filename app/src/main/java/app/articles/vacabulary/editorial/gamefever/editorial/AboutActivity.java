@@ -32,7 +32,7 @@ public class AboutActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Intent.ACTION_SEND);
 
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"acraftystudio@gmail.com"});
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"appforyou@yahoo.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion for Editorial App");
         intent.putExtra(Intent.EXTRA_TEXT, "Your suggestion here \n");
 

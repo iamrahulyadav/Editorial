@@ -335,7 +335,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.editorial_list_with_nav, menu);
+        getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
         return true;
     }
 
@@ -344,14 +344,31 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                // search action
+                onAboutClick();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_refresh:
+                // refresh
+                onRefreashClick();
+                return true;
+            case R.id.action_share:
+                // help action
+                onShareClick();
+                return true;
+            case R.id.action_vacabulary:
+                // help action
+                onVacabularyClick();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

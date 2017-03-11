@@ -454,7 +454,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         EditText editText2 = (EditText) findViewById(R.id.editorialFeed_commenttext_edittext);
         String commentString = editText2.getText().toString();
 
-        if ( emailString.length() > 5 && commentString.length() > 3 ) {
+        if ( emailString.length() > 5 && commentString.length() > 1 ) {
             DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
             Comment commentToPost = new Comment();
             commentToPost.setCommentText(commentString);

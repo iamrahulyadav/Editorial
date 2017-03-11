@@ -36,11 +36,11 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
 
-         <!--   <item
+           <item
                 android:id="@+id/nav_hindu_daily_note"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_menu_send"
                 android:title="Hindu Daily Notes" />
--->
+
             <item
                 android:id="@+id/nav_about_us"
                 android:icon="@drawable/ic_menu_send"
