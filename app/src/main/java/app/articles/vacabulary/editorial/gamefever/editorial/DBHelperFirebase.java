@@ -73,6 +73,31 @@ public class DBHelperFirebase {
 
     }
 
+    public void getEditorialExtraInfoByID(final String editorialId , final EditorialListWithNavActivity activity) {
+        /*Return Full editorial object using editorial general info */
+
+        DatabaseReference myRef = database.getReference("EditorialGeneralInfo/" + editorialId);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                EditorialGeneralInfo editorialGeneralInfo =  dataSnapshot.getValue(EditorialGeneralInfo.class);
+
+
+
+
+
+                //onEditorialFullInfoById(editorialFullInfo);
+                activity.getEditorialExtraInfoByIDListner(editorialGeneralInfo);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("article cannot be loadede"));
+            }
+        });
+
+    }
+
 
 
     public void insertEditorial(EditorialFullInfo editorialFullInfo) {

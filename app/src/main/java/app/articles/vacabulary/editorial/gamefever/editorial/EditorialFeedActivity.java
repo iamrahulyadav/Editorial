@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -33,6 +35,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.net.URL;
 import java.text.BreakIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -78,7 +81,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        if ( EditorialListActivity.isShowingAd ) {
+        if (EditorialListActivity.isShowingAd) {
             initializeAds();
         }
 
@@ -99,7 +102,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
 
-        if ( !isNetworkAvailable() ) {
+        if (!isNetworkAvailable()) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
             Snackbar.make(translateText, "No Network", Snackbar.LENGTH_LONG)
                     .setAction("No action", null).show();
@@ -129,10 +132,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
             iterator.setText(definition);
             int start = iterator.first();
-            for ( int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
-                    .next() ) {
+            for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
+                    .next()) {
                 String possibleWord = definition.substring(start, end);
-                if ( Character.isLetterOrDigit(possibleWord.charAt(0)) ) {
+                if (Character.isLetterOrDigit(possibleWord.charAt(0))) {
                     ClickableSpan clickSpan = getClickableSpan(possibleWord);
                     spans.setSpan(clickSpan, start, end,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -182,7 +185,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void updateTranslateText(Translation translation) {
-        if ( translation.word.equalsIgnoreCase(translateText.getText().toString().trim()) ) {
+        if (translation.word.equalsIgnoreCase(translateText.getText().toString().trim())) {
             translateText.setText(translation.word + " = " + translation.wordTranslation);
         }
     }
@@ -195,7 +198,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv.setText(dictionary.getWordPartOfSpeech());
         tv = (TextView) findViewById(R.id.editorial_bottomsheet_synonyms_textview);
         String synonymstring = "";
-        for ( int i = 0; i < dictionary.getWordsynonym().length; i++ ) {
+        for (int i = 0; i < dictionary.getWordsynonym().length; i++) {
             synonymstring = synonymstring + dictionary.getWordsynonym()[i] + " , ";
         }
         tv.setText(synonymstring);
@@ -241,7 +244,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Don't forget to shutdown tts!
-        if ( tts != null ) {
+        if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
@@ -249,14 +252,26 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+
+
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
+    @Override
     public void onInit(int status) {
 
-        if ( status == TextToSpeech.SUCCESS ) {
+        if (status == TextToSpeech.SUCCESS) {
 
             int result = tts.setLanguage(Locale.US);
 
-            if ( result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED ) {
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS", "This Language is not supported");
             } else {
                 // btnSpeak.setEnabled(true);
@@ -329,16 +344,41 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void onShareClick() {
 
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+
+        String appCode = getString(R.string.app_code);
+        String appName = getString(R.string.app_name);
+        String packageName = getString(R.string.package_name);
+
+        String utmSource = getString(R.string.utm_source);
+        String utmCampaign = getString(R.string.utm_campaign);
+        String utmMedium = getString(R.string.utm_medium);
+
+String url = "https://"+appCode+".app.goo.gl/?link=https://editorialapp.com/"
+        +currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
+        +"&apn=" +
+        packageName+"&st=" +
+        appName+"&sd=" +
+        currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()+"&utm_source=" +
+        utmSource+"&utm_medium=" +
+        utmMedium+"&utm_campaign=" +
+        utmCampaign;
+
+        Toast.makeText(this, "Shared an article "+url, Toast.LENGTH_SHORT).show();
+
+        url=url.replaceAll(" ","+");
+
+         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListActivity.shareLink);
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, url);
+        startActivity(Intent.createChooser(sharingIntent, "Share Article via"));
+
+
+
+
     }
 
-    private void onSettingClick() {
-    }
 
     private void onAboutClick() {
         Intent i = new Intent(this, AboutActivity.class);
@@ -389,7 +429,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         ArrayList<Comment> commentList = new ArrayList<>();
 
-        if ( currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null ) {
+        if (currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null) {
             Comment comment = new Comment();
             comment.setCommentText("No Comment");
             comment.seteMailID("");
@@ -397,16 +437,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
         } else {
-            for ( Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values() ) {
+            for (Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values()) {
                 commentList.add(comment);
             }
         }
 
-         mCommentAdapter = new CommentsListViewAdapter(this, commentList);
+        mCommentAdapter = new CommentsListViewAdapter(this, commentList);
         commentListView.setAdapter(mCommentAdapter);
 
         resizeCommentListView();
-
 
 
     }
@@ -454,7 +493,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         EditText editText2 = (EditText) findViewById(R.id.editorialFeed_commenttext_edittext);
         String commentString = editText2.getText().toString();
 
-        if ( emailString.length() > 5 && commentString.length() > 1 ) {
+        if (emailString.length() > 5 && commentString.length() > 1) {
             DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
             Comment commentToPost = new Comment();
             commentToPost.setCommentText(commentString);
@@ -481,4 +520,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
+
+
 }

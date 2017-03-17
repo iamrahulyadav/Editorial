@@ -12,10 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
         <activity android:name=".TestActivity" />
-        <activity android:name=".EditorialFeedActivity" />
+        <activity android:name=".EditorialFeedActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity" android:scheme="http"/>
+                <data android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity" android:scheme="https"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".EditorialListActivity">
 
+
         </activity>
+
         <activity android:name=".VacabularyActivity" />
         <activity android:name=".AboutActivity" />
 

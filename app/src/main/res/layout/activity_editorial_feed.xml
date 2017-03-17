@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
+        <!--Tollbar layout-->
         <android.support.design.widget.AppBarLayout
             android:id="@+id/editorialfeed_activity_appbarlayout"
             android:layout_width="match_parent"
@@ -54,18 +54,38 @@
                     android:background="@android:drawable/ic_lock_silent_mode_off"
                     android:onClick="readFullArticle"/>
 
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+
+                    android:layout_height="match_parent">
+
+
                 <TextView
                     android:id="@+id/editorial_feed_cardview_textview"
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:onClick="onDictionaryClick"
                     android:text="Tap on Word"
+                    android:layout_width="match_parent"
                     android:textAlignment="center"
                     android:textColor="#ffffff"
                     android:textSize="24sp"/>
 
 
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:onClick="onDictionaryClick"
+                        android:text="Tap here for Meaaning"
+                        android:layout_width="match_parent"
+                        android:textAlignment="center"
+                        android:textColor="#ffffff"
+                        android:textSize="10sp"/>
+
+
+
+
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -315,9 +335,15 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-
-
         >
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"
+            android:src="@mipmap/bottomsheet_down_arrow"
+            />
 
 
         <TextView

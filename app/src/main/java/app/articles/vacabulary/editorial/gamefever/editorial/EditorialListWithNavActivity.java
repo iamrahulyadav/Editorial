@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,12 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
@@ -52,6 +59,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private boolean isSplashScreenVisible = true;
     public static boolean isShowingAd = false;
     public static String shareLink = "";
+
+
+
     public static int listLimit = 10;
     public String selectedSortWord = "";
 
@@ -62,13 +72,83 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         initializeRemoteConfig();
 
-        fetchEditorialGeneralList();
 
         if (!isNetworkAvailable()) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
         }
 
         initializeSplashScreen();
+
+
+// Build GoogleApiClient with AppInvite API for receiving deep links
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(EditorialListWithNavActivity.this, "Connection failed", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addApi(AppInvite.API)
+                .build();
+
+        // Check if this app was launched from a deep link. Setting autoLaunchDeepLink to true
+        // would automatically launch the deep link if one is found.
+        boolean autoLaunchDeepLink = false;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(@NonNull AppInviteInvitationResult result) {
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract deep link from Intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
+
+                                    int lastIndex = deepLink.indexOf("?",25);
+                                    String editorialID =deepLink.substring(25,lastIndex);
+                                    Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
+
+                                    fetchEditorialByID(editorialID);
+                                    // Handle the deep link. For example, open the linked
+                                    // content, or apply promotional credit to the user's
+                                    // account.
+
+                                    // ...
+                                } else {
+                                    Log.d("editorial", "getInvitation: no deep link found.");
+                                    fetchEditorialGeneralList();
+
+                                }
+                            }
+                        });
+
+
+
+
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if(isSplashScreenVisible){
+            fetchEditorialGeneralList();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isSplashScreenVisible){
+            fetchEditorialGeneralList();
+        }
+
+    }
+
+    private void fetchEditorialByID(String editorialID) {
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+        dbHelperFirebase.getEditorialExtraInfoByID( editorialID ,this);
 
     }
 
@@ -166,6 +246,23 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
+    private void onSharedLinkOpen(EditorialGeneralInfo editorialgenralInfo) {
+
+        Intent i = new Intent(this, EditorialFeedActivity.class);
+        i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
+        i.putExtra("editorialDate", editorialgenralInfo.getEditorialDate());
+        i.putExtra("editorialHeading", editorialgenralInfo.getEditorialHeading());
+        i.putExtra("editorialSource", editorialgenralInfo.getEditorialSource());
+        i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
+        i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
+
+        startActivity(i);
+
+
+    }
+
+
+
     public void fetchEditorialGeneralList() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, "", this, true);
@@ -244,6 +341,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         }
         mAdapter.notifyDataSetChanged();
+
+        setToolBarSubTitle(selectedSortWord);
 
         if(editorialListSortedArrayList.size()<5){
           // loadMoreClick();
@@ -490,5 +589,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onTutorialClick() {
     }
 
+    public void setToolBarSubTitle(String subTitle){
+        try{
+            getSupportActionBar().setSubtitle(subTitle);
+        }
+        catch (Exception e){
 
+        }
+    }
+
+
+    public void getEditorialExtraInfoByIDListner(EditorialGeneralInfo editorialGeneralInfo) {
+        onSharedLinkOpen(editorialGeneralInfo);
+    }
 }
