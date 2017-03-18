@@ -81,7 +81,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        if (EditorialListActivity.isShowingAd) {
+        if (EditorialListWithNavActivity.isShowingAd) {
             initializeAds();
         }
 
@@ -97,9 +97,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         editorialGeneralInfo.setEditorialSubHeading(i.getExtras().getString("editorialSubheading"));
         editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
 
-        DBHelperFirebase dbHelper = new DBHelperFirebase();
-        dbHelper.getEditorialFullInfoByID(editorialGeneralInfo, this);
+        boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
+        if (isBookMarked) {
+            DatabaseHandlerBookMark databasehandlerBookmark = new DatabaseHandlerBookMark(this);
+            EditorialExtraInfo editorialExtraInfo= databasehandlerBookmark.getBookMarkEditorial(editorialGeneralInfo.getEditorialID());
+    currentEditorialFullInfo.setEditorialExtraInfo(editorialExtraInfo);
+            init(editorialExtraInfo.getEditorialText());
+            findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
 
+
+        } else {
+            DBHelperFirebase dbHelper = new DBHelperFirebase();
+            dbHelper.getEditorialFullInfoByID(editorialGeneralInfo, this);
+        }
         currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
 
         if (!isNetworkAvailable()) {
@@ -353,28 +363,26 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         String utmCampaign = getString(R.string.utm_campaign);
         String utmMedium = getString(R.string.utm_medium);
 
-String url = "https://"+appCode+".app.goo.gl/?link=https://editorialapp.com/"
-        +currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
-        +"&apn=" +
-        packageName+"&st=" +
-        appName+"&sd=" +
-        currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()+"&utm_source=" +
-        utmSource+"&utm_medium=" +
-        utmMedium+"&utm_campaign=" +
-        utmCampaign;
+        String url = "https://" + appCode + ".app.goo.gl/?link=https://editorialapp.com/"
+                + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
+                + "&apn=" +
+                packageName + "&st=" +
+                appName + "&sd=" +
+                currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading() + "&utm_source=" +
+                utmSource + "&utm_medium=" +
+                utmMedium + "&utm_campaign=" +
+                utmCampaign;
 
-        Toast.makeText(this, "Shared an article "+url, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
 
-        url=url.replaceAll(" ","+");
+        url = url.replaceAll(" ", "+");
 
-         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, url);
         startActivity(Intent.createChooser(sharingIntent, "Share Article via"));
-
-
 
 
     }
@@ -386,6 +394,11 @@ String url = "https://"+appCode+".app.goo.gl/?link=https://editorialapp.com/"
     }
 
     private void onRefreashClick() {
+        /*demo for bookmark function */
+
+        DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
+        databaseHandlerBookMark.addToBookMark(currentEditorialFullInfo.getEditorialGeneralInfo(), currentEditorialFullInfo.getEditorialExtraInfo());
+        Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
 
 
     }

@@ -187,7 +187,7 @@ public class DBHelperFirebase {
                 }
 
 
-                activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
+               // activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
 
             }
 

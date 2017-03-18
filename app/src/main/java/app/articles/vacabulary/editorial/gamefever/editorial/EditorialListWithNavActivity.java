@@ -103,11 +103,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                     // Extract deep link from Intent
                                     Intent intent = result.getInvitationIntent();
                                     String deepLink = AppInviteReferral.getDeepLink(intent);
-                                    Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
+                                  //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
 
                                     int lastIndex = deepLink.indexOf("?",25);
                                     String editorialID =deepLink.substring(25,lastIndex);
-                                    Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
 
                                     fetchEditorialByID(editorialID);
                                     // Handle the deep link. For example, open the linked
@@ -240,6 +240,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSource", editorialgenralInfo.getEditorialSource());
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
+        i.putExtra("isBookMarked",false);
+
 
         startActivity(i);
 
@@ -255,6 +257,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSource", editorialgenralInfo.getEditorialSource());
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
+        i.putExtra("isBookMarked",false);
+
 
         startActivity(i);
 
@@ -284,7 +288,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void loadMoreClick() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
+        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
 
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -388,24 +392,24 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 });
 
 
-        EditorialListActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
+        EditorialListWithNavActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
 
         try {
             FirebaseCrash.log("Value of isShowingad isWrong");
-            EditorialListActivity.isShowingAd = Boolean.valueOf(mFirebaseRemoteConfig.getString("isShowingAd"));
+            EditorialListWithNavActivity.isShowingAd = Boolean.valueOf(mFirebaseRemoteConfig.getString("isShowingAd"));
 
         } catch (Exception e) {
             e.printStackTrace();
-            EditorialListActivity.isShowingAd = false;
+            EditorialListWithNavActivity.isShowingAd = false;
         }
 
         try {
             FirebaseCrash.log("Value of listLimit isWrong");
-            EditorialListActivity.listLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("listLimit"));
+            EditorialListWithNavActivity.listLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("listLimit"));
 
         } catch (Exception e) {
             e.printStackTrace();
-            EditorialListActivity.listLimit = 20;
+            EditorialListWithNavActivity.listLimit = 20;
         }
 
     }
@@ -501,7 +505,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             case R.id.nav_share:
                 onShareClick();
                 break;
-
+            case R.id.nav_hindu_daily_note:
+                onTheHinduNoteClick();
+                break;
 
 
             case R.id.nav_about_us:
@@ -532,11 +538,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListActivity.shareLink);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     private void onSettingClick() {
+
     }
 
     private void onAboutClick() {
@@ -584,6 +591,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onTheHinduNoteClick() {
+
+        Intent intent = new Intent(this , EditorialListActivity.class);
+        startActivity(intent);
     }
 
     private void onTutorialClick() {
