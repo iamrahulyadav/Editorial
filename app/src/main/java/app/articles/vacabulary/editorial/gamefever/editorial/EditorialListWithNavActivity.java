@@ -58,7 +58,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private boolean isRefreshing = true;
     private boolean isSplashScreenVisible = true;
     public static boolean isShowingAd = false;
-    public static String shareLink = "";
+    public static String shareLink = "https://play.google.com/store/apps/details?id=app.articles.vacabulary.editorial.gamefever.editorial";
 
 
 
@@ -391,8 +391,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     }
                 });
 
-
-        EditorialListWithNavActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
+/*got an static share link to use so remote config for share link is not required*/
+       // EditorialListWithNavActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
 
         try {
             FirebaseCrash.log("Value of isShowingad isWrong");
