@@ -3,8 +3,10 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +66,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
     }
 
+
     public void initializeActivity(){
 
         setContentView(R.layout.activity_editorial_list);
@@ -81,7 +84,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList ,getActivityTheme());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -136,7 +139,11 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
 
-
+    private String getActivityTheme() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPref.getString("theme_list", "Day");
+        return theme;
+    }
 
     private void onRecyclerViewItemClick(int position) {
         EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
@@ -160,7 +167,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList,getActivityTheme());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

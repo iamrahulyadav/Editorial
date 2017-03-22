@@ -23,7 +23,9 @@
     <string name="utm_source">user</string>
     <string name="utm_medium">socialmedia</string>
     <string name="utm_campaign">articlesharing</string>
-
+    <string name="pref_title_select_theme">Select Theme</string>
+    <string name="pref_title_select_font_size">Select Font Size</string>
+    <string name="pref_title_select_voice_speed">Select Voice Pitch</string>
 
 
 </resources>

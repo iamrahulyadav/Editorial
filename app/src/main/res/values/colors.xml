@@ -17,4 +17,16 @@
     <color name="editorialFeedBottomsheetheadingbgcolor">#EF5350</color>
 
 
+    <color name="dayThemeBackGroundColor">#000000</color>
+    <color name="dayThemeTextColor">#000000</color>
+    <color name="dayThemeListBackGroundColor">#000000</color>
+
+
+    <color name="nightThemeBackGroundColor">#000000</color>
+    <color name="nightThemeTextColor">#ffffff</color>
+    <color name="nightThemeListBackGroundColor">#000000</color>
+
+
+
+
 </resources>

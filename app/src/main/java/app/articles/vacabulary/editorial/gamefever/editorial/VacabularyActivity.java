@@ -1,6 +1,8 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,6 +55,14 @@ public class VacabularyActivity extends AppCompatActivity {
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+
+        setActivityTheme();
+
+    }
+
+    private void setActivityTheme() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPref.getString("theme_list", "Day");
 
     }
 

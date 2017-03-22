@@ -2,9 +2,11 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +26,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -61,9 +66,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public static String shareLink = "https://play.google.com/store/apps/details?id=app.articles.vacabulary.editorial.gamefever.editorial";
 
 
-
     public static int listLimit = 10;
     public String selectedSortWord = "";
+    private String activityCurrentTheme = "Day";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +109,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                     // Extract deep link from Intent
                                     Intent intent = result.getInvitationIntent();
                                     String deepLink = AppInviteReferral.getDeepLink(intent);
-                                  //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
+                                    //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
 
-                                    int lastIndex = deepLink.indexOf("?",25);
-                                    String editorialID =deepLink.substring(25,lastIndex);
-                                   // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
+                                    int lastIndex = deepLink.indexOf("?", 25);
+                                    String editorialID = deepLink.substring(25, lastIndex);
+                                    // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
 
                                     fetchEditorialByID(editorialID);
                                     // Handle the deep link. For example, open the linked
@@ -124,14 +130,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         });
 
 
-
-
     }
+
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        if(isSplashScreenVisible){
+        if (isSplashScreenVisible) {
             fetchEditorialGeneralList();
         }
     }
@@ -140,7 +145,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        if(isSplashScreenVisible){
+        if (isSplashScreenVisible) {
             fetchEditorialGeneralList();
         }
 
@@ -148,7 +153,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void fetchEditorialByID(String editorialID) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.getEditorialExtraInfoByID( editorialID ,this);
+        dbHelperFirebase.getEditorialExtraInfoByID(editorialID, this);
 
     }
 
@@ -162,8 +167,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         getSupportActionBar().setTitle("Editorial");
-
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -182,7 +185,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         recyclerView = (RecyclerView) findViewById(R.id.editoriallist_recyclerview);
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList);
+
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, getActivityTheme());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -223,6 +227,31 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (!isSplashScreenVisible) {
+
+            if (!activityCurrentTheme.contentEquals(getActivityTheme())) {
+                changeActivityTheme(getActivityTheme());
+            }
+        }
+    }
+
+    private String getActivityTheme() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        String theme = sharedPref.getString("theme_list", "Day");
+        this.activityCurrentTheme = theme;
+        return theme;
+    }
+
+    private void changeActivityTheme(String day) {
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day);
+        recyclerView.setAdapter(mAdapter);
+    }
+
 
     public void initializeSplashScreen() {
 
@@ -240,7 +269,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSource", editorialgenralInfo.getEditorialSource());
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
-        i.putExtra("isBookMarked",false);
+        i.putExtra("isBookMarked", false);
 
 
         startActivity(i);
@@ -257,14 +286,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSource", editorialgenralInfo.getEditorialSource());
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
-        i.putExtra("isBookMarked",false);
+        i.putExtra("isBookMarked", false);
 
 
         startActivity(i);
 
 
     }
-
 
 
     public void fetchEditorialGeneralList() {
@@ -304,7 +332,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
         int insertPosition = editorialListArrayList.size();
-        if(!isFirst) {
+        if (!isFirst) {
             editorialGeneralInfoArraylist.remove(editorialGeneralInfoArraylist.size() - 1);
         }
         for (EditorialGeneralInfo editorialGeneralInfo : editorialGeneralInfoArraylist) {
@@ -324,23 +352,22 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void sortEditorList(String selectedSortWord) {
 
 
-
-        if(!selectedSortWord.equals("")){
+        if (!selectedSortWord.equals("")) {
 
 
             editorialListSortedArrayList.clear();
-            for(EditorialGeneralInfo editorialGeneralInfo : editorialListArrayList){
+            for (EditorialGeneralInfo editorialGeneralInfo : editorialListArrayList) {
 
-                if(editorialGeneralInfo.getEditorialSource().equals(selectedSortWord)){
+                if (editorialGeneralInfo.getEditorialSource().equals(selectedSortWord)) {
                     editorialListSortedArrayList.add(editorialGeneralInfo);
 
 
                 }
             }
-        }else{
+        } else {
             editorialListSortedArrayList.clear();
-            for(EditorialGeneralInfo editorialGeneralInfo : editorialListArrayList){
-                    editorialListSortedArrayList.add(editorialGeneralInfo);
+            for (EditorialGeneralInfo editorialGeneralInfo : editorialListArrayList) {
+                editorialListSortedArrayList.add(editorialGeneralInfo);
             }
 
         }
@@ -348,8 +375,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         setToolBarSubTitle(selectedSortWord);
 
-        if(editorialListSortedArrayList.size()<5){
-          // loadMoreClick();
+        if (editorialListSortedArrayList.size() < 5) {
+            // loadMoreClick();
 
         }
 
@@ -392,7 +419,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 });
 
 /*got an static share link to use so remote config for share link is not required*/
-       // EditorialListWithNavActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
+        // EditorialListWithNavActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
 
         try {
             FirebaseCrash.log("Value of isShowingad isWrong");
@@ -425,9 +452,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if(!isSplashScreenVisible) {
+        if (!isSplashScreenVisible) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if ( drawer.isDrawerOpen(GravityCompat.START) ) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
                 super.onBackPressed();
@@ -468,7 +495,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             default:
                 return super.onOptionsItemSelected(item);
-
 
 
         }
@@ -568,42 +594,44 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     private void onEconomicTimesClick() {
-        selectedSortWord="The Economic Times";
+        selectedSortWord = "The Economic Times";
         sortEditorList(selectedSortWord);
 
 
     }
 
     private void onfinancialExpClick() {
-        selectedSortWord="The Financial Express";
+        selectedSortWord = "The Financial Express";
         sortEditorList(selectedSortWord);
 
     }
 
     private void onTheHinduClick() {
-        selectedSortWord="The Hindu";
+        selectedSortWord = "The Hindu";
         sortEditorList(selectedSortWord);
     }
 
     private void onAllClick() {
-        selectedSortWord="";
+        selectedSortWord = "";
         sortEditorList(selectedSortWord);
     }
 
     private void onTheHinduNoteClick() {
 
-        Intent intent = new Intent(this , EditorialListActivity.class);
+        Intent intent = new Intent(this, EditorialListActivity.class);
         startActivity(intent);
     }
 
     private void onTutorialClick() {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
+
     }
 
-    public void setToolBarSubTitle(String subTitle){
-        try{
+    public void setToolBarSubTitle(String subTitle) {
+        try {
             getSupportActionBar().setSubtitle(subTitle);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -612,4 +640,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public void getEditorialExtraInfoByIDListner(EditorialGeneralInfo editorialGeneralInfo) {
         onSharedLinkOpen(editorialGeneralInfo);
     }
+
+
+
 }

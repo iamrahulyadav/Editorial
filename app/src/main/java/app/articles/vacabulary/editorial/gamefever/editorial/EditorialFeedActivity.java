@@ -1,15 +1,20 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -27,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +91,85 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             initializeAds();
         }
 
+        setThemeinactivity();
+
+        checkRateUsOption();
+
+    }
+
+    private void checkRateUsOption() {
+        SharedPreferences prefs = getSharedPreferences("RateUsNum", MODE_PRIVATE);
+        int ratenum = prefs.getInt("ratenum", 0);
+
+        if (ratenum < 5) {
+            ratenum++;
+
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putInt("ratenum", ratenum);
+            edit.commit();
+
+
+        } else {
+
+            boolean rateeus = prefs.getBoolean("rateus", false);
+            if (rateeus) {
+
+
+                return;
+            } else {
+
+
+                //show rate Pop Up
+
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditorialFeedActivity.this);
+
+
+                // Setting Dialog Title
+                alertDialog.setTitle("Rate us");
+
+                // Setting Dialog Message
+                alertDialog.setMessage("Do you like this app");
+
+                // Setting Icon to Dialog
+                alertDialog.setIcon(R.drawable.ic_menu_share);
+
+                // Setting Positive "Yes" Button
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Write your code here to invoke YES event
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.shareLink)));
+
+                        } catch (Exception exception) {
+
+                        }
+                        dialog.cancel();
+                    }
+                });
+
+
+
+                // Setting Negative "NO" Button
+                alertDialog.setNegativeButton("Not much", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to invoke NO event
+
+                        dialog.cancel();
+                    }
+                });
+
+                // Showing Alert Message
+                alertDialog.show();
+
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putBoolean("rateus", true);
+                edit.commit();
+
+            }
+        }
+
 
     }
 
@@ -100,8 +185,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
         if (isBookMarked) {
             DatabaseHandlerBookMark databasehandlerBookmark = new DatabaseHandlerBookMark(this);
-            EditorialExtraInfo editorialExtraInfo= databasehandlerBookmark.getBookMarkEditorial(editorialGeneralInfo.getEditorialID());
-    currentEditorialFullInfo.setEditorialExtraInfo(editorialExtraInfo);
+            EditorialExtraInfo editorialExtraInfo = databasehandlerBookmark.getBookMarkEditorial(editorialGeneralInfo.getEditorialID());
+            currentEditorialFullInfo.setEditorialExtraInfo(editorialExtraInfo);
             init(editorialExtraInfo.getEditorialText());
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
 
@@ -138,6 +223,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
             definitionView.setMovementMethod(LinkMovementMethod.getInstance());
             definitionView.setText(definition, TextView.BufferType.SPANNABLE);
+
             Spannable spans = (Spannable) definitionView.getText();
             BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
             iterator.setText(definition);
@@ -151,6 +237,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
+
         } catch (Exception e) {
             TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
             definitionView.setText(textToShow);
@@ -174,11 +261,16 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
                 onWordTap(mWord);
+
             }
 
             public void updateDrawState(TextPaint ds) {
-                ds.setUnderlineText(false);
-                ds.setColor(ds.linkColor);
+                //ds.setUnderlineText(false);
+
+               /* if (mWord.contentEquals(selectedWord)){
+                    ds.setColor(ds.linkColor);
+                }*/
+                //ds.setColor(ds.linkColor);
                 //super.updateDrawState(ds);
             }
         };
@@ -255,6 +347,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onDestroy() {
         // Don't forget to shutdown tts!
         if (tts != null) {
+            speakOutWord("");
             tts.stop();
             tts.shutdown();
         }
@@ -279,6 +372,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         if (status == TextToSpeech.SUCCESS) {
 
             int result = tts.setLanguage(Locale.US);
+            tts.setPitch(0.8f);
+
 
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -420,7 +515,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void readFullArticle(View view) {
-        speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+        if (tts.isSpeaking()) {
+            speakOutWord("");
+
+        } else {
+            speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+        }
     }
 
 
@@ -531,6 +631,27 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             Toast.makeText(this, "Comment Size is small", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+    public void setThemeinactivity() {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPref.getString("theme_list", "Day");
+
+        TextView mainText = (TextView) findViewById(R.id.editorial_text_textview);
+
+        if (theme.contentEquals("Night")) {
+
+            ScrollView scrollView = (ScrollView) findViewById(R.id.editorialFeed_scrollView);
+            scrollView.setBackgroundColor(getResources().getColor(R.color.nightThemeBackGroundColor));
+
+            mainText.setTextColor(getResources().getColor(R.color.nightThemeTextColor));
+
+        }
+
+
+        mainText.setTextSize(TypedValue.COMPLEX_UNIT_SP, Float.valueOf(sharedPref.getString("font_size_list", "16")));
 
     }
 
