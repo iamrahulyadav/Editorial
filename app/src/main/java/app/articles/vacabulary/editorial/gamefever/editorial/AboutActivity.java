@@ -42,4 +42,16 @@ public class AboutActivity extends AppCompatActivity {
 
     }
 
+    public void sendEmailTocontentmanager(View view) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"pdf4exams@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion for Editorial App");
+        intent.putExtra(Intent.EXTRA_TEXT, "Your suggestion here \n");
+
+        intent.setType("message/rfc822");
+
+        startActivity(Intent.createChooser(intent, "Select Email Sending App"));
+
+    }
 }

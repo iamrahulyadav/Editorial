@@ -1,15 +1,18 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +54,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    private static int sortedListLimit=3;
     private List<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
     private List<EditorialGeneralInfo> editorialListSortedArrayList = new ArrayList<>();
 
@@ -81,6 +85,44 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (!isNetworkAvailable()) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditorialListWithNavActivity.this);
+
+
+            // Setting Dialog Title
+            alertDialog.setTitle("No Internet connection");
+
+            // Setting Dialog Message
+            alertDialog.setMessage("Do you want to open Bookmarks for offline reading");
+
+            // Setting Icon to Dialog
+            alertDialog.setIcon(R.drawable.ic_action_information);
+
+            // Setting Positive "Yes" Button
+            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                    onBookMark();
+
+                    dialog.cancel();
+                }
+            });
+
+
+            // Setting Negative "NO" Button
+            alertDialog.setNegativeButton("Not much", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Write your code here to invoke NO event
+
+                    dialog.cancel();
+                }
+            });
+
+            // Showing Alert Message
+            alertDialog.show();
+
+
         }
 
         initializeSplashScreen();
@@ -375,8 +417,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         setToolBarSubTitle(selectedSortWord);
 
-        if (editorialListSortedArrayList.size() < 5) {
-            // loadMoreClick();
+        if (editorialListSortedArrayList.size() < EditorialListWithNavActivity.sortedListLimit) {
+             loadMoreClick();
 
         }
 
@@ -439,6 +481,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             EditorialListWithNavActivity.listLimit = 20;
         }
 
+
+        try {
+            FirebaseCrash.log("Value of sortedlistlimit isWrong");
+            EditorialListWithNavActivity.listLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("sortedListLimit"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            EditorialListWithNavActivity.sortedListLimit = 2;
+        }
+
+
     }
 
 
@@ -465,7 +518,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
+       // getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
         return true;
     }
 
@@ -475,10 +528,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.action_about:
-                // search action
-                onAboutClick();
-                return true;
 
             case R.id.action_refresh:
                 // refresh
@@ -487,10 +536,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             case R.id.action_share:
                 // help action
                 onShareClick();
-                return true;
-            case R.id.action_vacabulary:
-                // help action
-                onVacabularyClick();
                 return true;
 
             default:
@@ -540,8 +585,27 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onAboutClick();
                 break;
 
-            case R.id.nav_tutorial:
+           /* case R.id.nav_tutorial:
                 onTutorialClick();
+                break;
+*/
+            case R.id.nav_setting:
+                onSettingClick();
+                break;
+
+
+            case R.id.nav_rate_us:
+                onRateUs();
+                break;
+
+
+            case R.id.nav_current_affair:
+                onCurrentAffairs();
+                break;
+
+
+            case R.id.nav_bookmark:
+                onBookMark();
                 break;
 
 
@@ -551,6 +615,36 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onBookMark() {
+        Intent intent = new  Intent (this,EditorialListActivity.class);
+        startActivity(intent);
+    }
+
+    private void onCurrentAffairs() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://currentaffairsonly.com/")));
+        }catch (Exception e){
+
+        }
+    }
+
+    private void onRateUs() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.shareLink)));
+        }catch (Exception e){
+
+        }
+    }
+
+    private void onTheHinduNoteClick() {
+
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://currentaffairsonly.com/the-hindu-notes/")));
+        }catch (Exception e){
+
+        }
     }
 
     private void onVacabularyClick() {
@@ -569,6 +663,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSettingClick() {
+
+        Intent intent = new Intent(this , SettingActivity.class);
+        startActivity(intent);
 
     }
 
@@ -616,11 +713,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         sortEditorList(selectedSortWord);
     }
 
-    private void onTheHinduNoteClick() {
 
-        Intent intent = new Intent(this, EditorialListActivity.class);
-        startActivity(intent);
-    }
 
     private void onTutorialClick() {
         Intent intent = new Intent(this, SettingActivity.class);

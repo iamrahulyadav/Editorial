@@ -150,7 +150,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 });
 
 
-
                 // Setting Negative "NO" Button
                 alertDialog.setNegativeButton("Not much", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -418,10 +417,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
-            case R.id.action_about:
-                // search action
-                onAboutClick();
-                return true;
 
             case R.id.action_refresh:
                 // refresh
@@ -431,14 +426,21 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 // help action
                 onShareClick();
                 return true;
-            case R.id.action_vacabulary:
-                // help action
-                onVacabularyClick();
+            case R.id.action_bookmark:
+                // refresh
+                onBookmark();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void onBookmark() {
+        DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
+        databaseHandlerBookMark.addToBookMark(currentEditorialFullInfo.getEditorialGeneralInfo(), currentEditorialFullInfo.getEditorialExtraInfo());
+        Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
+
     }
 
     private void onVacabularyClick() {
@@ -462,8 +464,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
                 + "&apn=" +
                 packageName + "&st=" +
-                appName + "&sd=" +
-                currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading() + "&utm_source=" +
+                currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
+                + "&sd=" +
+                appName + "&utm_source=" +
                 utmSource + "&utm_medium=" +
                 utmMedium + "&utm_campaign=" +
                 utmCampaign;
@@ -491,9 +494,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void onRefreashClick() {
         /*demo for bookmark function */
 
-        DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
-        databaseHandlerBookMark.addToBookMark(currentEditorialFullInfo.getEditorialGeneralInfo(), currentEditorialFullInfo.getEditorialExtraInfo());
-        Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
 
 
     }

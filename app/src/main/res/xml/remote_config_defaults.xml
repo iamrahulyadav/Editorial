@@ -13,5 +13,11 @@
         <key>shareLink</key>
         <value>no Link</value>
     </entry>
+
+    <entry>
+        <key>sortedListLimit</key>
+        <value>2</value>
+    </entry>
+
 </defaultsMap>
     <!-- END xml_defaults -->

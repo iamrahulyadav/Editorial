@@ -34,12 +34,6 @@
         </android.support.design.widget.AppBarLayout>
 
 
-        <!--Content manager card -->
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.CardView>
 
 
         <!--developer card-->
@@ -55,7 +49,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Crafty Studio"
+                    android:text="App For You"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimary"
                     android:textSize="32sp"
@@ -122,6 +116,60 @@
                     android:text="Email Us"
                     android:textColor="@color/colorAccent"
                     android:onClick="sendEmailToCraftyStudio"
+
+                    />
+
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+
+        <!--manager card-->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Powered by PDF4Exam and Team ASA"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+
+                    />
+
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+
+                    android:text="@string/aboutActivity_contentManager_contactString" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorPrimary"
+                    android:text="Email Us"
+                    android:textColor="@color/colorAccent"
+                    android:onClick="sendEmailTocontentmanager"
 
                     />
 

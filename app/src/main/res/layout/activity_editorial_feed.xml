@@ -67,10 +67,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:onClick="onDictionaryClick"
-                        android:text="Tap on Word"
+                        android:text="Tap on Word for hindi meaning"
                         android:textAlignment="center"
                         android:textColor="#ffffff"
-                        android:textSize="24sp" />
+                        android:textSize="18sp" />
 
 
                     <TextView
@@ -446,7 +446,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/editorial_bottomsheet_parofspeech_layout"
             android:background="@color/white"
-            android:text="ADD To Vocabulary"
+            android:text="ADD To vocabulary"
 
             android:textColor="@color/colorPrimary" />
 

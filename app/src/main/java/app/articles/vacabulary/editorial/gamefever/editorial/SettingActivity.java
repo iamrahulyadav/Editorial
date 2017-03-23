@@ -20,7 +20,6 @@ public class SettingActivity extends PreferenceActivity {
 
         SharedPreferences sharedPref= PreferenceManager.getDefaultSharedPreferences(this);
         String s= sharedPref.getString("font_size_list","none");
-        Toast.makeText(this, "font = "+s, Toast.LENGTH_SHORT).show();
 
     }
 }
