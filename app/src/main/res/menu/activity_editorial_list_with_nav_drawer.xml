@@ -53,12 +53,12 @@ android:titleCondensed="true"
 
             <item
                 android:id="@+id/nav_hindu_daily_note"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_action_hindu_notes"
                 android:title="Hindu Daily Notes" />
 
             <item
                 android:id="@+id/nav_current_affair"
-                android:icon="@drawable/ic_action_current_affair"
+                android:icon="@drawable/ic_action_currentaffair"
                 android:title="Daily Current Affair" />
 
         </menu>
