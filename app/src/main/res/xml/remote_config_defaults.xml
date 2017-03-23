@@ -7,7 +7,7 @@
     </entry>
     <entry>
         <key>listLimit</key>
-        <value>20</value>
+        <value>15</value>
     </entry>
     <entry>
         <key>shareLink</key>
@@ -16,7 +16,7 @@
 
     <entry>
         <key>sortedListLimit</key>
-        <value>2</value>
+        <value>0</value>
     </entry>
 
 </defaultsMap>

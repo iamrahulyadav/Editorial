@@ -39,7 +39,7 @@
 
         <activity
             android:name=".EditorialListWithNavActivity"
-            android:label="@string/title_activity_editorial_list_with_nav"
+            android:label="@string/app_name"
             android:theme="@style/MyMaterialTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

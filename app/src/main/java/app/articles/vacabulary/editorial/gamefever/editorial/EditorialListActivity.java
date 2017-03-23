@@ -81,6 +81,9 @@ public class EditorialListActivity extends AppCompatActivity {
 
 // set the icon
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        getSupportActionBar().setSubtitle("BookMarks");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 

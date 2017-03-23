@@ -396,11 +396,21 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
-        init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
-        currentEditorialFullInfo = editorialFullInfo;
-        findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
-        initializeCommentList();
+        try {
 
+            init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            currentEditorialFullInfo = editorialFullInfo;
+            findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
+            initializeCommentList();
+        }catch (NullPointerException nl){
+            editorialFullInfo.getEditorialExtraInfo().setEditorialText("No editorial found");
+            init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            currentEditorialFullInfo = editorialFullInfo;
+            findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
+            initializeCommentList();
+        }catch (Exception e){
+            Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

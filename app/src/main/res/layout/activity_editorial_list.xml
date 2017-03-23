@@ -27,6 +27,10 @@
     </android.support.design.widget.AppBarLayout>
 
 
+<android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:id="@+id/editoriallist_swiperefreshlayout"
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -98,6 +102,8 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+
+</android.support.v4.widget.SwipeRefreshLayout>
 
 
 

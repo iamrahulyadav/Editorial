@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,7 +55,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private static int sortedListLimit=3;
+    private static int sortedListLimit = 0;
     private List<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
     private List<EditorialGeneralInfo> editorialListSortedArrayList = new ArrayList<>();
 
@@ -74,6 +75,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public String selectedSortWord = "";
     private String activityCurrentTheme = "Day";
 
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,6 +269,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.editoriallist_swiperefreshlayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchEditorialGeneralList();
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+
+
     }
 
     @Override
@@ -373,10 +385,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             initializeActivity();
         }
 
-        int insertPosition = editorialListArrayList.size();
+
         if (!isFirst) {
             editorialGeneralInfoArraylist.remove(editorialGeneralInfoArraylist.size() - 1);
+        }else{
+            editorialListArrayList.clear();
         }
+
+        int insertPosition = editorialListArrayList.size();
         for (EditorialGeneralInfo editorialGeneralInfo : editorialGeneralInfoArraylist) {
             editorialListArrayList.add(insertPosition, editorialGeneralInfo);
         }
@@ -388,6 +404,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         isRefreshing = false;
 
         sortEditorList(selectedSortWord);
+
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
 
     }
 
@@ -418,7 +438,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         setToolBarSubTitle(selectedSortWord);
 
         if (editorialListSortedArrayList.size() < EditorialListWithNavActivity.sortedListLimit) {
-             loadMoreClick();
+            loadMoreClick();
 
         }
 
@@ -484,7 +504,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         try {
             FirebaseCrash.log("Value of sortedlistlimit isWrong");
-            EditorialListWithNavActivity.listLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("sortedListLimit"));
+            EditorialListWithNavActivity.sortedListLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("sortedListLimit"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -518,7 +538,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
+        // getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
         return true;
     }
 
@@ -618,14 +638,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onBookMark() {
-        Intent intent = new  Intent (this,EditorialListActivity.class);
+        Intent intent = new Intent(this, EditorialListActivity.class);
         startActivity(intent);
     }
 
     private void onCurrentAffairs() {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://currentaffairsonly.com/")));
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -633,7 +653,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onRateUs() {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.shareLink)));
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -642,7 +662,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://currentaffairsonly.com/the-hindu-notes/")));
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -664,7 +684,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSettingClick() {
 
-        Intent intent = new Intent(this , SettingActivity.class);
+        Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
 
     }
@@ -714,7 +734,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
 
-
     private void onTutorialClick() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
@@ -733,7 +752,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public void getEditorialExtraInfoByIDListner(EditorialGeneralInfo editorialGeneralInfo) {
         onSharedLinkOpen(editorialGeneralInfo);
     }
-
 
 
 }
