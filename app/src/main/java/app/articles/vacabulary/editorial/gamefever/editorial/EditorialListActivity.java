@@ -3,8 +3,10 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,34 +46,31 @@ public class EditorialListActivity extends AppCompatActivity {
    // private ArrayAdapter<String> mDrawerAdapter;
     View addMoreButton;
     ProgressBar progressBar;
-    private boolean isRefreshing = true;
-    private  boolean isSplashScreenVisible =true;
-    public static boolean isShowingAd =false;
-    public static String shareLink ="";
-    public static int listLimit =10;
+
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initializeRemoteConfig();
+        initializeActivity();
+
 
         fetchEditorialGeneralList();
 
-        if(!isNetworkAvailable()){
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
-        }
 
-        initializeSplashScreen();
+
 
 
     }
 
+
     public void initializeActivity(){
 
         setContentView(R.layout.activity_editorial_list);
-        isSplashScreenVisible=false;
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.editoriallist_activity_toolbar);
@@ -82,10 +81,13 @@ public class EditorialListActivity extends AppCompatActivity {
 
 // set the icon
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        getSupportActionBar().setSubtitle("BookMarks");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList ,getActivityTheme());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -124,7 +126,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
-        if(isShowingAd) {
+        if(EditorialListWithNavActivity.isShowingAd) {
             initializeAds();
         }
 
@@ -139,8 +141,16 @@ public class EditorialListActivity extends AppCompatActivity {
 
     }
 
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
-
+    private String getActivityTheme() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPref.getString("theme_list", "Day");
+        return theme;
+    }
 
     private void onRecyclerViewItemClick(int position) {
         EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
@@ -151,6 +161,7 @@ public class EditorialListActivity extends AppCompatActivity {
         i.putExtra("editorialSource",editorialgenralInfo.getEditorialSource());
         i.putExtra("editorialSubheading",editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag",editorialgenralInfo.getEditorialTag());
+        i.putExtra("isBookMarked",true);
 
         startActivity(i);
 
@@ -158,123 +169,28 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
     public void fetchEditorialGeneralList(){
-        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListActivity.listLimit ,"" ,this , true);
+        DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
+        editorialListArrayList= databaseHandlerBookMark.getAllBookMarkEditorial();
+
+
+
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList,getActivityTheme());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //recyclerView.addItemDecoration(new DividerItemDecorator(this, LinearLayoutManager.VERTICAL));
+
+        progressBar.setVisibility(View.GONE);
+
+        recyclerView.setAdapter(mAdapter);
 
     }
 
 
 
-    private void prepareMovieData() {
 
-        EditorialGeneralInfo editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("This is heading text for demo purpose and testing layout");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-
-
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("this is heading text for demo purpose and testing layout");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("economics time");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("this is heading text for demo purpose and testing layout");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("this is heading text for demo purpose and testing layout");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("this is heading text for demo purpose and testing layout");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-        editorial =new EditorialGeneralInfo();
-        editorial.setEditorialHeading("Heading some");
-        editorial.setEditorialDate("20-01-17");
-        editorial.setEditorialSource("hindu");
-
-        editorialListArrayList.add(editorial);
-
-
-        mAdapter.notifyDataSetChanged();
-    }
+/*
 
     public void loadMoreClick(View view) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
@@ -306,11 +222,12 @@ public class EditorialListActivity extends AppCompatActivity {
         isRefreshing =false;
 
     }
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.activity_editorial_list_actions, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -320,10 +237,6 @@ public class EditorialListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
-            case R.id.action_about:
-                // search action
-                onAboutClick();
-                return true;
 
             case R.id.action_refresh:
                 // refresh
@@ -332,10 +245,6 @@ public class EditorialListActivity extends AppCompatActivity {
             case R.id.action_share:
                 // help action
                 onShareClick();
-                return true;
-            case R.id.action_vacabulary:
-                // help action
-                onVacabularyClick();
                 return true;
 
             default:
@@ -354,7 +263,7 @@ public class EditorialListActivity extends AppCompatActivity {
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListActivity.shareLink);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
@@ -374,10 +283,10 @@ public class EditorialListActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        if(!isRefreshing) {
+       /* if(!isRefreshing) {
             fetchEditorialGeneralList();
             isRefreshing =true;
-        }
+        }*/
 
     }
 
@@ -393,52 +302,6 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
 
-    public void initializeRemoteConfig(){
-        final FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-
-        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
-
-        mFirebaseRemoteConfig.fetch()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                           //Toast.makeText(EditorialListActivity.this, "Fetch Succeeded", Toast.LENGTH_SHORT).show();
-
-                            // Once the config is successfully fetched it must be activated before newly fetched
-                            // values are returned.
-                            mFirebaseRemoteConfig.activateFetched();
-                        } else {
-                           // Toast.makeText(EditorialListActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
-                        }
-                        //displayWelcomeMessage();
-                    }
-                });
-
-
-         EditorialListActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
-
-        try{
-            FirebaseCrash.log("Value of isShowingad isWrong");
-            EditorialListActivity.isShowingAd =Boolean.valueOf( mFirebaseRemoteConfig.getString("isShowingAd"));
-
-        }catch(Exception e){
-            e.printStackTrace();
-            EditorialListActivity.isShowingAd=false;
-        }
-
-        try{
-            FirebaseCrash.log("Value of listLimit isWrong");
-            EditorialListActivity.listLimit =Integer.valueOf( mFirebaseRemoteConfig.getString("listLimit"));
-
-        }catch(Exception e){
-            e.printStackTrace();
-            EditorialListActivity.listLimit=20;
-        }
-
-    }
 
 
 

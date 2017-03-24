@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_theme_list_titles">
+        <item>Day</item>
+        <item>Night</item>
+    </string-array>
+    <string-array name="pref_font_size_list_titles">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+
+    </string-array>
+    <string-array name="pref_voice_speed_list_titles">
+        <item>Slow</item>
+        <item>Medium</item>
+        <item>Fast</item>
+
+    </string-array>
+    <string-array name="pref_font_size_list_values" >
+        <item>14</item>
+        <item>18</item>
+        <item>21</item>
+
+    </string-array>
+</resources>

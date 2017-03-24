@@ -3,23 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Search / will display always -->
-    <item android:id="@+id/action_about"
-        android:icon="@drawable/common_google_signin_btn_icon_light"
-        android:title="About"
-        app:showAsAction="never"/>
 
     <!-- Location Found -->
     <item android:id="@+id/action_share"
         android:icon="@drawable/ic_action_share"
         android:title="Share"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_bookmark"
+        android:icon="@drawable/ic_action_name"
+        android:title="BookMark"
+        app:showAsAction="always" />
+
 
     <!-- Refresh -->
     <item android:id="@+id/action_refresh"
         android:icon="@drawable/ic_action_refresh"
         android:title="Refresh"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <!-- Help -->
    <!-- <item android:id="@+id/action_setting"
@@ -27,10 +28,6 @@
         android:title="Setting"
         app:showAsAction="never"/>-->
     <!-- Help -->
-    <item android:id="@+id/action_vacabulary"
-        android:icon="@drawable/common_google_signin_btn_text_dark"
-        android:title="Vocabulary"
-        app:showAsAction="never"/>
 
 
 

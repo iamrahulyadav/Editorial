@@ -7,11 +7,17 @@
     </entry>
     <entry>
         <key>listLimit</key>
-        <value>20</value>
+        <value>15</value>
     </entry>
     <entry>
         <key>shareLink</key>
         <value>no Link</value>
     </entry>
+
+    <entry>
+        <key>sortedListLimit</key>
+        <value>0</value>
+    </entry>
+
 </defaultsMap>
     <!-- END xml_defaults -->

@@ -6,4 +6,10 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="editorialFeed_small_textsize">12sp</dimen>
+    <dimen name="editorialFeed_medium_textsize">16sp</dimen>
+    <dimen name="editorialFeed_large_textsize">20sp</dimen>
+
 </resources>

@@ -4,54 +4,98 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_all"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_menu_gallery"
             android:title="All" />
 
         <item
             android:id="@+id/nav_the_hindu"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_send"
             android:title="The Hindu" />
         <item
             android:id="@+id/nav_financial_express"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_send"
             android:title="Financial Express" />
         <item
             android:id="@+id/nav_economic_times"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_send"
             android:title="Economic Times" />
 
     </group>
 
-    <item android:title="Communicate">
+    <item
+        android:title="Communicate"
+        android:titleCondensed="">
         <menu>
 
             <item
                 android:id="@+id/nav_vacabulary"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Vacublary" />
+                android:icon="@drawable/ic_action_vocabulary"
+                android:title="vocabulary" />
 
+            <item
+                android:id="@+id/nav_bookmark"
+                android:icon="@drawable/ic_action_bookmark"
+                android:title="Bookmark" />
+
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_action_setting"
+                android:title="Setting" />
+
+        </menu>
+    </item>
+
+    <item
+        android:title="Knowledge Gallery"
+android:titleCondensed="true"
+        >
+        <menu>
+
+            <item
+                android:id="@+id/nav_hindu_daily_note"
+                android:icon="@drawable/ic_action_hindu_notes"
+                android:title="Hindu Daily Notes" />
+
+            <item
+                android:id="@+id/nav_current_affair"
+                android:icon="@drawable/ic_action_currentaffair"
+                android:title="Daily Current Affair" />
+
+        </menu>
+    </item>
+
+
+    <item
+        android:title="Help and Support"
+        android:titleCondensed="true">
+        <menu>
+
+          <!--  <item
+                android:id="@+id/nav_tutorial"
+                android:icon="@drawable/ic_action_information"
+                android:title="How to Use" />
+-->
 
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
 
-           <item
-                android:id="@+id/nav_hindu_daily_note"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Hindu Daily Notes" />
+            <item
+                android:id="@+id/nav_rate_us"
+                android:icon="@mipmap/ic_rateus"
+                android:title="Rate Us" />
 
             <item
                 android:id="@+id/nav_about_us"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_action_information"
                 android:title="About Us" />
 
-            <item
-                android:id="@+id/nav_tutorial"
-                android:icon="@drawable/ic_menu_send"
-                android:title="How to Use" />
 
         </menu>
     </item>
+
+
+
 
 </menu>

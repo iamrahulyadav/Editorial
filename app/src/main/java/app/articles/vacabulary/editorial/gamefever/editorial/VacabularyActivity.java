@@ -1,6 +1,8 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,7 +33,7 @@ public class VacabularyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("Vocabulary");
+        getSupportActionBar().setSubtitle("vocabulary");
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
 
@@ -53,6 +55,14 @@ public class VacabularyActivity extends AppCompatActivity {
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+
+        setActivityTheme();
+
+    }
+
+    private void setActivityTheme() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPref.getString("theme_list", "Day");
 
     }
 
@@ -91,8 +101,8 @@ public class VacabularyActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+        //MenuInflater inflater = getMenuInflater();
+       // inflater.inflate(R.menu.activity_editorial_list_actions, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -102,10 +112,6 @@ public class VacabularyActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
-            case R.id.action_about:
-                // search action
-                onAboutClick();
-                return true;
 
             case R.id.action_refresh:
                 // refresh
@@ -114,10 +120,6 @@ public class VacabularyActivity extends AppCompatActivity {
             case R.id.action_share:
                 // help action
                 onShareClick();
-                return true;
-            case R.id.action_vacabulary:
-                // help action
-                onVacabularyClick();
                 return true;
 
             default:
@@ -135,7 +137,7 @@ public class VacabularyActivity extends AppCompatActivity {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListActivity.shareLink);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 

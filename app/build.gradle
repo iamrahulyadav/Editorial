@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "app.articles.vacabulary.editorial.gamefever.editorial"
         minSdkVersion 15
@@ -39,5 +39,10 @@ dependencies {
 
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-invites:10.0.1'
+
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'
