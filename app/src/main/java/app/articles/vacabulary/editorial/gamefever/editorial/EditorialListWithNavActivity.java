@@ -211,7 +211,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        getSupportActionBar().setTitle("Editorial");
+        getSupportActionBar().setTitle(getString(R.string.app_name));
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
