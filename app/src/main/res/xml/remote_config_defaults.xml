@@ -19,5 +19,11 @@
         <value>0</value>
     </entry>
 
+    <entry>
+        <key>visitAppForYou</key>
+        <value>https://appforyou.wixsite.com/android</value>
+    </entry>
+
+
 </defaultsMap>
     <!-- END xml_defaults -->

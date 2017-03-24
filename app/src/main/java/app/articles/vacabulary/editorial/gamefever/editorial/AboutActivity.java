@@ -1,6 +1,7 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +53,17 @@ public class AboutActivity extends AppCompatActivity {
         intent.setType("message/rfc822");
 
         startActivity(Intent.createChooser(intent, "Select Email Sending App"));
+
+    }
+
+    public void visitUsAppForYou(View view) {
+
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.visitUsLink)));
+
+        } catch (Exception exception) {
+
+        }
 
     }
 }

@@ -25,8 +25,7 @@
     <color name="nightThemeBackGroundColor">#000000</color>
     <color name="nightThemeTextColor">#ffffff</color>
     <color name="nightThemeListBackGroundColor">#000000</color>
-
-
+    <color name="editorialFeed_text_color">#3e3e3e</color>
 
 
 </resources>

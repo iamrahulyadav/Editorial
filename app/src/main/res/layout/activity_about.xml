@@ -108,7 +108,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="10dp"
@@ -116,6 +116,20 @@
                     android:text="Email Us"
                     android:textColor="@color/colorAccent"
                     android:onClick="sendEmailToCraftyStudio"
+
+                    />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimary"
+                    android:text="Visit us"
+                    android:textColor="@color/colorAccent"
+                    android:onClick="visitUsAppForYou"
 
                     />
 

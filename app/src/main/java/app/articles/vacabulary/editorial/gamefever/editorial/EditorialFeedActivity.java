@@ -138,6 +138,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
+                       // Toast.makeText(EditorialFeedActivity.this, "ThankYou", Toast.LENGTH_SHORT).show();
+
                         // Write your code here to invoke YES event
                         try {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.shareLink)));
@@ -155,6 +157,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke NO event
 
+                        sendSuggestionEmail();
+
                         dialog.cancel();
                     }
                 });
@@ -170,6 +174,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
 
+    }
+
+    private void sendSuggestionEmail() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"appforyou@yahoo.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion for Editorial App");
+        intent.putExtra(Intent.EXTRA_TEXT, "Your suggestion here \n");
+
+        intent.setType("message/rfc822");
+
+        startActivity(Intent.createChooser(intent, "Select Email Sending App"));
     }
 
     private void intialiseViewAndFetch(Intent i) {
