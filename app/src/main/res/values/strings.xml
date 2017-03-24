@@ -30,6 +30,7 @@
     <string name="pref_title_select_font_size">Select Font Size</string>
     <string name="pref_title_select_voice_speed">Select Voice Pitch</string>
     <string name="aboutActivity_contentManager_contactString">For feedback and review \n Feel free to Contact us</string>
+    <string name="splashScreen_extraText" >Best Editorial App </string>
 
 
 </resources>
