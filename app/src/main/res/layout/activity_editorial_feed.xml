@@ -123,14 +123,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusable="true"
+                            android:fontFamily="serif"
                             android:onClick="readFullArticle"
                             android:text="Heading text is shown here inh this textview do you get this"
                             android:textAlignment="center"
                             android:textAllCaps="true"
-                            android:fontFamily="serif"
-                            android:textStyle="bold"
                             android:textColor="@color/white"
-                            android:textSize="24sp" />
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
 
 
                         <LinearLayout
@@ -145,11 +145,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="8dp"
                                 android:layout_weight="1"
+                                android:fontFamily="monospace"
                                 android:text="Source NAme"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
-                                android:fontFamily="monospace"
                                 android:textStyle="italic" />
 
                             <TextView
@@ -202,15 +202,15 @@
                     android:id="@+id/editorial_text_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="1.3"
-                    android:textStyle="italic"
-
                     android:layout_margin="8dp"
-                    android:text=""
+                    android:autoLink="all"
                     android:fontFamily="serif"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text=""
                     android:textColor="@color/editorialFeed_text_color"
                     android:textColorLink="@color/colorPrimary"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
 
                 <ProgressBar
                     android:id="@+id/editorialfeed_activity_progressbar"
