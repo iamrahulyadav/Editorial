@@ -14,13 +14,16 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.editorialAbout_activity_toolbar);
-        setSupportActionBar(toolbar);
+        try {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.editorialAbout_activity_toolbar);
+            setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("About");
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setSubtitle("About");
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        }catch(Exception e){
 
+        }
 
     }
 

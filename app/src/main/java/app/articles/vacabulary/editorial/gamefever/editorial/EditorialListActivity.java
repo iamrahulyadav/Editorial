@@ -80,10 +80,13 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 // set the icon
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        getSupportActionBar().setSubtitle("BookMarks");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        try {
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            getSupportActionBar().setSubtitle("BookMarks");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 

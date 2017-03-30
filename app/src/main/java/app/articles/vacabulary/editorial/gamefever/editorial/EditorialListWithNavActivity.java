@@ -207,12 +207,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 // the content to show and initialize navigation drawer
 
         setContentView(R.layout.activity_editorial_list_with_nav);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        try {
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            getSupportActionBar().setTitle(getString(R.string.app_name));
+        } catch (Exception e) {
 
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
-
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -389,7 +392,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (!isFirst) {
             editorialGeneralInfoArraylist.remove(editorialGeneralInfoArraylist.size() - 1);
-        }else{
+        } else {
             editorialListArrayList.clear();
         }
 

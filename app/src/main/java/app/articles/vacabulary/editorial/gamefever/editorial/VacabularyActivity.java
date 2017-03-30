@@ -24,6 +24,7 @@ public class VacabularyActivity extends AppCompatActivity {
     ArrayList<String> arrayListword = new ArrayList<String>();
     ArrayAdapter<String> mAdapter;
     private BottomSheetBehavior mBottomSheetBehavior;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +32,16 @@ public class VacabularyActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.vacabulary_activity_toolbar);
         setSupportActionBar(toolbar);
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setSubtitle("vocabulary");
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("vocabulary");
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-
-
-        ListView listView =(ListView)findViewById(R.id.vacabulary_activity_listview);
-        mAdapter =new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayListword);
+        ListView listView = (ListView) findViewById(R.id.vacabulary_activity_listview);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayListword);
 
         listView.setAdapter(mAdapter);
         fetchDictionaryword();
@@ -51,7 +54,7 @@ public class VacabularyActivity extends AppCompatActivity {
             }
         });
 
-        View bottomSheet = findViewById( R.id.vacabulary_activity_bottom_sheet );
+        View bottomSheet = findViewById(R.id.vacabulary_activity_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
@@ -67,9 +70,9 @@ public class VacabularyActivity extends AppCompatActivity {
     }
 
     private void fetchDictionaryword() {
-    DatabaseHandler databasehandler = new DatabaseHandler(this);
-         dictionaryArrayList= databasehandler.getAllDictionaryWord();
-        for(Dictionary dictionary : dictionaryArrayList){
+        DatabaseHandler databasehandler = new DatabaseHandler(this);
+        dictionaryArrayList = databasehandler.getAllDictionaryWord();
+        for (Dictionary dictionary : dictionaryArrayList) {
             arrayListword.add(dictionary.getWord());
         }
 
@@ -77,20 +80,20 @@ public class VacabularyActivity extends AppCompatActivity {
 
     }
 
-    public void openBottomSheet(Dictionary dictionary){
+    public void openBottomSheet(Dictionary dictionary) {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        TextView tv ;
-        tv=(TextView)findViewById(R.id.vacabulary_bottomsheet_heading_textview);
+        TextView tv;
+        tv = (TextView) findViewById(R.id.vacabulary_bottomsheet_heading_textview);
         tv.setText(dictionary.getWord());
-        tv=(TextView)findViewById(R.id.vacabulary_bottomsheet_meaning_textview);
+        tv = (TextView) findViewById(R.id.vacabulary_bottomsheet_meaning_textview);
         tv.setText(dictionary.getWordMeaning());
-        tv=(TextView)findViewById(R.id.vacabulary_bottomsheet_partspeech_textview);
+        tv = (TextView) findViewById(R.id.vacabulary_bottomsheet_partspeech_textview);
         tv.setText(dictionary.getWordPartOfSpeech());
-        tv=(TextView)findViewById(R.id.vacabulary_bottomsheet_synonyms_textview);
-        String synonymstring="";
-        for(int i =0 ; i<dictionary.getWordsynonym().length ;i++) {
-            synonymstring=synonymstring+dictionary.getWordsynonym()[i] +" , ";
+        tv = (TextView) findViewById(R.id.vacabulary_bottomsheet_synonyms_textview);
+        String synonymstring = "";
+        for (int i = 0; i < dictionary.getWordsynonym().length; i++) {
+            synonymstring = synonymstring + dictionary.getWordsynonym()[i] + " , ";
         }
         tv.setText(synonymstring);
 
@@ -98,11 +101,10 @@ public class VacabularyActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //MenuInflater inflater = getMenuInflater();
-       // inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+        // inflater.inflate(R.menu.activity_editorial_list_actions, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -128,7 +130,7 @@ public class VacabularyActivity extends AppCompatActivity {
     }
 
     private void onVacabularyClick() {
-        Intent i = new Intent(this ,VacabularyActivity.class);
+        Intent i = new Intent(this, VacabularyActivity.class);
         startActivity(i);
 
     }
@@ -145,12 +147,11 @@ public class VacabularyActivity extends AppCompatActivity {
     }
 
     private void onAboutClick() {
-        Intent i = new Intent(this ,AboutActivity.class);
+        Intent i = new Intent(this, AboutActivity.class);
         startActivity(i);
     }
 
     private void onRefreashClick() {
-
 
 
     }
