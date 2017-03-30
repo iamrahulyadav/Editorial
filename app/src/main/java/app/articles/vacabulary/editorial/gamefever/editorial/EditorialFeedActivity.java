@@ -497,7 +497,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 utmMedium + "&utm_campaign=" +
                 utmCampaign;
 
-        Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
 
         url = url.replaceAll(" ", "+");
 

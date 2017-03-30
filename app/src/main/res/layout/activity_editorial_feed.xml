@@ -127,8 +127,10 @@
                             android:text="Heading text is shown here inh this textview do you get this"
                             android:textAlignment="center"
                             android:textAllCaps="true"
+                            android:fontFamily="serif"
+                            android:textStyle="bold"
                             android:textColor="@color/white"
-                            android:textSize="25sp" />
+                            android:textSize="24sp" />
 
 
                         <LinearLayout
@@ -147,6 +149,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
+                                android:fontFamily="monospace"
                                 android:textStyle="italic" />
 
                             <TextView
@@ -204,6 +207,7 @@
 
                     android:layout_margin="8dp"
                     android:text=""
+                    android:fontFamily="serif"
                     android:textColor="@color/editorialFeed_text_color"
                     android:textColorLink="@color/colorPrimary"
                     android:textSize="20sp" />
