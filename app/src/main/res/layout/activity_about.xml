@@ -49,10 +49,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="App For You"
+                    android:text="Crafty Studio"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
 
                     />
@@ -81,7 +81,7 @@
                             android:layout_height="wrap_content"
                             android:text="Priyank Choudhary"
                             android:textAlignment="center"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
 
 
                         <TextView
@@ -89,7 +89,7 @@
                             android:layout_height="wrap_content"
                             android:text="Vaishali Malviya"
                             android:textAlignment="center"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
 
 
                     </LinearLayout>

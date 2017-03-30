@@ -12,8 +12,6 @@ import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,9 +39,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.net.URL;
+
 import java.text.BreakIterator;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,13 +65,16 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editorial_feed);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.editorialfeed_activity_toolbar);
-        setSupportActionBar(toolbar);
+        try {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.editorialfeed_activity_toolbar);
+            setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle("Feeds");
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setSubtitle("Feeds");
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        }catch(Exception e ){
 
+        }
 
         tts = new TextToSpeech(this, this);
         Intent i = getIntent();
@@ -106,7 +106,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             SharedPreferences.Editor edit = prefs.edit();
             edit.putInt("ratenum", ratenum);
-            edit.commit();
+            edit.apply();
 
 
         } else {
@@ -179,7 +179,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void sendSuggestionEmail() {
         Intent intent = new Intent(Intent.ACTION_SEND);
 
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"appforyou@yahoo.com"});
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"acraftystudio@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion for Editorial App");
         intent.putExtra(Intent.EXTRA_TEXT, "Your suggestion here \n");
 
@@ -406,9 +406,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void speakOutWord(String speakWord) {
 
+try {
+    tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+}catch(Exception e){
 
-        tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
-    }
+}
+}
 
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
@@ -505,8 +508,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, url);
-        startActivity(Intent.createChooser(sharingIntent, "Share Article via"));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, url + " \nHey read this editorial");
+        startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
 
     }
