@@ -1,5 +1,6 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import utils.UrlShortner;
+
 public class EditorialFeedActivity extends AppCompatActivity implements
         TextToSpeech.OnInitListener {
 
@@ -59,6 +62,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public String selectedWord = "null";
 
     CommentsListViewAdapter mCommentAdapter;
+    ArrayList<Comment> commentList =new ArrayList<>();
+
+    boolean isPushNotification =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,6 +204,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
+        boolean isPushNotification =i.getBooleanExtra("isPushNotification",false);
+
+
         if (isBookMarked) {
             DatabaseHandlerBookMark databasehandlerBookmark = new DatabaseHandlerBookMark(this);
             EditorialExtraInfo editorialExtraInfo = databasehandlerBookmark.getBookMarkEditorial(editorialGeneralInfo.getEditorialID());
@@ -210,6 +219,32 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             DBHelperFirebase dbHelper = new DBHelperFirebase();
             dbHelper.getEditorialFullInfoByID(editorialGeneralInfo, this);
         }
+
+
+        if (isPushNotification){
+
+            new DBHelperFirebase().getEditorialFullInfoByID(editorialGeneralInfo, this);
+
+        }
+
+
+        //Fetching comments
+        new DBHelperFirebase().fetchComment(editorialGeneralInfo.getEditorialID(), 50, new DBHelperFirebase.OnCommentListener() {
+            @Override
+            public void onCommentInserted(Comment comment) {
+
+            }
+
+            @Override
+            public void onCommentFetched(ArrayList<Comment> commentArrayList) {
+                EditorialFeedActivity.this.commentList =commentArrayList ;
+                initializeCommentList();
+
+            }
+        });
+        //end fetching comment
+
+
         currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
 
         if (!isNetworkAvailable()) {
@@ -504,13 +539,43 @@ try {
 
         url = url.replaceAll(" ", "+");
 
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
 
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, url + " \nHey read this editorial");
-        startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
+
+        final ProgressDialog pd = new ProgressDialog(EditorialFeedActivity.this);
+        pd.setMessage("Creating link ...");
+        pd.show();
+
+        new UrlShortner(url, new UrlShortner.UrlShortnerListner() {
+
+
+            @Override
+            public void onCancel(String longUrl) {
+                pd.dismiss();
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, longUrl + " \nHey read this editorial");
+                startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
+
+
+            }
+
+            @Override
+            public void onUrlShort(String shortUrl, String longUrl) {
+                pd.dismiss();
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+
+                //sharingIntent.putExtra(Intent.EXTRA_STREAM, newsMetaInfo.getNewsImageLocalPath());
+
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl + " \nRead More... ");
+                startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
+
+            }
+        }).execute("");
 
     }
 
@@ -569,7 +634,8 @@ try {
 
         ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
 
-        ArrayList<Comment> commentList = new ArrayList<>();
+        if (commentList.size() == 0){
+        //commentList = new ArrayList<>();
 
         if (currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null) {
             Comment comment = new Comment();
@@ -582,6 +648,7 @@ try {
             for (Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values()) {
                 commentList.add(comment);
             }
+        }
         }
 
         mCommentAdapter = new CommentsListViewAdapter(this, commentList);
