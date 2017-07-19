@@ -29,9 +29,10 @@
             android:text="This is heading text for demo purpose and testing layout"
             android:textAlignment="center"
             android:textColor="@color/heading_color"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            tools:elevation="8dp" />
+            android:layout_margin="4dp"
+            tools:elevation="100dp" />
 
         <TextView
             android:id="@+id/editorial_list_layout_subheading"

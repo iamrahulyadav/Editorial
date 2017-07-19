@@ -8,7 +8,7 @@
 
     <color name="light_black">#b3000000</color>
 
-    <color name="editorialListActivityBGColor">#f7f7f7</color>
+    <color name="editorialListActivityBGColor">#d7d7d7</color>
     <color name="editorialListBGColor">#ffffff</color>
     <color name="editorialListTagColor">#673AB7</color>
     <color name="editorialHeadingTextColor">#000000</color>
