@@ -29,6 +29,8 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
+
+
         </android.support.design.widget.AppBarLayout>
 
 
@@ -49,16 +51,17 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/ic_lock_silent_mode_off"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/ic_action_audio"
                     android:onClick="readFullArticle" />
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
                     android:layout_weight="1"
-
                     android:orientation="vertical">
 
 
@@ -70,17 +73,17 @@
                         android:text="Tap on Word for hindi meaning"
                         android:textAlignment="center"
                         android:textColor="#ffffff"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:onClick="onDictionaryClick"
-                        android:text="Tap here for Meaaning"
+                        android:text="Tap here for Meaning"
                         android:textAlignment="center"
                         android:textColor="#ffffff"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
 
                 </LinearLayout>
@@ -110,13 +113,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/editorialFeedHeadingBGColor"
+                    app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
                         <TextView
                             android:id="@+id/editorial_heading_textview"
@@ -136,6 +140,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
                             android:orientation="horizontal">
 
 
@@ -143,40 +148,33 @@
                                 android:id="@+id/editorial_source_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="8dp"
                                 android:layout_weight="1"
-                                android:fontFamily="monospace"
                                 android:text="Source NAme"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
-                                android:textStyle="italic" />
+                                android:textStyle="normal" />
 
                             <TextView
                                 android:id="@+id/editorial_date_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="8dp"
                                 android:layout_weight="1"
                                 android:text="Date"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
-
-                                android:textStyle="italic" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:textStyle="normal" />
 
 
                             <TextView
                                 android:id="@+id/editorial_tag_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
+                                android:layout_weight="1"
                                 android:text="Tag"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
                                 android:textColor="@color/editorialListTagColor"
                                 android:textSize="20sp" />
 
@@ -210,7 +208,7 @@
                     android:textColor="@color/editorialFeed_text_color"
                     android:textColorLink="@color/colorPrimary"
                     android:textSize="20sp"
-                    android:textStyle="italic" />
+                    android:textStyle="normal" />
 
                 <ProgressBar
                     android:id="@+id/editorialfeed_activity_progressbar"
@@ -218,7 +216,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="25dp"
-                    android:background="@color/editorialFeedHeadingBGColor" />
+                    android:background="@color/colorPrimary"
+                    android:visibility="visible" />
 
                 <com.google.android.gms.ads.AdView
                     android:id="@+id/editorialfeed_activity_adView"
@@ -237,9 +236,10 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
+                    android:layout_margin="6dp"
                     app:cardBackgroundColor="@color/editorialFeedDictionaryBottomsheetcolor"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
 
 
                     <LinearLayout
@@ -256,66 +256,93 @@
                             android:layout_margin="12dp"
                             android:text="Comments"
                             android:textAlignment="center"
-                            android:textColor="@color/white"
+                            android:textColor="@color/colorPrimary"
                             android:textSize="20sp" />
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            app:cardBackgroundColor="@color/colorPrimary"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"></android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="12dp"
+                            android:layout_marginTop="15dp"
+                            android:onClick="insertCommentBtnClick"
+                            app:cardCornerRadius="4dp"
+                            app:cardElevation="4dp"
+
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2dp"
+                                android:orientation="vertical">
+
+
+                                <EditText
+                                    android:id="@+id/editorialFeed_commenttext_edittext"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2dp"
+                                    android:hint="Write your comment"
+                                    android:inputType="text"
+                                    android:maxLines="5"
+                                    android:minLines="2"
+                                    android:textColor="@color/heading_color"
+                                    android:textColorHint="@color/heading_color"
+                                    android:textSize="15sp" />
+
+                                <EditText
+                                    android:id="@+id/editorialFeed_commentemail_edittext"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2dp"
+                                    android:hint="Your Email"
+                                    android:inputType="textEmailAddress"
+                                    android:requiresFadingEdge="vertical"
+                                    android:textColor="@color/heading_color"
+                                    android:textColorHint="@color/heading_color"
+                                    android:textSize="15sp" />
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:layout_marginBottom="5dp"
+                                    app:cardBackgroundColor="@color/light_black"
+                                    app:cardCornerRadius="0dp"
+                                    app:cardElevation="0dp"></android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="0dp"
+                                    android:text="Write A Comment"
+                                    android:textAlignment="center"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/heading_color"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                        </android.support.v7.widget.CardView>
 
 
                         <ListView
                             android:id="@+id/editorialFeed_comments_listView"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-
-
                             android:isScrollContainer="false"
                             android:nestedScrollingEnabled="true">
 
                         </ListView>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-
-                            <EditText
-                                android:id="@+id/editorialFeed_commenttext_edittext"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Write your comment"
-                                android:inputType="text"
-                                android:maxLines="5"
-                                android:minLines="2"
-                                android:textColor="@color/white"
-                                android:textColorHint="@color/white" />
-
-                            <EditText
-                                android:id="@+id/editorialFeed_commentemail_edittext"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Your Email"
-                                android:inputType="textEmailAddress"
-                                android:requiresFadingEdge="vertical"
-                                android:textColor="@color/white"
-                                android:textColorHint="@color/white" />
-
-                            <Button
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:layout_marginLeft="32dp"
-                                android:layout_marginRight="32dp"
-                                android:layout_marginTop="4dp"
-                                android:background="@color/white"
-                                android:onClick="insertCommentBtnClick"
-                                android:text="Add Comment"
-                                android:textColor="@color/colorPrimary"
-
-
-                                />
-
-
-                        </LinearLayout>
 
 
                     </LinearLayout>
@@ -334,7 +361,7 @@
         android:id="@+id/editorial_activity_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/editorialFeedDictionaryBottomsheetcolor"
+        android:background="@color/colorPrimary"
         android:clipToPadding="true"
         android:orientation="vertical"
         app:behavior_hideable="true"
@@ -355,27 +382,22 @@
             android:layout_height="wrap_content"
             android:text="hint and dictionary text"
             android:textAlignment="center"
-            android:textColor="@color/heading_color"
-            android:textSize="30sp" />
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
 
 
-        <android.support.v7.widget.CardView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/editorialFeedBottomsheetheadingbgcolor"
-            app:cardCornerRadius="4dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="Meaning"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-        </android.support.v7.widget.CardView>
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="Meaning :"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
 
         <TextView
@@ -385,26 +407,21 @@
             android:layout_below="@id/editorial_bottomsheet_heading_textview"
             android:text="meaning"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textColor="@color/white_fade_color"
+            android:textSize="18sp" />
 
 
-        <android.support.v7.widget.CardView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/editorialFeedBottomsheetheadingbgcolor"
-            app:cardCornerRadius="4dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="synonyms"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-        </android.support.v7.widget.CardView>
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="Synonyms:"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
 
         <TextView
@@ -414,26 +431,21 @@
             android:layout_below="@id/editorial_bottomsheet_heading_textview"
             android:text="synonyms"
             android:textAlignment="center"
+            android:textColor="@color/white_fade_color"
             android:textSize="20sp" />
 
 
-        <android.support.v7.widget.CardView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/editorialFeedBottomsheetheadingbgcolor"
-            app:cardCornerRadius="4dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="Part Of speech"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-        </android.support.v7.widget.CardView>
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="Part Of speech :"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
 
         <TextView
@@ -441,19 +453,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/editorial_bottomsheet_heading_textview"
+            android:layout_marginBottom="5dp"
             android:text="part of speech"
             android:textAlignment="center"
+            android:textColor="@color/white_fade_color"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/editorial_bottomSheet_add_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@+id/editorial_bottomsheet_parofspeech_layout"
             android:background="@color/white"
             android:text="ADD To vocabulary"
-
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>

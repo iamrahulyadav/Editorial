@@ -6,14 +6,16 @@
     <color name="heading_color">#000000</color>
     <color name="white">#ffffff</color>
 
-    <color name="editorialListActivityBGColor">#d7d7d7</color>
+    <color name="light_black">#b3000000</color>
+
+    <color name="editorialListActivityBGColor">#f7f7f7</color>
     <color name="editorialListBGColor">#ffffff</color>
     <color name="editorialListTagColor">#673AB7</color>
     <color name="editorialHeadingTextColor">#000000</color>
     <color name="editorialHeadingWhiteTextColor">#ffffff</color>
     <color name="editorialNormalTextColor">#000000</color>
     <color name="editorialFeedHeadingBGColor">#EF5350</color>
-    <color name="editorialFeedDictionaryBottomsheetcolor">#FF8A80</color>
+    <color name="editorialFeedDictionaryBottomsheetcolor">#fcfbfb</color>
     <color name="editorialFeedBottomsheetheadingbgcolor">#EF5350</color>
 
 

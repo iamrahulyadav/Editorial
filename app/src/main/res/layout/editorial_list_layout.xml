@@ -5,15 +5,16 @@
     android:id="@+id/editorial_list_layout_background_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="false"
     android:focusable="true"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/editorialListBGColor"
-    app:cardCornerRadius="2dp">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,8 +29,7 @@
             android:text="This is heading text for demo purpose and testing layout"
             android:textAlignment="center"
             android:textColor="@color/heading_color"
-            android:textSize="24sp"
-
+            android:textSize="18sp"
             android:textStyle="bold"
             tools:elevation="8dp" />
 
@@ -39,21 +39,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
-            android:textColor="@color/heading_color"
-
+            android:textColor="@color/light_black"
             android:textSize="12sp"
-            android:textStyle="italic" />
+            android:textStyle="normal" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="8dp"
-
-            app:cardBackgroundColor="@color/colorPrimaryDark">
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp">
 
         </android.support.v7.widget.CardView>
 
@@ -61,12 +61,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="8dp"
-
-
+            android:layout_margin="2dp"
             android:orientation="horizontal">
 
 
@@ -74,10 +69,12 @@
                 android:id="@+id/editorial_list_layout_source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
                 android:text="source"
                 android:textAlignment="center"
-                android:textColor="@color/heading_color"
-                android:textSize="16sp"
+                android:textColor="@color/light_black"
+                android:textSize="14sp"
                 android:textStyle="italic"
 
                 />
@@ -88,30 +85,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="3dp"
                 android:layout_weight="1"
                 android:text="date"
                 android:textAlignment="center"
-                android:textColor="@color/heading_color"
-                android:textSize="16sp" />
+                android:textColor="@color/light_black"
+                android:textSize="14sp" />
 
 
             <TextView
                 android:id="@+id/editorial_list_layout_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_gravity="end"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
                 android:text="Tag"
                 android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/editorialListTagColor"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
 
         </LinearLayout>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="3dp"
             app:cardBackgroundColor="@color/colorPrimaryDark">
 
         </android.support.v7.widget.CardView>
