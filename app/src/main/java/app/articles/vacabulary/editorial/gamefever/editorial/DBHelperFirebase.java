@@ -1,5 +1,9 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -72,6 +76,12 @@ public class DBHelperFirebase {
         });
 
     }
+
+
+
+
+
+
 
     public void getEditorialExtraInfoByID(final String editorialId , final EditorialListWithNavActivity activity) {
         /*Return Full editorial object using editorial general info */
@@ -249,11 +259,53 @@ public class DBHelperFirebase {
 
     public void insertComment(String editorialID , Comment userComment){
 
-        DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialID
-                +"/"+"comments" );
-        myRef.push().setValue(userComment);
+        DatabaseReference myRef = database.getReference("Comments/" + editorialID);
+        myRef.push().setValue(userComment).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
     }
 
+    public void fetchComment(String editorialID,int limitTo , final OnCommentListener onCommentListener){
+
+
+        DatabaseReference myRef = database.getReference("Comments/" + editorialID);
+        Query query= myRef.orderByKey().limitToLast(limitTo);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Comment> commentArrayList = new ArrayList<Comment>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                    commentArrayList.add(snapshot.getValue(Comment.class));
+
+
+                }
+                onCommentListener.onCommentFetched(commentArrayList);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+    public interface OnCommentListener{
+        public void onCommentInserted( Comment comment);
+        public void onCommentFetched(ArrayList<Comment> commentArrayList);
+    }
+
+    public interface onEditorialListener{
+        public void onEditorialFullInfo ();
+    }
 
 
 }

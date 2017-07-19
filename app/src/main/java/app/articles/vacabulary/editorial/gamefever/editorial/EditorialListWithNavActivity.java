@@ -260,6 +260,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 })
         );
 
+        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!recyclerView.canScrollVertically(1)) {
+                    Toast.makeText(EditorialListWithNavActivity.this, "loading more items ", Toast.LENGTH_SHORT).show();
+                    loadMoreClick();
+                }
+            }
+        });*/
+
 
         addMoreButton = (View) findViewById(R.id.editoriallist_activity_add_button);
         addMoreButton.setVisibility(View.INVISIBLE);
