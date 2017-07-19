@@ -86,6 +86,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         initializeRemoteConfig();
 
 
+
         if (!isNetworkAvailable()) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
 
