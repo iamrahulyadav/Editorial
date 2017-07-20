@@ -223,7 +223,34 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (isPushNotification){
 
-            new DBHelperFirebase().getEditorialFullInfoByID(editorialGeneralInfo, this);
+            new DBHelperFirebase().getEditorialGeneralInfoByID(editorialGeneralInfo.getEditorialID(), new DBHelperFirebase.OnEditorialListener() {
+                @Override
+                public void onEditorialGeneralInfo(EditorialGeneralInfo editorialGeneralInfo, boolean isSuccessful) {
+
+                    if (isSuccessful ){
+
+                        currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
+
+                        TextView tv = (TextView) findViewById(R.id.editorial_heading_textview);
+                        tv.setText(editorialGeneralInfo.getEditorialHeading());
+                        tv = (TextView) findViewById(R.id.editorial_source_textview);
+                        tv.setText(editorialGeneralInfo.getEditorialSource());
+                        tv = (TextView) findViewById(R.id.editorial_date_textview);
+                        tv.setText(editorialGeneralInfo.getEditorialDate());
+                        tv = (TextView) findViewById(R.id.editorial_tag_textview);
+                        tv.setText(editorialGeneralInfo.getEditorialTag());
+
+                    }else{
+                        Toast.makeText(EditorialFeedActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onEditorialExtraInfo(EditorialExtraInfo editorialExtraInfo, boolean isSuccessful) {
+
+                }
+            });
+
 
         }
 
@@ -411,7 +438,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            super.onBackPressed();
+            if (isPushNotification){
+                Intent intent =new Intent(EditorialFeedActivity.this , EditorialListWithNavActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }else {
+                super.onBackPressed();
+            }
         }
 
     }

@@ -52,6 +52,8 @@ public class DBHelperFirebase {
     }
 
 
+
+
     public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo , final EditorialFeedActivity activity) {
         /*Return Full editorial object using editorial general info */
 
@@ -78,9 +80,54 @@ public class DBHelperFirebase {
     }
 
 
+//editorial updte
+    public void getEditorialExtraInfoByID(String editorialID , final OnEditorialListener onEditorialListener) {
+        /*Return Full editorial object using editorial general info */
+
+        DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialID);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                EditorialExtraInfo editorialExtraInfo =  dataSnapshot.getValue(EditorialExtraInfo.class);
+
+                //onEditorialFullInfoById(editorialFullInfo);
+                onEditorialListener.onEditorialExtraInfo(editorialExtraInfo ,true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("article cannot be loadede"));
+                onEditorialListener.onEditorialExtraInfo(null ,false);
+            }
+        });
+
+    }
 
 
+    public void getEditorialGeneralInfoByID(String editorialID , final OnEditorialListener onEditorialListener) {
+        /*Return Full editorial object using editorial general info */
 
+        DatabaseReference myRef = database.getReference("EditorialGeneralInfo/" + editorialID);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                EditorialGeneralInfo editorialGeneralInfo =  dataSnapshot.getValue(EditorialGeneralInfo.class);
+
+                //onEditorialFullInfoById(editorialFullInfo);
+                onEditorialListener.onEditorialGeneralInfo(editorialGeneralInfo ,true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("article cannot be loadede"));
+                onEditorialListener.onEditorialGeneralInfo(null ,false);
+            }
+        });
+
+    }
+
+
+//after editorial update
 
 
     public void getEditorialExtraInfoByID(final String editorialId , final EditorialListWithNavActivity activity) {
@@ -303,8 +350,9 @@ public class DBHelperFirebase {
         public void onCommentFetched(ArrayList<Comment> commentArrayList);
     }
 
-    public interface onEditorialListener{
-        public void onEditorialFullInfo ();
+    public interface OnEditorialListener{
+        public void onEditorialGeneralInfo (EditorialGeneralInfo editorialGeneralInfo ,boolean isSuccessful);
+        public void onEditorialExtraInfo (EditorialExtraInfo editorialExtraInfo ,boolean isSuccessful);
     }
 
 
