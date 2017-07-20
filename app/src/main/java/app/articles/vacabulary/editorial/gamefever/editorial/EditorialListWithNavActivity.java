@@ -46,6 +46,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
@@ -175,6 +176,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             }
                         });
 
+
+        FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
 
     }
 

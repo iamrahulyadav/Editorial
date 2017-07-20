@@ -28,7 +28,7 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            editorialID = remoteMessage.getData().get("editorialID");
+            editorialID = remoteMessage.getData().get("editorial");
 
 
 
@@ -37,7 +37,7 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
 
             intent = new Intent(this, EditorialFeedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("editorialID" ,editorialID);
+            intent.putExtra("editorialID", editorialID);
             intent.putExtra("isPushNotification" , true);
 
             showNotification(remoteMessage.getData().get("notificationT"), remoteMessage.getData().get("notificationB"));
@@ -69,6 +69,6 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(125 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(200 /* ID of notification */, notificationBuilder.build());
     }
 }

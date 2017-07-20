@@ -39,6 +39,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 import java.text.BreakIterator;
@@ -100,6 +101,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         setThemeinactivity();
 
         checkRateUsOption();
+
+
+
 
     }
 
@@ -204,7 +208,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
-        boolean isPushNotification =i.getBooleanExtra("isPushNotification",false);
+         isPushNotification =i.getBooleanExtra("isPushNotification",false);
 
 
         if (isBookMarked) {
@@ -487,7 +491,7 @@ try {
         try {
 
             init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
-            currentEditorialFullInfo = editorialFullInfo;
+            currentEditorialFullInfo.setEditorialExtraInfo(editorialFullInfo.getEditorialExtraInfo());
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
             initializeCommentList();
         }catch (NullPointerException nl){
@@ -496,6 +500,7 @@ try {
             currentEditorialFullInfo = editorialFullInfo;
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
             initializeCommentList();
+            nl.printStackTrace();
         }catch (Exception e){
             Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
         }
