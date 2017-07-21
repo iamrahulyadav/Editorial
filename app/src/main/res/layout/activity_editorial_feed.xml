@@ -176,7 +176,7 @@
                                 android:textAlignment="center"
                                 android:textAllCaps="true"
                                 android:textColor="@color/editorialListTagColor"
-                                android:textSize="20sp" />
+                                android:textSize="16sp" />
 
 
                         </LinearLayout>
@@ -195,6 +195,20 @@
                      android:text="&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;"
                      android:textAlignment="center"/>
 -->
+
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/editorialfeed_activity_adView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone"
+                    app:adSize="BANNER"
+                    app:adUnitId="@string/banner_ad_unit_id">
+
+                </com.google.android.gms.ads.AdView>
+
 
                 <TextView
                     android:id="@+id/editorial_text_textview"
@@ -219,17 +233,7 @@
                     android:background="@color/colorPrimary"
                     android:visibility="visible" />
 
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/editorialfeed_activity_adView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:visibility="gone"
-                    app:adSize="BANNER"
-                    app:adUnitId="@string/banner_ad_unit_id">
 
-                </com.google.android.gms.ads.AdView>
 
                 <!--Comment System layout-->
 

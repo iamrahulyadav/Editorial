@@ -87,7 +87,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         initializeRemoteConfig();
 
 
-
         if (!isNetworkAvailable()) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
 
@@ -631,19 +630,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             case R.id.nav_share:
                 onShareClick();
                 break;
-            case R.id.nav_hindu_daily_note:
-                onTheHinduNoteClick();
-                break;
 
 
-            case R.id.nav_about_us:
-                onAboutClick();
-                break;
 
-           /* case R.id.nav_tutorial:
+
+             /* case R.id.nav_tutorial:
                 onTutorialClick();
                 break;
-*/
+            */
             case R.id.nav_setting:
                 onSettingClick();
                 break;
@@ -651,11 +645,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             case R.id.nav_rate_us:
                 onRateUs();
-                break;
-
-
-            case R.id.nav_current_affair:
-                onCurrentAffairs();
                 break;
 
 

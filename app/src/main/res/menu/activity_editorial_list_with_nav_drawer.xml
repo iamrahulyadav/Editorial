@@ -23,7 +23,7 @@
     </group>
 
     <item
-        android:title="Communicate"
+        android:title="Options"
         android:titleCondensed="">
         <menu>
 
@@ -45,10 +45,9 @@
         </menu>
     </item>
 
-    <item
+    <!--<item
         android:title="Knowledge Gallery"
-android:titleCondensed="true"
-        >
+        android:titleCondensed="true">
         <menu>
 
             <item
@@ -63,18 +62,18 @@ android:titleCondensed="true"
 
         </menu>
     </item>
-
+-->
 
     <item
         android:title="Help and Support"
         android:titleCondensed="true">
         <menu>
 
-          <!--  <item
-                android:id="@+id/nav_tutorial"
-                android:icon="@drawable/ic_action_information"
-                android:title="How to Use" />
--->
+            <!--  <item
+                  android:id="@+id/nav_tutorial"
+                  android:icon="@drawable/ic_action_information"
+                  android:title="How to Use" />
+  -->
 
             <item
                 android:id="@+id/nav_share"
@@ -86,16 +85,11 @@ android:titleCondensed="true"
                 android:icon="@mipmap/ic_rateus"
                 android:title="Rate Us" />
 
-            <item
-                android:id="@+id/nav_about_us"
-                android:icon="@drawable/ic_action_information"
-                android:title="About Us" />
+
 
 
         </menu>
     </item>
-
-
 
 
 </menu>
