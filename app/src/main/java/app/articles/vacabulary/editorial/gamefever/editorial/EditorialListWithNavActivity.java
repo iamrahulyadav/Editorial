@@ -158,8 +158,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                     String deepLink = AppInviteReferral.getDeepLink(intent);
                                     //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
 
-                                    int lastIndex = deepLink.indexOf("?", 25);
-                                    String editorialID = deepLink.substring(25, lastIndex);
+                                    int lastIndex = deepLink.indexOf("?", 27);
+                                    String editorialID = deepLink.substring(27, lastIndex);
                                     // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
 
                                     fetchEditorialByID(editorialID);

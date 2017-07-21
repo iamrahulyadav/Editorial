@@ -564,7 +564,7 @@ try {
         String utmCampaign = getString(R.string.utm_campaign);
         String utmMedium = getString(R.string.utm_medium);
 
-        String url = "https://" + appCode + ".app.goo.gl/?link=https://editorialapp.com/"
+        String url = "https://" + appCode + ".app.goo.gl/?link=https://dailyeditorial.com/"
                 + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
                 + "&apn=" +
                 packageName + "&st=" +
