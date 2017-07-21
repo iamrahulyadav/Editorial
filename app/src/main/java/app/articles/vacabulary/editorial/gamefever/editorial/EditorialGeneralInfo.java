@@ -5,7 +5,9 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
  */
 
 public class EditorialGeneralInfo {
-    private String editorialHeading ,editorialDate ,editorialSource ,editorialID ,editorialSubHeading ,editorialTag ;
+    private String editorialHeading ,editorialDate ,editorialSource ,editorialID ,editorialSubHeading ,editorialTag ,editorialCategory ;
+    private int editorialSourceIndex ;
+    private long timeInMillis ;
 
     public EditorialGeneralInfo() {
     }
@@ -66,5 +68,29 @@ public class EditorialGeneralInfo {
 
     public void setEditorialTag(String editorialTag) {
         this.editorialTag = editorialTag;
+    }
+
+    public String getEditorialCategory() {
+        return editorialCategory;
+    }
+
+    public void setEditorialCategory(String editorialCategory) {
+        this.editorialCategory = editorialCategory;
+    }
+
+    public int getEditorialSourceIndex() {
+        return editorialSourceIndex;
+    }
+
+    public void setEditorialSourceIndex(int editorialSourceIndex) {
+        this.editorialSourceIndex = editorialSourceIndex;
+    }
+
+    public long getTimeInMillis() {
+        return timeInMillis;
+    }
+
+    public void setTimeInMillis(long timeInMillis) {
+        this.timeInMillis = timeInMillis;
     }
 }
