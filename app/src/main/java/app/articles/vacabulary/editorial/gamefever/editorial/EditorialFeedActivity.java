@@ -557,7 +557,8 @@ try {
 
         String appCode = getString(R.string.app_code);
         String appName = getString(R.string.app_name);
-        String packageName = getString(R.string.package_name);
+        String packageName = this.getPackageName();
+
 
         String utmSource = getString(R.string.utm_source);
         String utmCampaign = getString(R.string.utm_campaign);

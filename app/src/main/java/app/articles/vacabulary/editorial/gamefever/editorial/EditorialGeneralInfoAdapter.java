@@ -84,7 +84,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialG
         EditorialGeneralInfo EditorialGeneralInfo = EditorialGeneralInfoList.get(position);
         holder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
 
-        holder.date.setText(EditorialGeneralInfo.getEditorialDate());
+        holder.date.setText(EditorialGeneralInfo.resolveDate(EditorialGeneralInfo.getTimeInMillis()));
         holder.source.setText(EditorialGeneralInfo.getEditorialSource());
         holder.tag.setText(EditorialGeneralInfo.getEditorialTag());
         holder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());

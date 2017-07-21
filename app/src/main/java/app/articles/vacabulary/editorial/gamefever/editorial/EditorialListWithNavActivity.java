@@ -687,7 +687,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onRateUs() {
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.shareLink)));
+            String link = "https://play.google.com/store/apps/details?id=" + this.getPackageName();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } catch (Exception e) {
 
         }
@@ -709,12 +710,28 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onShareClick() {
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+
+
+
+
+        /*Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
+*/
+
+        int applicationNameId = this.getApplicationInfo().labelRes;
+        final String appPackageName = this.getPackageName();
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, getString(applicationNameId));
+        String text = "Install this  Daily Editorial and improve you vocabulary: ";
+        String link = "https://play.google.com/store/apps/details?id=" + appPackageName;
+        i.putExtra(Intent.EXTRA_TEXT, text + "\n " + link);
+        startActivity(Intent.createChooser(i, "Share App :"));
+
     }
 
     private void onSettingClick() {
