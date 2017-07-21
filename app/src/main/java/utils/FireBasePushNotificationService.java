@@ -1,5 +1,6 @@
 package utils;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -64,11 +65,17 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
                 .setContentText( body)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(title))
+                ;
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(200 /* ID of notification */, notificationBuilder.build());
+        int id = (int) System.currentTimeMillis();
+
+
+        notificationManager.notify(id /* ID of notification */,notificationBuilder.build() );
     }
 }
