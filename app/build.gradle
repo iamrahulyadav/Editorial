@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
     defaultConfig {
-        applicationId "app.articles.vacabulary.editorial.gamefever.editorial"
+        applicationId "app.craftystudio.vocabulary.dailyeditorial"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1

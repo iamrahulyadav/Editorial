@@ -30,6 +30,9 @@
       "api_key": [
         {
           "current_key": "AIzaSyAleZ0V6oBpbXKW134Nf-GaMC_ZpKkg74w"
+        },
+        {
+          "current_key": "AIzaSyAF-ogoyPg_VRj7wlMV9jnJSXabWeWICss"
         }
       ],
       "services": {
@@ -44,6 +47,74 @@
               "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533438781965:android:077f5cb8e2f6c6b1",
+        "android_client_info": {
+          "package_name": "app.vacabulary.editorialwriter.gamefever.editorialwriter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533438781965-sg00f56c5drqirheatv0q6nhrsh40tmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAleZ0V6oBpbXKW134Nf-GaMC_ZpKkg74w"
+        },
+        {
+          "current_key": "AIzaSyAF-ogoyPg_VRj7wlMV9jnJSXabWeWICss"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533438781965:android:84fc5722be34c9d2",
+        "android_client_info": {
+          "package_name": "app.craftystudio.vocabulary.dailyeditorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533438781965-sg00f56c5drqirheatv0q6nhrsh40tmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAleZ0V6oBpbXKW134Nf-GaMC_ZpKkg74w"
+        },
+        {
+          "current_key": "AIzaSyAF-ogoyPg_VRj7wlMV9jnJSXabWeWICss"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
