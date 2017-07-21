@@ -732,6 +732,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra(Intent.EXTRA_TEXT, text + "\n " + link);
         startActivity(Intent.createChooser(i, "Share App :"));
 
+
     }
 
     private void onSettingClick() {
