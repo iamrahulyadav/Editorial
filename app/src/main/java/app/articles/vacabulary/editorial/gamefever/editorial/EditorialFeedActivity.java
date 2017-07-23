@@ -825,8 +825,6 @@ try {
 
     }
 
-
-
     public void showInterstitialAd(){
         //set editorialcount to 0
 
@@ -841,4 +839,5 @@ try {
 
         }
     }
+
 }
