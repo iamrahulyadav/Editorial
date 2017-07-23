@@ -1,5 +1,7 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.content.Intent;
+
 import java.util.Calendar;
 
 /**

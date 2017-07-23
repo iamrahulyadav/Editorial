@@ -642,7 +642,7 @@ try {
                 //sharingIntent.putExtra(Intent.EXTRA_STREAM, newsMetaInfo.getNewsImageLocalPath());
 
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl + " \nRead More... ");
+                sharingIntent.putExtra( android.content.Intent.EXTRA_TEXT, shortUrl +"\nRead full editorial at Daily editorial app  ");
                 startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
             }
