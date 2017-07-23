@@ -34,8 +34,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
@@ -74,10 +76,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     public static int listLimit = 10;
+    public static int EDITORIALCOUNTADS = 0;
+
     public String selectedSortWord = "";
     private String activityCurrentTheme = "Day";
 
     SwipeRefreshLayout swipeRefreshLayout;
+
+    InterstitialAd mInterstitialAd;
+    private  int editorialcountAdMax =2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +185,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
 
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
+        loadInterstitialAd();
+
     }
 
     @Override
@@ -253,6 +264,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         // do whatever
 
                         onRecyclerViewItemClick(position);
+                        showInterstitialAd();
 
                     }
 
@@ -465,11 +477,27 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void initializeAds() {
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
-        AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
-        mAdView.setVisibility(View.VISIBLE);
+        final AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
+
         AdRequest adRequest = new AdRequest.Builder().build();
 
         mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                FirebaseCrash.log(" Editorial list Ad failed to load - " + i);
+
+
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdView.setVisibility(View.VISIBLE);
+                FirebaseCrash.log(" Editorial list Ad loaded " );
+            }
+        });
 
     }
 
@@ -509,33 +537,46 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
         try {
-            FirebaseCrash.log("Value of isShowingad isWrong");
+
             EditorialListWithNavActivity.isShowingAd = Boolean.valueOf(mFirebaseRemoteConfig.getString("isShowingAd"));
 
         } catch (Exception e) {
             e.printStackTrace();
             EditorialListWithNavActivity.isShowingAd = false;
+            FirebaseCrash.log("Value of isShowingad isWrong");
         }
 
         try {
-            FirebaseCrash.log("Value of listLimit isWrong");
+
             EditorialListWithNavActivity.listLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("listLimit"));
 
         } catch (Exception e) {
             e.printStackTrace();
             EditorialListWithNavActivity.listLimit = 20;
+            FirebaseCrash.log("Value of listLimit isWrong");
         }
 
 
         try {
-            FirebaseCrash.log("Value of sortedlistlimit isWrong");
+
             EditorialListWithNavActivity.sortedListLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("sortedListLimit"));
 
         } catch (Exception e) {
             e.printStackTrace();
             EditorialListWithNavActivity.sortedListLimit = 2;
+            FirebaseCrash.log("Value of sortedlistlimit isWrong");
         }
 
+        try {
+
+            editorialcountAdMax = Integer.valueOf(mFirebaseRemoteConfig.getString("editorialCountAdMax"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            editorialcountAdMax = 2;
+            FirebaseCrash.log("Value of editorialcountadmax isWrong");
+        }
 
         try {
             EditorialListWithNavActivity.visitUsLink = mFirebaseRemoteConfig.getString("visitAppForYou");
@@ -795,5 +836,64 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         onSharedLinkOpen(editorialGeneralInfo);
     }
 
+
+    private void loadInterstitialAd() {
+
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                //Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
+                FirebaseCrash.log("Ad failed to load - " + i);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+                FirebaseCrash.log("Ad opened in editorial count " + EDITORIALCOUNTADS);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                //Toast.makeText(EditorialListWithNavActivity.this, "Ad loaded", Toast.LENGTH_SHORT).show();
+                FirebaseCrash.log("Ad loaded in editorial count " + EDITORIALCOUNTADS);
+            }
+        });
+
+    }
+
+    public void showInterstitialAd() {
+        //set editorialcount to 0
+
+
+        if (EDITORIALCOUNTADS > editorialcountAdMax) {
+
+            if (mInterstitialAd != null) {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                    EDITORIALCOUNTADS = 0;
+                } else {
+                    loadInterstitialAd();
+                }
+            } else {
+                loadInterstitialAd();
+            }
+        } else {
+            EDITORIALCOUNTADS++;
+        }
+
+    }
 
 }

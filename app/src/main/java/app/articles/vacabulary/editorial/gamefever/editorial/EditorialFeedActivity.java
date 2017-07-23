@@ -35,8 +35,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -66,6 +68,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     ArrayList<Comment> commentList =new ArrayList<>();
 
     boolean isPushNotification =false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +110,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
+
+
 
     private void checkRateUsOption() {
         SharedPreferences prefs = getSharedPreferences("RateUsNum", MODE_PRIVATE);
@@ -448,7 +454,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 startActivity(intent);
                 finish();
             }else {
-                super.onBackPressed();
+
+                    super.onBackPressed();
+
             }
         }
 
@@ -780,10 +788,13 @@ try {
         if (theme.contentEquals("Night")) {
 
             ScrollView scrollView = (ScrollView) findViewById(R.id.editorialFeed_scrollView);
-            scrollView.setBackgroundColor(getResources().getColor(R.color.nightThemeBackGroundColor));
+            try {
+                scrollView.setBackgroundColor(getResources().getColor(R.color.nightThemeBackGroundColor));
 
-            mainText.setTextColor(getResources().getColor(R.color.nightThemeTextColor));
-
+                mainText.setTextColor(getResources().getColor(R.color.nightThemeTextColor));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
 
@@ -791,5 +802,14 @@ try {
 
     }
 
+
+
+    public void showInterstitialAd(){
+        //set editorialcount to 0
+
+
+
+
+    }
 
 }
