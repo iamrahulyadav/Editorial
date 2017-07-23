@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -97,6 +98,29 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         View bottomSheet = findViewById(R.id.editorial_activity_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior.setHideable(false);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                if (newState == BottomSheetBehavior.STATE_EXPANDED){
+
+
+                    openBottomSheet(true);
+                    Dictionary dictionary = new Dictionary(selectedWord);
+                    dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
+
+                    TextView tv = (TextView) findViewById(R.id.editorial_bottomsheet_heading_textview);
+                    tv.setText(translateText.getText());
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
 
         if (EditorialListWithNavActivity.isShowingAd) {
             initializeAds();
@@ -371,6 +395,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         translateText.setText(mWord);
         selectedWord = mWord;
+
+        if (mBottomSheetBehavior.getState() ==BottomSheetBehavior.STATE_EXPANDED){
+            onDictionaryClick(translateText);
+        }
     }
 
     public void updateTranslateText(Translation translation) {
@@ -408,12 +436,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onDictionaryClick(View v) {
         //Intent i =new Intent(this ,);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        openBottomSheet(true);
-        Dictionary dictionary = new Dictionary(selectedWord);
-        dictionary.fetchWordMeaning(selectedWord, this);
 
-        TextView tv = (TextView) findViewById(R.id.editorial_bottomsheet_heading_textview);
-        tv.setText(translateText.getText());
 
 
     }
@@ -812,4 +835,10 @@ try {
 
     }
 
+    public void hideBottomsheet(View view) {
+        if (mBottomSheetBehavior != null){
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        }
+    }
 }
