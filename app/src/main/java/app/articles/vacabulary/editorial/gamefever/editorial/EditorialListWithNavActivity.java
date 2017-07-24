@@ -85,6 +85,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     InterstitialAd mInterstitialAd;
     private  int editorialcountAdMax =2;
+    GoogleApiClient mGoogleApiClient;
+    boolean isActivityInitialized=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +142,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
 // Build GoogleApiClient with AppInvite API for receiving deep links
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -177,6 +179,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                 } else {
                                     Log.d("editorial", "getInvitation: no deep link found.");
                                     fetchEditorialGeneralList();
+                                    isActivityInitialized = true;
 
                                 }
                             }
@@ -198,6 +201,45 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (isSplashScreenVisible) {
             fetchEditorialGeneralList();
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+/*        if (isActivityInitialized && mGoogleApiClient != null) {
+
+            boolean autoLaunchDeepLink = false;
+            AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                    .setResultCallback(
+                            new ResultCallback<AppInviteInvitationResult>() {
+                                @Override
+                                public void onResult(@NonNull AppInviteInvitationResult result) {
+                                    if (result.getStatus().isSuccess()) {
+                                        // Extract deep link from Intent
+                                        Intent intent = result.getInvitationIntent();
+                                        String deepLink = AppInviteReferral.getDeepLink(intent);
+                                        //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
+
+                                        int lastIndex = deepLink.indexOf("?", 27);
+                                        String editorialID = deepLink.substring(27, lastIndex);
+                                        // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
+
+                                        fetchEditorialByID(editorialID);
+                                        // Handle the deep link. For example, open the linked
+                                        // content, or apply promotional credit to the user's
+                                        // account.
+
+                                        // ...
+                                    } else {
+
+
+                                    }
+                                }
+                            });
+
+        }*/
+
     }
 
     @Override
