@@ -35,7 +35,7 @@ public class VacabularyActivity extends AppCompatActivity {
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setSubtitle("vocabulary");
-            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            //getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         } catch (Exception e) {
             e.printStackTrace();
         }

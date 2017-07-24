@@ -83,7 +83,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setSubtitle("Feeds");
-            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+           // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         }catch(Exception e ){
 
         }

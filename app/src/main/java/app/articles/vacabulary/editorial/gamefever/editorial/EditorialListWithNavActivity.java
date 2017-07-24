@@ -267,7 +267,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try {
-            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+           // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setTitle(getString(R.string.app_name));
         } catch (Exception e) {
 
@@ -926,6 +926,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                     EDITORIALCOUNTADS = 0;
+                    loadInterstitialAd();
                 } else {
                     loadInterstitialAd();
                 }
