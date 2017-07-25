@@ -190,7 +190,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
-        loadInterstitialAd();
+        initializeInterstitialAds();
 
     }
 
@@ -415,6 +415,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("isBookMarked", false);
 
 
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
 
 
@@ -882,11 +883,19 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void loadInterstitialAd() {
 
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+    }
+
+
+    public void  initializeInterstitialAds(){
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                loadInterstitialAd();
             }
+
 
             @Override
             public void onAdFailedToLoad(int i) {
@@ -913,7 +922,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 FirebaseCrash.log("Ad loaded in editorial count " + EDITORIALCOUNTADS);
             }
         });
-
     }
 
     public void showInterstitialAd() {
@@ -926,7 +934,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                     EDITORIALCOUNTADS = 0;
-                    loadInterstitialAd();
+
                 } else {
                     loadInterstitialAd();
                 }

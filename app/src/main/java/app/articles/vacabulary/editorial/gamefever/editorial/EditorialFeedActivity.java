@@ -398,6 +398,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (mBottomSheetBehavior.getState() ==BottomSheetBehavior.STATE_EXPANDED){
             onDictionaryClick(translateText);
+
         }
     }
 
@@ -437,6 +438,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         //Intent i =new Intent(this ,);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
+        openBottomSheet(true);
+        Dictionary dictionary = new Dictionary(selectedWord);
+        dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
 
 
     }

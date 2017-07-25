@@ -58,7 +58,7 @@
         android:background="@color/editorialFeedDictionaryBottomsheetcolor"
         android:clipToPadding="true"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="400dp"
+        app:behavior_peekHeight="0dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
 
         >
