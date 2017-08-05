@@ -657,6 +657,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
 
+
             }
 
             @Override
