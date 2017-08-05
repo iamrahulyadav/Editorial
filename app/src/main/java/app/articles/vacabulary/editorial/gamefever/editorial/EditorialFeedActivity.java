@@ -44,6 +44,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
@@ -114,11 +115,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
                     openBottomSheet(true);
+
                     Dictionary dictionary = new Dictionary(selectedWord);
                     dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
 
                     TextView tv = (TextView) findViewById(R.id.editorial_bottomsheet_heading_textview);
                     tv.setText(translateText.getText());
+
+                    initializeBottomSheetAd();
 
                 }
             }
@@ -708,6 +712,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         mAdView.loadAd(adRequest);
 
+
+
+
+    }
+
+    public void initializeBottomSheetAd(){
+        AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     public void readFullArticle(View view) {

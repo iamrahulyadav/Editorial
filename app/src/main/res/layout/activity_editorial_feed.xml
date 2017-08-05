@@ -144,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    app:adSize="BANNER"
+                    app:adSize="LARGE_BANNER"
                     app:adUnitId="@string/banner_ad_unit_id">
 
                 </com.google.android.gms.ads.AdView>
@@ -172,6 +172,7 @@
                     android:layout_marginBottom="25dp"
                     android:background="@color/colorPrimary"
                     android:visibility="visible" />
+
 
 
 
@@ -455,6 +456,18 @@
             android:textAlignment="center"
             android:textColor="@color/white_fade_color"
             android:textSize="20sp" />
+
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/editorialFeed_bottomSheet_adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-8455191357100024/2521126642">
+        </com.google.android.gms.ads.AdView>
 
         <Button
             android:id="@+id/editorial_bottomSheet_add_button"
