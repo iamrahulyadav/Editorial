@@ -35,6 +35,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.InviteEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -179,6 +182,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                     // account.
 
                                     // ...
+
+                                    try {
+                                        Answers.getInstance().logInvite(new InviteEvent()
+                                                .putMethod("Share link"));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     Log.d("editorial", "getInvitation: no deep link found.");
                                     fetchEditorialGeneralList();
