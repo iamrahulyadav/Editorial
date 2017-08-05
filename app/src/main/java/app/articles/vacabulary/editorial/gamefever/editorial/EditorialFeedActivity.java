@@ -44,7 +44,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 
@@ -666,12 +671,17 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         }).execute("");
 
+
+
+
         Answers.getInstance().logShare(new ShareEvent()
                 .putContentName(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
                 .putContentId(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()));
 
 
     }
+
+
 
 
     private void onAboutClick() {
