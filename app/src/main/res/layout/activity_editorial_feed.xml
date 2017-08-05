@@ -71,7 +71,7 @@
                             android:focusable="true"
                             android:fontFamily="serif"
                             android:onClick="readFullArticle"
-                            android:text="Heading text is shown here inh this textview do you get this"
+                            android:text="Heading text"
                             android:textAlignment="center"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
