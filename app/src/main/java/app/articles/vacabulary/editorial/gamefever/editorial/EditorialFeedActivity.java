@@ -323,8 +323,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (!isNetworkAvailable()) {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
-            Snackbar.make(translateText, "No Network", Snackbar.LENGTH_LONG)
-                    .setAction("No action", null).show();
+
         }
 
         TextView tv = (TextView) findViewById(R.id.editorial_heading_textview);
