@@ -668,7 +668,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 //sharingIntent.putExtra(Intent.EXTRA_STREAM, newsMetaInfo.getNewsImageLocalPath());
 
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl + "\nRead full editorial at Daily editorial app  ");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl
+                        + "\n"+currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
+                        +"\n\nRead full editorial at Daily editorial app  ");
                 startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
             }
