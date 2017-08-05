@@ -36,6 +36,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.ShareEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -66,10 +69,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public String selectedWord = "null";
 
     CommentsListViewAdapter mCommentAdapter;
-    ArrayList<Comment> commentList =new ArrayList<>();
+    ArrayList<Comment> commentList = new ArrayList<>();
 
-    boolean isPushNotification =false;
-
+    boolean isPushNotification = false;
 
 
     @Override
@@ -83,8 +85,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setSubtitle("Feeds");
-           // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        }catch(Exception e ){
+            // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        } catch (Exception e) {
 
         }
 
@@ -103,7 +105,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
-                if (newState == BottomSheetBehavior.STATE_EXPANDED){
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
 
                     openBottomSheet(true);
@@ -131,10 +133,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         checkRateUsOption();
 
 
-
-
     }
-
 
 
     private void checkRateUsOption() {
@@ -178,7 +177,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                       // Toast.makeText(EditorialFeedActivity.this, "ThankYou", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(EditorialFeedActivity.this, "ThankYou", Toast.LENGTH_SHORT).show();
 
                         // Write your code here to invoke YES event
                         try {
@@ -238,7 +237,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
-         isPushNotification =i.getBooleanExtra("isPushNotification",false);
+        isPushNotification = i.getBooleanExtra("isPushNotification", false);
 
 
         if (isBookMarked) {
@@ -255,13 +254,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
 
-        if (isPushNotification){
+        if (isPushNotification) {
 
             new DBHelperFirebase().getEditorialGeneralInfoByID(editorialGeneralInfo.getEditorialID(), new DBHelperFirebase.OnEditorialListener() {
                 @Override
                 public void onEditorialGeneralInfo(EditorialGeneralInfo editorialGeneralInfo, boolean isSuccessful) {
 
-                    if (isSuccessful ){
+                    if (isSuccessful) {
 
                         currentEditorialFullInfo.setEditorialGeneralInfo(editorialGeneralInfo);
 
@@ -274,7 +273,16 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         tv = (TextView) findViewById(R.id.editorial_tag_textview);
                         tv.setText(editorialGeneralInfo.getEditorialTag());
 
-                    }else{
+                        try {
+                            Answers.getInstance().logContentView(new ContentViewEvent()
+                                    .putContentId(editorialGeneralInfo.getEditorialID())
+                                    .putContentName(editorialGeneralInfo.getEditorialHeading())
+                                    .putContentType("By push notification"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
                         Toast.makeText(EditorialFeedActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -298,7 +306,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             @Override
             public void onCommentFetched(ArrayList<Comment> commentArrayList) {
-                EditorialFeedActivity.this.commentList =commentArrayList ;
+                EditorialFeedActivity.this.commentList = commentArrayList;
                 initializeCommentList();
 
             }
@@ -323,6 +331,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv = (TextView) findViewById(R.id.editorial_tag_textview);
         tv.setText(editorialGeneralInfo.getEditorialTag());
 
+        try {
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentId(editorialGeneralInfo.getEditorialID())
+                    .putContentName(editorialGeneralInfo.getEditorialHeading()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -396,7 +411,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         translateText.setText(mWord);
         selectedWord = mWord;
 
-        if (mBottomSheetBehavior.getState() ==BottomSheetBehavior.STATE_EXPANDED){
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             onDictionaryClick(translateText);
 
         }
@@ -475,14 +490,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            if (isPushNotification){
-                Intent intent =new Intent(EditorialFeedActivity.this , EditorialListWithNavActivity.class);
+            if (isPushNotification) {
+                Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            }else {
+            } else {
 
-                    super.onBackPressed();
+                super.onBackPressed();
 
             }
         }
@@ -514,12 +529,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void speakOutWord(String speakWord) {
 
-try {
-    tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
-}catch(Exception e){
+        try {
+            tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+        } catch (Exception e) {
 
-}
-}
+        }
+    }
 
     public void onGetEditorialFullInfo(EditorialFullInfo editorialFullInfo) {
 
@@ -529,14 +544,14 @@ try {
             currentEditorialFullInfo.setEditorialExtraInfo(editorialFullInfo.getEditorialExtraInfo());
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
             initializeCommentList();
-        }catch (NullPointerException nl){
+        } catch (NullPointerException nl) {
             editorialFullInfo.getEditorialExtraInfo().setEditorialText("No editorial found");
             init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
             currentEditorialFullInfo = editorialFullInfo;
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
             initializeCommentList();
             nl.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
         }
 
@@ -610,11 +625,10 @@ try {
                 utmMedium + "&utm_campaign=" +
                 utmCampaign;
 
-       // Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
 
         url = url.replaceAll(" ", "+");
-
-
+        url = url.replaceAll("\n", "");
 
 
         final ProgressDialog pd = new ProgressDialog(EditorialFeedActivity.this);
@@ -646,11 +660,16 @@ try {
                 //sharingIntent.putExtra(Intent.EXTRA_STREAM, newsMetaInfo.getNewsImageLocalPath());
 
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-                sharingIntent.putExtra( android.content.Intent.EXTRA_TEXT, shortUrl +"\nRead full editorial at Daily editorial app  ");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl + "\nRead full editorial at Daily editorial app  ");
                 startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
             }
         }).execute("");
+
+        Answers.getInstance().logShare(new ShareEvent()
+                .putContentName(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
+                .putContentId(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()));
+
 
     }
 
@@ -662,7 +681,6 @@ try {
 
     private void onRefreashClick() {
         /*demo for bookmark function */
-
 
 
     }
@@ -709,21 +727,21 @@ try {
 
         ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
 
-        if (commentList.size() == 0){
-        //commentList = new ArrayList<>();
+        if (commentList.size() == 0) {
+            //commentList = new ArrayList<>();
 
-        if (currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null) {
-            Comment comment = new Comment();
-            comment.setCommentText("No Comment");
-            comment.seteMailID("");
-            commentList.add(comment);
-
-
-        } else {
-            for (Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values()) {
+            if (currentEditorialFullInfo.getEditorialExtraInfo().getComments() == null) {
+                Comment comment = new Comment();
+                comment.setCommentText("No Comment");
+                comment.seteMailID("");
                 commentList.add(comment);
+
+
+            } else {
+                for (Comment comment : currentEditorialFullInfo.getEditorialExtraInfo().getComments().values()) {
+                    commentList.add(comment);
+                }
             }
-        }
         }
 
         mCommentAdapter = new CommentsListViewAdapter(this, commentList);
@@ -819,7 +837,7 @@ try {
                 scrollView.setBackgroundColor(getResources().getColor(R.color.nightThemeBackGroundColor));
 
                 mainText.setTextColor(getResources().getColor(R.color.nightThemeTextColor));
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -829,16 +847,14 @@ try {
 
     }
 
-    public void showInterstitialAd(){
+    public void showInterstitialAd() {
         //set editorialcount to 0
-
-
 
 
     }
 
     public void hideBottomsheet(View view) {
-        if (mBottomSheetBehavior != null){
+        if (mBottomSheetBehavior != null) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         }
