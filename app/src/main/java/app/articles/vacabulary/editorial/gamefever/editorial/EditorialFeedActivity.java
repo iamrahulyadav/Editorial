@@ -616,6 +616,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         String appCode = getString(R.string.app_code);
         String appName = getString(R.string.app_name);
         String packageName = this.getPackageName();
+        String imageUrl = "https://firebasestorage.googleapis.com/v0/b/editorial-8cbf6.appspot.com/o/editorial%20logo%20png.png?alt=media&token=632a8d65-b5cb-4f68-94a0-e65b20890405";
 
 
         String utmSource = getString(R.string.utm_source);
@@ -624,14 +625,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         String url = "https://" + appCode + ".app.goo.gl/?link=https://dailyeditorial.com/"
                 + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
-                + "&apn=" +
-                packageName + "&st=" +
-                currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
-                + "&sd=" +
-                appName + "&utm_source=" +
-                utmSource + "&utm_medium=" +
-                utmMedium + "&utm_campaign=" +
-                utmCampaign;
+                + "&apn=" + packageName
+                + "&st=" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
+                + "&sd=" + appName
+                + "&si="+imageUrl
+                + "&utm_source=" + utmSource
+                + "&utm_medium=" + utmMedium
+                + "&utm_campaign=" + utmCampaign;
 
         // Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
 

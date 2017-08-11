@@ -170,6 +170,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                     // Extract deep link from Intent
                                     Intent intent = result.getInvitationIntent();
                                     String deepLink = AppInviteReferral.getDeepLink(intent);
+
                                     //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
 
                                     int lastIndex = deepLink.indexOf("?", 27);

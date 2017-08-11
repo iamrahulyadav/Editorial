@@ -100,12 +100,12 @@
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/editorialList_activity_adView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         app:adSize="BANNER"
-        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
         app:adUnitId="@string/editorialList_banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 
