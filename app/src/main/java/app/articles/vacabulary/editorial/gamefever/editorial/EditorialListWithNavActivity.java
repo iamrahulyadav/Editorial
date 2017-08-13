@@ -50,12 +50,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import io.fabric.sdk.android.Fabric;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,9 +94,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     SwipeRefreshLayout swipeRefreshLayout;
 
     InterstitialAd mInterstitialAd;
-    private  int editorialcountAdMax =2;
+    private int editorialcountAdMax = 2;
     GoogleApiClient mGoogleApiClient;
-    boolean isActivityInitialized=false;
+    boolean isActivityInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,56 +153,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
 // Build GoogleApiClient with AppInvite API for receiving deep links
-         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(EditorialListWithNavActivity.this, "Connection failed", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addApi(AppInvite.API)
-                .build();
 
-        // Check if this app was launched from a deep link. Setting autoLaunchDeepLink to true
-        // would automatically launch the deep link if one is found.
-        boolean autoLaunchDeepLink = false;
-        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
-                .setResultCallback(
-                        new ResultCallback<AppInviteInvitationResult>() {
-                            @Override
-                            public void onResult(@NonNull AppInviteInvitationResult result) {
-                                if (result.getStatus().isSuccess()) {
-                                    // Extract deep link from Intent
-                                    Intent intent = result.getInvitationIntent();
-                                    String deepLink = AppInviteReferral.getDeepLink(intent);
-
-                                    //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
-
-                                    int lastIndex = deepLink.indexOf("?", 27);
-                                    String editorialID = deepLink.substring(27, lastIndex);
-                                    // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
-
-                                    fetchEditorialByID(editorialID);
-                                    // Handle the deep link. For example, open the linked
-                                    // content, or apply promotional credit to the user's
-                                    // account.
-
-                                    // ...
-
-                                    try {
-                                        Answers.getInstance().logInvite(new InviteEvent()
-                                                .putMethod("Share link"));
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    Log.d("editorial", "getInvitation: no deep link found.");
-                                    fetchEditorialGeneralList();
-                                    isActivityInitialized = true;
-
-                                }
-                            }
-                        });
+        openDynamicLink();
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
@@ -205,6 +162,81 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
         initializeInterstitialAds();
+
+    }
+
+    private void openDynamicLink() {
+
+
+
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                            Log.d("DeepLink", "onSuccess: " + deepLink);
+
+                            String editorialID = deepLink.getQueryParameter("editorialID");
+                            Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
+
+
+                            if (editorialID == null) {
+                                String deepLinkstring  = deepLink.toString();
+
+                                //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
+
+                                int lastIndex = deepLinkstring.indexOf("?", 27);
+                                editorialID = deepLinkstring.substring(27, lastIndex);
+                                // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
+
+
+                                // Handle the deep link. For example, open the linked
+                                // content, or apply promotional credit to the user's
+                                // account.
+
+                                // ...
+
+                                try {
+                                    Answers.getInstance().logInvite(new InviteEvent()
+                                            .putMethod("Share link"));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                            fetchEditorialByID(editorialID);
+
+                        } else {
+                            Log.d("editorial", "getInvitation: no deep link found.");
+                            fetchEditorialGeneralList();
+                            isActivityInitialized = true;
+                        }
+
+
+                        // Handle the deep link. For example, open the linked
+                        // content, or apply promotional credit to the user's
+                        // account.
+                        // ...
+
+                        // ...
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DeepLink", "getDynamicLink:onFailure", e);
+                        Log.d("editorial", "getInvitation: no deep link found.");
+                        fetchEditorialGeneralList();
+                        isActivityInitialized = true;
+
+                    }
+                });
+
 
     }
 
@@ -218,7 +250,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
 
 /*        if (isActivityInitialized && mGoogleApiClient != null) {
@@ -281,7 +313,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try {
-           // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setTitle(getString(R.string.app_name));
         } catch (Exception e) {
 
@@ -552,7 +584,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onAdLoaded() {
                 super.onAdLoaded();
                 mAdView.setVisibility(View.VISIBLE);
-                FirebaseCrash.log(" Editorial list Ad loaded " );
+                FirebaseCrash.log(" Editorial list Ad loaded ");
             }
         });
 
@@ -901,7 +933,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
 
-    public void  initializeInterstitialAds(){
+    public void initializeInterstitialAds() {
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override

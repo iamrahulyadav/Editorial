@@ -46,6 +46,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.dynamiclinks.DynamicLink;
@@ -610,6 +611,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
+/*
     private void onShareClick() {
 
 
@@ -628,7 +630,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 + "&apn=" + packageName
                 + "&st=" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
                 + "&sd=" + appName
-                + "&si="+imageUrl
+                + "&si=" + imageUrl
                 + "&utm_source=" + utmSource
                 + "&utm_medium=" + utmMedium
                 + "&utm_campaign=" + utmCampaign;
@@ -657,7 +659,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
 
-
             }
 
             @Override
@@ -670,14 +671,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl
-                        + "\n"+currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
-                        +"\n\nRead full editorial at Daily editorial app  ");
+                        + "\n" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
+                        + "\n\nRead full editorial at Daily editorial app  ");
                 startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
             }
         }).execute("");
-
-
 
 
         Answers.getInstance().logShare(new ShareEvent()
@@ -686,8 +685,73 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
+*/
 
 
+    private void onShareClick() {
+
+        String appCode = getString(R.string.app_code);
+        String appName = getString(R.string.app_name);
+        String packageName = this.getPackageName();
+        String imageUrl = "https://firebasestorage.googleapis.com/v0/b/editorial-8cbf6.appspot.com/o/editorial%20logo%20png.png?alt=media&token=632a8d65-b5cb-4f68-94a0-e65b20890405";
+
+
+        String utmSource = getString(R.string.utm_source);
+        String utmCampaign = getString(R.string.utm_campaign);
+        String utmMedium = getString(R.string.utm_medium);
+
+
+        Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse("https://goo.gl/Ae4Mhw?editorialID=" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()))
+                .setDynamicLinkDomain(appCode)
+                .setAndroidParameters(
+                        new DynamicLink.AndroidParameters.Builder(packageName)
+                                .build())
+                .setSocialMetaTagParameters(
+                        new DynamicLink.SocialMetaTagParameters.Builder()
+                                .setTitle(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
+                                .setDescription(appName)
+                                .setImageUrl(Uri.parse("https://firebasestorage.googleapis.com/v0/b/editorial-8cbf6.appspot.com/o/logo.png?alt=media&token=e2c451aa-e7ef-4f57-8e77-2c783dcc290e"))
+                                .build())
+                .setGoogleAnalyticsParameters(
+                        new DynamicLink.GoogleAnalyticsParameters.Builder()
+                                .setSource(utmSource)
+                                .setMedium(utmMedium)
+                                .setCampaign(utmCampaign)
+                                .build())
+                .buildShortDynamicLink()
+                .addOnCompleteListener(new OnCompleteListener<ShortDynamicLink>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                        if (task.isSuccessful()) {
+                            Uri shortLink = task.getResult().getShortLink();
+
+                            openShareDialog(shortLink);
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+    }
+
+    private void openShareDialog(Uri shortLink) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+
+        //sharingIntent.putExtra(Intent.EXTRA_STREAM, newsMetaInfo.getNewsImageLocalPath());
+
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortLink
+                + "\n"+currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
+                +"\n\nRead full editorial at Daily editorial app  ");
+        startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
+
+    }
 
 
     private void onAboutClick() {

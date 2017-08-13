@@ -20,7 +20,7 @@
 
     <!--dynamic link and smart sharing variable-->
 
-    <string name="app_code">tt93a</string>
+    <string name="app_code">tt93a.app.goo.gl</string>
     <string name="deep_link"></string>
     <string name="package_name">app.articles.vacabulary.editorial.gamefever.editorial</string>
     <string name="utm_source">user</string>
