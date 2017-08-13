@@ -1,8 +1,10 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +21,7 @@ import java.util.List;
 public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialGeneralInfoAdapter.MyViewHolder> {
 
     String theme = "Day";
-
+Context context ;
     private List<EditorialGeneralInfo> EditorialGeneralInfoList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -38,12 +40,12 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialG
 
             if (theme.contentEquals("Night")) {
                 CardView cv = (CardView) view.findViewById(R.id.editorial_list_layout_background_card);
-                cv.setCardBackgroundColor(Color.BLACK);
+                cv.setCardBackgroundColor(ContextCompat.getColor(context ,R.color.card_background_night));
 
-                heading.setTextColor(Color.WHITE);
-                date.setTextColor(Color.WHITE);
-                source.setTextColor(Color.WHITE);
-                subheading.setTextColor(Color.GRAY);
+                heading.setTextColor(ContextCompat.getColor(context ,R.color.main_white));
+                date.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
+                source.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
+                subheading.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
             }
 
 
@@ -52,9 +54,10 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialG
     }
 
 
-    public EditorialGeneralInfoAdapter(List<EditorialGeneralInfo> EditorialGeneralInfoList, String themeActivity) {
+    public EditorialGeneralInfoAdapter(List<EditorialGeneralInfo> EditorialGeneralInfoList, String themeActivity ,Context context) {
         this.EditorialGeneralInfoList = EditorialGeneralInfoList;
         this.theme = themeActivity;
+        this.context =context;
     }
 
     @Override

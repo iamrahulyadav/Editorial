@@ -16,6 +16,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
@@ -41,6 +42,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.ShareEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -84,6 +86,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AppCompatDelegate.getDefaultNightMode()
+                ==AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.FeedActivityThemeDark);
+        }
         setContentView(R.layout.activity_editorial_feed);
 
         try {
@@ -123,7 +129,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     TextView tv = (TextView) findViewById(R.id.editorial_bottomsheet_heading_textview);
                     tv.setText(translateText.getText());
 
-                    initializeBottomSheetAd();
+                    //initializeBottomSheetAd();
 
                 }
             }
@@ -136,9 +142,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (EditorialListWithNavActivity.isShowingAd) {
             initializeAds();
+            initializeNativeAds();
+            initializeBottomSheetAd();
         }
 
-        setThemeinactivity();
+        //setThemeinactivity();
 
         checkRateUsOption();
 
@@ -784,6 +792,54 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
+    public void initializeNativeAds() {
+        NativeExpressAdView adView = (NativeExpressAdView)findViewById(R.id.editorialfeed_native_adView);
+
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
+
+        adView.setAdListener(new AdListener(){
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+            }
+        });
+
+
+
+    }
+
+
     public void initializeBottomSheetAd(){
         AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -948,5 +1004,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         }
     }
+
+
 
 }

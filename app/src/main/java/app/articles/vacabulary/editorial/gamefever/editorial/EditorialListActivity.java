@@ -90,7 +90,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList ,getActivityTheme());
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList ,getActivityTheme() ,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -177,7 +177,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList,getActivityTheme());
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList,getActivityTheme() ,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

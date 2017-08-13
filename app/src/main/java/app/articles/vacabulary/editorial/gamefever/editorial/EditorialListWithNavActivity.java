@@ -12,8 +12,10 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -103,7 +105,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
-
+        if (AppCompatDelegate.getDefaultNightMode()
+                ==AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.FeedActivityThemeDark);
+        }
         initializeRemoteConfig();
 
 
@@ -316,6 +321,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         try {
             // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setTitle(getString(R.string.app_name));
+
         } catch (Exception e) {
 
         }
@@ -337,7 +343,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.editoriallist_recyclerview);
 
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, getActivityTheme());
+        String actvityTheme =getActivityTheme();
+        if (actvityTheme.contentEquals("Night")){
+            View view = findViewById(R.id.activity_editorial_list);
+            view.setBackgroundColor(ContextCompat.getColor(this,R.color.editorialList_background_night));
+
+        }
+
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, actvityTheme ,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -415,13 +428,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-        String theme = sharedPref.getString("theme_list", "Day");
+        String theme = sharedPref.getString("theme_list", "Day" );
         this.activityCurrentTheme = theme;
         return theme;
     }
 
     private void changeActivityTheme(String day) {
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day ,this);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -783,6 +796,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onBookMark();
                 break;
 
+            case R.id.nav_day_mode:
+                onDayMode();
+                break;
+
+            case R.id.nav_night_mode:
+                onNightMode();
+                break;
 
         }
 
@@ -790,6 +810,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onNightMode() {
+        AppCompatDelegate
+                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        recreate();
+    }
+
+    private void onDayMode() {
+        AppCompatDelegate
+                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        recreate();
     }
 
     private void onBookMark() {

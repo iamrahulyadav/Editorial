@@ -9,4 +9,38 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
+
+    <!-- Light base activity theme -->
+    <style name="ActivityTheme.Primary.Base.Light" parent="MyMaterialTheme.Base">
+
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">#ffff</item>
+        <item name="primaryTextColor">#33343B</item>
+        <item name="secondaryTextColor">#af33343b</item>
+        <item name="backgroundCardColor">#FFFF</item>
+        <item name="dividerColor">#F2F2F3</item>
+        <item name="backgroundColor">#F4F4F6</item>
+    </style>
+
+    <!-- Dark base activity theme -->
+    <style name="ActivityTheme.Primary.Base.Dark" parent="Theme.AppCompat.NoActionBar">
+
+        <item name="primaryTextColor">#F4F4F6</item>
+        <item name="secondaryTextColor">#96F4F4F6</item>
+        <item name="backgroundCardColor">#28292e</item>
+        <item name="dividerColor">#F2F2F3</item>
+        <item name="backgroundColor">#33343B</item>
+
+
+    </style>
+
+
+    <!-- Specific Feed activity theme -->
+    <style name="FeedActivityThemeLight" parent="ActivityTheme.Primary.Base.Light">
+        <item name="android:windowBackground">@color/windowbackground</item>
+    </style>
+
+    <style name="FeedActivityThemeDark" parent="ActivityTheme.Primary.Base.Dark"></style>
+
 </resources>

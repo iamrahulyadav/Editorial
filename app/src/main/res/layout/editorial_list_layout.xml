@@ -12,7 +12,7 @@
     android:clickable="false"
     android:focusable="true"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/editorialListBGColor"
+    app:cardBackgroundColor="?attr/backgroundCardColor"
     app:cardCornerRadius="2dp"
     app:cardElevation="4dp">
 
@@ -28,7 +28,7 @@
             android:elevation="8dp"
             android:text="This is heading text for demo purpose and testing layout"
             android:textAlignment="center"
-            android:textColor="@color/heading_color"
+            android:textColor="?attr/primaryTextColor"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_margin="4dp"
@@ -42,7 +42,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginTop="8dp"
             android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
-            android:textColor="@color/light_black"
+            android:textColor="?attr/secondaryTextColor"
             android:textSize="12sp"
             android:textStyle="italic" />
 
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:text="source"
                 android:textAlignment="center"
-                android:textColor="@color/light_black"
+                android:textColor="?attr/secondaryTextColor"
                 android:textSize="12sp"
                 android:textStyle="italic"
 
@@ -91,7 +91,7 @@
                 android:layout_weight="1"
                 android:text="date"
                 android:textAlignment="center"
-                android:textColor="@color/light_black"
+                android:textColor="?attr/secondaryTextColor"
                 android:textSize="14sp" />
 
 
@@ -104,7 +104,7 @@
                 android:text="Tag"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="@color/light_black"
+                android:textColor="?attr/secondaryTextColor"
                 android:textSize="12sp" />
 
 

@@ -29,6 +29,13 @@
     <color name="nightThemeListBackGroundColor">#000000</color>
     <color name="editorialFeed_text_color">#3e3e3e</color>
     <color name="white_fade_color">#c8ffffff</color>
+    <color name="off_white">#ffb1b2b4</color>
+    <color name="main_white">#f7f7f7</color>
+    <color name="card_background_night">#33343b</color>
+    <color name="editorialList_background_night">#27282d</color>
 
+
+
+    <color name="windowbackground">#f4f4f6</color>
 
 </resources>
