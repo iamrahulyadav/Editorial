@@ -184,6 +184,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
 
 
+
                             if (editorialID == null) {
                                 String deepLinkstring  = deepLink.toString();
 
