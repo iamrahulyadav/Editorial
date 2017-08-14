@@ -503,7 +503,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked", false);
-
+        i.putExtra("editorial",editorialgenralInfo);
 
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);

@@ -259,6 +259,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        if (editorialGeneralInfo == null){
+            editorialGeneralInfo = new EditorialGeneralInfo();
+        }
         editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
         editorialGeneralInfo.setEditorialDate(i.getExtras().getString("editorialDate"));
         editorialGeneralInfo.setEditorialHeading(i.getExtras().getString("editorialHeading"));
@@ -688,6 +692,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
 /*
+
     private void onShareClick() {
 
 
@@ -701,7 +706,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         String utmCampaign = getString(R.string.utm_campaign);
         String utmMedium = getString(R.string.utm_medium);
 
-        String url = "https://" + appCode + ".app.goo.gl/?link=https://dailyeditorial.com/"
+        String url = "https://" + appCode + "/?link=https://dailyeditorial.com/"
                 + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
                 + "&apn=" + packageName
                 + "&st=" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
@@ -764,7 +769,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 */
 
 
-    private void onShareClick() {
+
+
+
+   private void onShareClick() {
 
         String appCode = getString(R.string.app_code);
         String appName = getString(R.string.app_name);
@@ -819,6 +827,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 });
 
     }
+
 
     private void openShareDialog(Uri shortLink) {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
