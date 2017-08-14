@@ -39,6 +39,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.InviteEvent;
+import com.crashlytics.android.answers.RatingEvent;
 import com.crashlytics.android.answers.ShareEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -150,7 +153,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         //setThemeinactivity();
 
-        checkRateUsOption();
+        //checkRateUsOption();
 
 
     }
@@ -312,6 +315,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 }
             });
+
+            try {
+                Answers.getInstance().logInvite(new InviteEvent()
+                       .putMethod("push notification")
+                .putCustomAttribute("editorialID",editorialGeneralInfo.getEditorialID())
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
         }
@@ -604,7 +616,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             case R.id.action_refresh:
                 // refresh
-                onRefreashClick();
+
                 return true;
             case R.id.action_share:
                 // help action
@@ -627,11 +639,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-    private void onVacabularyClick() {
-        Intent i = new Intent(this, VacabularyActivity.class);
-        startActivity(i);
-
-    }
 
 /*
     private void onShareClick() {
@@ -770,22 +777,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortLink
                 + "\n" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
-                + "\n\nRead full editorial at Daily editorial app  ");
+                + "\n\nRead full editorial at Daily editorial app");
         startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
     }
 
-
-    private void onAboutClick() {
-        Intent i = new Intent(this, AboutActivity.class);
-        startActivity(i);
-    }
-
-    private void onRefreashClick() {
-        /*demo for bookmark function */
-
-
-    }
 
 
     public boolean onSupportNavigateUp() {
@@ -801,6 +797,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         mAdView.loadAd(adRequest);
 
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement","feed top banner"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
     }
 
@@ -811,39 +820,37 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         adView.loadAd(request);
 
         adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-            }
 
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement","Feed native bottom"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
 
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
 
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+
+
             }
 
             @Override
             public void onAdImpression() {
                 super.onAdImpression();
+
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("Ad impression")
+                            .putCustomAttribute("Placement","Feed native bottom"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -855,6 +862,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement","Bottom sheet"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void readFullArticle(View view) {
@@ -1003,11 +1023,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-    public void showInterstitialAd() {
-        //set editorialcount to 0
 
-
-    }
 
     public void hideBottomsheet(View view) {
         if (mBottomSheetBehavior != null) {
@@ -1028,6 +1044,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 Toast.makeText(EditorialFeedActivity.this, "Editorial Liked "+isSuccessful, Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        try {
+            Answers.getInstance().logRating(new RatingEvent()
+                    .putContentName("Like")
+                    .putContentId(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID())
+                    .putContentType(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
+                    .putRating(1)
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 }

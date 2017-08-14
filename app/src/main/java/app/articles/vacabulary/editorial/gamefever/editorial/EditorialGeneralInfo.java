@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 public class EditorialGeneralInfo {
     private String editorialHeading, editorialDate, editorialSource, editorialID, editorialSubHeading, editorialTag, editorialCategory ,editorialSourceLink;
-    private int editorialSourceIndex;
+    private int editorialSourceIndex ,editorialLike;
     private long timeInMillis;
 
     public EditorialGeneralInfo() {
@@ -104,6 +104,14 @@ public class EditorialGeneralInfo {
 
     public void setEditorialSourceLink(String editorialSourceLink) {
         this.editorialSourceLink = editorialSourceLink;
+    }
+
+    public int getEditorialLike() {
+        return editorialLike;
+    }
+
+    public void setEditorialLike(int editorialLike) {
+        this.editorialLike = editorialLike;
     }
 
     public static String resolveDate(long editorialTime) {

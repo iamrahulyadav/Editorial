@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.InviteEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -190,7 +191,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             Log.d("DeepLink", "onSuccess: " + deepLink);
 
                             String editorialID = deepLink.getQueryParameter("editorialID");
-                            Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
 
 
 
@@ -210,16 +211,21 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                                 // ...
 
-                                try {
-                                    Answers.getInstance().logInvite(new InviteEvent()
-                                            .putMethod("Share link"));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+
                             }
 
 
                             fetchEditorialByID(editorialID);
+
+                            try {
+                                Answers.getInstance().logInvite(new InviteEvent()
+                                        .putMethod("Dynamic link")
+                                        .putCustomAttribute("editorialID",editorialID)
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
 
                         } else {
                             Log.d("editorial", "getInvitation: no deep link found.");
@@ -347,14 +353,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.editoriallist_recyclerview);
 
 
-        String actvityTheme =getActivityTheme();
+       /* String actvityTheme =getActivityTheme();
         if (actvityTheme.contentEquals("Night")){
             View view = findViewById(R.id.activity_editorial_list);
             view.setBackgroundColor(ContextCompat.getColor(this,R.color.editorialList_background_night));
 
         }
-
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, actvityTheme ,this);
+*/
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, "day" ,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -420,12 +426,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (!isSplashScreenVisible) {
+        /*if (!isSplashScreenVisible) {
 
             if (!activityCurrentTheme.contentEquals(getActivityTheme())) {
                 changeActivityTheme(getActivityTheme());
             }
-        }
+        }*/
     }
 
     private String getActivityTheme() {
@@ -595,6 +601,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 super.onAdFailedToLoad(i);
                 FirebaseCrash.log(" Editorial list Ad failed to load - " + i);
 
+
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                    .putCustomAttribute("Placement","List banner"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
             }
 

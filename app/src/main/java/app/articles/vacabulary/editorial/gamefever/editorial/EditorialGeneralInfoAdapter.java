@@ -38,7 +38,7 @@ Context context ;
 
 
 
-            if (theme.contentEquals("Night")) {
+           /* if (theme.contentEquals("Night")) {
                 CardView cv = (CardView) view.findViewById(R.id.editorial_list_layout_background_card);
                 cv.setCardBackgroundColor(ContextCompat.getColor(context ,R.color.card_background_night));
 
@@ -46,7 +46,7 @@ Context context ;
                 date.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
                 source.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
                 subheading.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
-            }
+            }*/
 
 
 
