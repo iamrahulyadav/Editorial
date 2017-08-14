@@ -115,10 +115,7 @@ public class VacabularyActivity extends AppCompatActivity {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
 
-            case R.id.action_refresh:
-                // refresh
-                onRefreashClick();
-                return true;
+
             case R.id.action_share:
                 // help action
                 onShareClick();

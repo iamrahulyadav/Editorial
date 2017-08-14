@@ -2,13 +2,14 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Intent;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Created by gamef on 23-02-2017.
  */
 
-public class EditorialGeneralInfo {
+public class EditorialGeneralInfo implements Serializable {
     private String editorialHeading, editorialDate, editorialSource, editorialID, editorialSubHeading, editorialTag, editorialCategory ,editorialSourceLink;
     private int editorialSourceIndex ,editorialLike;
     private long timeInMillis;

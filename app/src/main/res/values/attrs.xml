@@ -14,8 +14,11 @@
     <attr name ="secondaryTextColor" format="color"/>
     <attr name ="editorialTextColor" format="color"/>
 
+        <attr name ="primaryTextAccentColor" format="color"/>
+        <attr name ="secondaryTextAccentColor" format="color"/>
 
-</declare-styleable>
+
+    </declare-styleable>
 
 
 </resources>

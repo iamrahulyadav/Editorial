@@ -16,11 +16,15 @@
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">#ffff</item>
-        <item name="primaryTextColor">#33343B</item>
-        <item name="secondaryTextColor">#af33343b</item>
+        <item name="primaryTextColor">#1e1e21</item>
+        <item name="secondaryTextColor">#bb262626</item>
         <item name="backgroundCardColor">#FFFF</item>
         <item name="dividerColor">#F2F2F3</item>
         <item name="backgroundColor">#F4F4F6</item>
+
+        <item name="primaryTextAccentColor">#fdfafafa</item>
+        <item name="secondaryTextAccentColor">#e7e7e7</item>
+
     </style>
 
     <!-- Dark base activity theme -->
@@ -32,13 +36,14 @@
         <item name="dividerColor">#F2F2F3</item>
         <item name="backgroundColor">#33343B</item>
 
+        <item name="primaryTextAccentColor">#F4F4F6</item>
+        <item name="secondaryTextAccentColor">#96F4F4F6</item>
 
     </style>
 
 
     <!-- Specific Feed activity theme -->
     <style name="FeedActivityThemeLight" parent="ActivityTheme.Primary.Base.Light">
-        <item name="android:windowBackground">@color/windowbackground</item>
     </style>
 
     <style name="FeedActivityThemeDark" parent="ActivityTheme.Primary.Base.Dark"></style>

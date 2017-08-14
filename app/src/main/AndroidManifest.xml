@@ -14,6 +14,7 @@
         android:theme="@style/FeedActivityThemeLight">
         <activity android:name=".TestActivity" />
         <activity android:name=".EditorialFeedActivity"
+            android:label="Editorial"
             >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

@@ -93,7 +93,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public static int EDITORIALCOUNTADS = 0;
 
     public String selectedSortWord = "";
-    private String activityCurrentTheme = "Day";
+    //private String activityCurrentTheme = "Day";
+    private boolean isNightMode =false;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -110,6 +111,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (AppCompatDelegate.getDefaultNightMode()
                 ==AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.FeedActivityThemeDark);
+            isNightMode =true;
         }
         initializeRemoteConfig();
 
@@ -311,6 +313,23 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (isSplashScreenVisible) {
             fetchEditorialGeneralList();
         }
+        if (AppCompatDelegate.getDefaultNightMode()
+                == AppCompatDelegate.MODE_NIGHT_YES) {
+
+            if (isNightMode){
+
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                recreate();
+            }
+
+        }else{
+
+            if (isNightMode){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+            }
+        }
 
     }
 
@@ -434,14 +453,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }*/
     }
 
-    private String getActivityTheme() {
+   /* private String getActivityTheme() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
 
         String theme = sharedPref.getString("theme_list", "Day" );
         this.activityCurrentTheme = theme;
         return theme;
-    }
+    }*/
 
     private void changeActivityTheme(String day) {
         mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day ,this);
@@ -466,6 +485,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked", false);
+        i.putExtra("editorial",editorialgenralInfo);
 
 
         startActivity(i);
@@ -744,10 +764,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
 
-            case R.id.action_refresh:
-                // refresh
-                onRefreashClick();
-                return true;
+
             case R.id.action_share:
                 // help action
                 onShareClick();
@@ -799,9 +816,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onTutorialClick();
                 break;
             */
-            case R.id.nav_setting:
-                onSettingClick();
-                break;
+
 
 
             case R.id.nav_rate_us:
@@ -933,14 +948,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     private void onEconomicTimesClick() {
-        selectedSortWord = "The Economic Times";
+        selectedSortWord = "Economic Times";
         sortEditorList(selectedSortWord);
 
 
     }
 
     private void onfinancialExpClick() {
-        selectedSortWord = "The Financial Express";
+        selectedSortWord = "Financial Express";
         sortEditorList(selectedSortWord);
 
     }

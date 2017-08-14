@@ -15,12 +15,14 @@
         android:title="BookMark"
         app:showAsAction="always" />
 
+    <item android:id="@+id/action_toggle"
+        android:icon="@drawable/ic_action_night_light"
+        android:title="Night Mode"
+        app:showAsAction="always" />
 
-    <!-- Refresh -->
-    <item android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_action_refresh"
-        android:title="Refresh"
-        app:showAsAction="ifRoom" />
+
+
+
 
     <!-- Help -->
    <!-- <item android:id="@+id/action_setting"

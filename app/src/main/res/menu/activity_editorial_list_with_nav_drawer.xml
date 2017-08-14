@@ -1,26 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_all"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="All" />
+    <item android:title="Most read">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_all"
+                    android:title="All" />
 
-        <item
-            android:id="@+id/nav_the_hindu"
-            android:icon="@drawable/ic_menu_send"
-            android:title="The Hindu" />
-        <item
-            android:id="@+id/nav_financial_express"
-            android:icon="@drawable/ic_menu_send"
-            android:title="Financial Express" />
-        <item
-            android:id="@+id/nav_economic_times"
-            android:icon="@drawable/ic_menu_send"
-            android:title="Economic Times" />
+                <item
+                    android:id="@+id/nav_the_hindu"
+                    android:title="The Hindu" />
+                <item
+                    android:id="@+id/nav_financial_express"
+                    android:title="Financial Express" />
+                <item
+                    android:id="@+id/nav_economic_times"
+                    android:title="Economic Times" />
 
-    </group>
+            </group>
+        </menu>
+
+    </item>
+
+
+    <item android:title="Theme">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/nav_day_mode"
+                    android:icon="@drawable/ic_action_day"
+                    android:title="Day mode">
+
+                </item>
+
+                <item
+                    android:id="@+id/nav_night_mode"
+                    android:icon="@drawable/ic_action_night"
+                    android:title="Night mode">
+
+                </item>
+
+            </group>
+
+        </menu>
+
+    </item>
 
     <item
         android:title="Options"
@@ -37,30 +63,14 @@
                 android:icon="@drawable/ic_action_bookmark"
                 android:title="Bookmark" />
 
-            <item
+            <!--<item
                 android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_action_setting"
-                android:title="Setting" />
+                android:title="Setting" />-->
 
         </menu>
     </item>
 
-    <group android:checkableBehavior="single"
-        >
-
-        <item
-            android:id="@+id/nav_day_mode"
-            android:title="Day mode">
-
-        </item>
-
-        <item
-            android:id="@+id/nav_night_mode"
-            android:title="Night mode">
-
-        </item>
-
-    </group>
 
     <!--<item
         android:title="Knowledge Gallery"
@@ -101,8 +111,6 @@
                 android:id="@+id/nav_rate_us"
                 android:icon="@mipmap/ic_rateus"
                 android:title="Rate Us" />
-
-
 
 
         </menu>

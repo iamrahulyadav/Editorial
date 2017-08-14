@@ -22,8 +22,8 @@ android {
         applicationId "app.craftystudio.vocabulary.dailyeditorial"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 4
-        versionName "1.4"
+        versionCode 5
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -55,6 +55,8 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.0.1'
     compile 'com.google.firebase:firebase-messaging:11.0.1'
     compile 'com.google.firebase:firebase-invites:11.0.1'
+
+    compile 'com.sackcentury:shinebutton:0.1.9'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
