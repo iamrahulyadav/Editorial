@@ -63,6 +63,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import utils.AppRater;
+import utils.Like;
 import utils.UrlShortner;
 
 public class EditorialFeedActivity extends AppCompatActivity implements
@@ -87,7 +89,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (AppCompatDelegate.getDefaultNightMode()
-                ==AppCompatDelegate.MODE_NIGHT_YES) {
+                == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.FeedActivityThemeDark);
         }
         setContentView(R.layout.activity_editorial_feed);
@@ -560,7 +562,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
             currentEditorialFullInfo.setEditorialExtraInfo(editorialFullInfo.getEditorialExtraInfo());
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
+            initializeSourceLink();
             initializeCommentList();
+
+            //calling rate now dialog
+
+            AppRater.app_launched(EditorialFeedActivity.this);
+
         } catch (NullPointerException nl) {
             editorialFullInfo.getEditorialExtraInfo().setEditorialText("No editorial found");
             init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
@@ -572,6 +580,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+    private void initializeSourceLink() {
+        TextView textView = (TextView) findViewById(R.id.editorialfeed_sourceLink_textView);
+        textView.setText(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceLink());
     }
 
     @Override
@@ -755,8 +769,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortLink
-                + "\n"+currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
-                +"\n\nRead full editorial at Daily editorial app  ");
+                + "\n" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
+                + "\n\nRead full editorial at Daily editorial app  ");
         startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
 
     }
@@ -788,17 +802,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         mAdView.loadAd(adRequest);
 
 
-
-
     }
 
     public void initializeNativeAds() {
-        NativeExpressAdView adView = (NativeExpressAdView)findViewById(R.id.editorialfeed_native_adView);
+        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialfeed_native_adView);
 
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
 
-        adView.setAdListener(new AdListener(){
+        adView.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
@@ -836,11 +848,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 
 
-
     }
 
 
-    public void initializeBottomSheetAd(){
+    public void initializeBottomSheetAd() {
         AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -1006,5 +1017,17 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
 
+    public void onLikeClick(View view) {
+        Like like =new Like();
+        like.setEditorialID(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID());
+        like.setEditorialTitle(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading());
 
+        new DBHelperFirebase().uploadLike(like, new DBHelperFirebase.OnLikeListener() {
+            @Override
+            public void onLikeUpload(boolean isSuccessful) {
+                Toast.makeText(EditorialFeedActivity.this, "Editorial Liked "+isSuccessful, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 }

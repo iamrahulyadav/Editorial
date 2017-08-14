@@ -58,6 +58,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
@@ -163,6 +164,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
+       // FirebaseMessaging.getInstance().subscribeToTopic("tester");
+        //Log.d("push notifiaction", "onCreate: "+ FirebaseInstanceId.getInstance().getToken());
+
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");

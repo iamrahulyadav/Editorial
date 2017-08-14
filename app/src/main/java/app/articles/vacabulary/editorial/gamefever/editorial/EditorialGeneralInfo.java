@@ -9,7 +9,7 @@ import java.util.Calendar;
  */
 
 public class EditorialGeneralInfo {
-    private String editorialHeading, editorialDate, editorialSource, editorialID, editorialSubHeading, editorialTag, editorialCategory;
+    private String editorialHeading, editorialDate, editorialSource, editorialID, editorialSubHeading, editorialTag, editorialCategory ,editorialSourceLink;
     private int editorialSourceIndex;
     private long timeInMillis;
 
@@ -98,6 +98,13 @@ public class EditorialGeneralInfo {
         this.timeInMillis = timeInMillis;
     }
 
+    public String getEditorialSourceLink() {
+        return editorialSourceLink;
+    }
+
+    public void setEditorialSourceLink(String editorialSourceLink) {
+        this.editorialSourceLink = editorialSourceLink;
+    }
 
     public static String resolveDate(long editorialTime) {
 

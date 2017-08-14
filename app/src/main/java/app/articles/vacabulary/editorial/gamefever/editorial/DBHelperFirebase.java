@@ -3,6 +3,8 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +15,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import utils.Like;
 
 /**
  * Created by gamef on 23-02-2017.
@@ -345,6 +349,26 @@ public class DBHelperFirebase {
     }
 
 
+
+    public void uploadLike(Like like, final OnLikeListener onLikeListener) {
+        DatabaseReference myRef = database.getReference().child("likes/");
+        myRef.push().setValue(like).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                onLikeListener.onLikeUpload(false);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                onLikeListener.onLikeUpload(true);
+            }
+        });
+
+
+    }
+
+
     public interface OnCommentListener{
         public void onCommentInserted( Comment comment);
         public void onCommentFetched(ArrayList<Comment> commentArrayList);
@@ -355,5 +379,8 @@ public class DBHelperFirebase {
         public void onEditorialExtraInfo (EditorialExtraInfo editorialExtraInfo ,boolean isSuccessful);
     }
 
+    public interface OnLikeListener {
+        void onLikeUpload(boolean isSuccessful);
+    }
 
 }
