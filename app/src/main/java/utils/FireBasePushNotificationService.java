@@ -32,6 +32,7 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
 
+
             try {
                 String messageType = remoteMessage.getData().get("type");
                 if (messageType.equalsIgnoreCase("link")) {
