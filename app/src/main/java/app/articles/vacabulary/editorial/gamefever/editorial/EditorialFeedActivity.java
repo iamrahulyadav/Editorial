@@ -691,6 +691,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
 
+
 /*
 
     private void onShareClick() {
@@ -711,7 +712,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 + "&apn=" + packageName
                 + "&st=" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
                 + "&sd=" + appName
-                + "&si=" + imageUrl
                 + "&utm_source=" + utmSource
                 + "&utm_medium=" + utmMedium
                 + "&utm_campaign=" + utmCampaign;
@@ -772,7 +772,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
 
-   private void onShareClick() {
+
+  private void onShareClick() {
 
         String appCode = getString(R.string.app_code);
         String appName = getString(R.string.app_name);

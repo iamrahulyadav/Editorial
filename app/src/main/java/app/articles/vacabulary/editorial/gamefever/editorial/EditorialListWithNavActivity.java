@@ -167,7 +167,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
-       // FirebaseMessaging.getInstance().subscribeToTopic("tester");
+         // FirebaseMessaging.getInstance().subscribeToTopic("tester");
         //Log.d("push notifiaction", "onCreate: "+ FirebaseInstanceId.getInstance().getToken());
 
 
