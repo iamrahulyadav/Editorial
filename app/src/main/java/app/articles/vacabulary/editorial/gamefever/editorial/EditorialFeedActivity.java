@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.TypedValue;
@@ -433,6 +434,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             }
 
+
+
             public void updateDrawState(TextPaint ds) {
                 //ds.setUnderlineText(false);
 
@@ -519,7 +522,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onDestroy() {
         // Don't forget to shutdown tts!
         if (tts != null) {
-            speakOutWord("");
+            speakOutWord(".");
             tts.stop();
             tts.shutdown();
         }
@@ -813,7 +816,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<ShortDynamicLink> task) {
                         if (task.isSuccessful()) {
                             Uri shortLink = task.getResult().getShortLink();
-                            pd.dismiss();
+                            if (pd.isShowing()) {
+                                pd.dismiss();
+                            }
                             openShareDialog(shortLink);
 
                         }

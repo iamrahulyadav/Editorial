@@ -476,6 +476,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     private void onRecyclerViewItemClick(int position) {
+
+        if(position <0){
+            recreate();
+        }
+
         EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
         Intent i = new Intent(this, EditorialFeedActivity.class);
         i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
