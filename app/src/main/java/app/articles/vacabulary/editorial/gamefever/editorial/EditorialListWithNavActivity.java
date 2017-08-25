@@ -869,7 +869,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[] {"Hindi","Telugu" };
+        String languages[] = new String[] {"Hindi","Telugu","Marathi","Tamil" };
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -884,7 +884,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode ="hi";
                 }else if (which==1){
                     languageCode ="te";
+                }else if (which ==2){
+                    languageCode ="mr";
+                }else if (which ==3){
+                    languageCode ="ta";
                 }
+
                 LanguageManager.setLanguageCode(EditorialListWithNavActivity.this ,languageCode);
 
 

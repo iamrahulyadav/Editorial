@@ -89,6 +89,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     ArrayList<Comment> commentList = new ArrayList<>();
 
     boolean isPushNotification = false;
+    private boolean notesMode=false;
 
 
     @Override
@@ -395,6 +396,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             FirebaseCrash.log("Showing spannable text");
             String definition = textToShow;
             TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+            definitionView.setTextIsSelectable(false);
             definitionView.setMovementMethod(LinkMovementMethod.getInstance());
             definitionView.setText(definition, TextView.BufferType.SPANNABLE);
 
@@ -673,10 +675,31 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 // refresh
                 onBookmark();
                 return true;
+            case R.id.action_notes:
+                onTakeNotesClick(item);
+
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void onTakeNotesClick(MenuItem item) {
+
+        if (notesMode){
+            init(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            notesMode =false;
+            item.setTitle("Take Notes");
+        }else{
+            TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+            definitionView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            definitionView.setTextIsSelectable(true);
+            notesMode =true;
+            item.setTitle("Exit notes mode");
+            Toast.makeText(this, "Entered notes mode", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void switchTheme() {
@@ -1013,23 +1036,23 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void resizeCommentListView() {
         ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
 
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, getResources().getDisplayMetrics());
 
         switch (mCommentAdapter.getCount()) {
 
             case 1:
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50,
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
                         getResources()
                                 .getDisplayMetrics());
                 break;
 
             case 2:
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150,
                         getResources()
                                 .getDisplayMetrics());
                 break;
             case 3:
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150,
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200,
                         getResources()
                                 .getDisplayMetrics());
                 break;

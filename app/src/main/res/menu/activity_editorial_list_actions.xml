@@ -20,6 +20,9 @@
         android:title="Night Mode"
         app:showAsAction="always" />
 
+    <item android:id="@+id/action_notes"
+        android:title="Take Notes"
+        app:showAsAction="never" />
 
 
 
