@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -64,6 +65,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import io.fabric.sdk.android.Fabric;
+import utils.AdsSubscriptionManager;
+import utils.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +105,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private int editorialcountAdMax = 2;
     GoogleApiClient mGoogleApiClient;
     boolean isActivityInitialized = false;
+    private InterstitialAd mSubscriptionInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +118,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             isNightMode =true;
         }
         initializeRemoteConfig();
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
 
 
         if (!isNetworkAvailable()) {
@@ -170,10 +176,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
          // FirebaseMessaging.getInstance().subscribeToTopic("tester");
         //Log.d("push notifiaction", "onCreate: "+ FirebaseInstanceId.getInstance().getToken());
 
+        if (AdsSubscriptionManager.checkShowAds(this)) {
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
+            initializeInterstitialAds();
+        }
 
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
-        initializeInterstitialAds();
+        initializeSubscriptionAds();
 
     }
 
@@ -425,7 +434,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         progressBar.setVisibility(View.VISIBLE);
 
 
-        if (isShowingAd) {
+        if (AdsSubscriptionManager.checkShowAds(this)) {
             initializeAds();
         }
 
@@ -614,8 +623,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     public void initializeAds() {
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+       // MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         final AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
+
+        mAdView.setVisibility(View.GONE);
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
@@ -687,7 +698,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         } catch (Exception e) {
             e.printStackTrace();
-            EditorialListWithNavActivity.isShowingAd = false;
+            EditorialListWithNavActivity.isShowingAd = true;
             FirebaseCrash.log("Value of isShowingad isWrong");
         }
 
@@ -840,6 +851,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             case R.id.nav_night_mode:
                 onNightMode();
                 break;
+            case R.id.nav_removeads:
+                onRemoveAdsClick();
+                break;
+
+            case R.id.nav_language:
+                onLanguageClick();
+                break;
 
         }
 
@@ -847,6 +865,105 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onLanguageClick() {
+
+        String languages[] = new String[] {"Hindi","Telugu" };
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose source");
+        builder.setItems(languages, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // the user clicked on colors[which]
+
+                String languageCode="";
+                if (which ==0){
+                    languageCode ="hi";
+                }else if (which==1){
+                    languageCode ="te";
+                }
+                LanguageManager.setLanguageCode(EditorialListWithNavActivity.this ,languageCode);
+
+
+            }
+        });
+        builder.show();
+
+    }
+
+    private void onRemoveAdsClick() {
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove all Ads");
+
+        builder.setMessage("Hello Message for subscription")
+                .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if (mSubscriptionInterstitialAd.isLoaded()) {
+                            mSubscriptionInterstitialAd.show();
+                        } else {
+                            Log.d("TAG", "The interstitial wasn't loaded yet.");
+                        }
+
+
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                    }
+                });
+
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+
+
+    }
+
+    public void initializeSubscriptionAds(){
+        mSubscriptionInterstitialAd = new InterstitialAd(this);
+        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mSubscriptionInterstitialAd.setAdListener(new AdListener(){
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                Toast.makeText(EditorialListWithNavActivity.this, "Ad clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+
+                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this);
+            }
+        });
+
     }
 
     private void onNightMode() {

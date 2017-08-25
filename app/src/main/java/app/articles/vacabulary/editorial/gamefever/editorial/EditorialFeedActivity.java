@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import utils.AdsSubscriptionManager;
 import utils.AppRater;
 import utils.Like;
 import utils.UrlShortner;
@@ -148,8 +149,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         });
 
-        if (EditorialListWithNavActivity.isShowingAd) {
-            initializeAds();
+        if (AdsSubscriptionManager.checkShowAds(this)) {
+            MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+
+            initializeTopNativeAds();
+            //initializeAds();
             initializeNativeAds();
             initializeBottomSheetAd();
         }
@@ -257,11 +261,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         EditorialGeneralInfo editorialGeneralInfo = new EditorialGeneralInfo();
         try {
             editorialGeneralInfo = (EditorialGeneralInfo) i.getSerializableExtra("editorial");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (editorialGeneralInfo == null){
+        if (editorialGeneralInfo == null) {
             editorialGeneralInfo = new EditorialGeneralInfo();
         }
         editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
@@ -433,7 +437,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onWordTap(mWord);
 
             }
-
 
 
             public void updateDrawState(TextPaint ds) {
@@ -772,11 +775,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 */
 
 
-
-
-
-
-  private void onShareClick() {
+    private void onShareClick() {
 
         String appCode = getString(R.string.app_code);
         String appName = getString(R.string.app_name);
@@ -856,9 +855,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void initializeAds() {
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         AdView mAdView = (AdView) findViewById(R.id.editorialfeed_activity_adView);
-        mAdView.setVisibility(View.VISIBLE);
+
         AdRequest adRequest = new AdRequest.Builder().build();
 
         mAdView.loadAd(adRequest);
@@ -881,6 +879,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void initializeNativeAds() {
         NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialfeed_native_adView);
+        adView.setVisibility(View.VISIBLE);
 
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
@@ -926,6 +925,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void initializeBottomSheetAd() {
         AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_adView);
+        mAdView.setVisibility(View.VISIBLE);
+
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -942,6 +943,21 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         });
     }
+
+    private void initializeTopNativeAds() {
+        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialFeed_top_nativeAds);
+        adView.setVisibility(View.VISIBLE);
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+        });
+    }
+
 
     public void readFullArticle(View view) {
         if (tts.isSpeaking()) {

@@ -132,7 +132,7 @@ public class EditorialGeneralInfo implements Serializable {
 
         long numberOfHour = (currenttime - editorialTime) / 3600000;
         if (numberOfHour == 0) {
-            return "hour ago";
+            return "just now";
         } else if (numberOfHour < 24) {
             return String.valueOf(numberOfHour) + " hour ago";
         } else {

@@ -27,6 +27,7 @@ import cz.msebera.android.httpclient.protocol.BasicHttpContext;
 import cz.msebera.android.httpclient.protocol.HTTP;
 import cz.msebera.android.httpclient.protocol.HttpContext;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import utils.LanguageManager;
 
 import static android.content.ContentValues.TAG;
 import static java.lang.System.in;
@@ -113,7 +114,10 @@ public class Translation {
             HttpContext localContext = new BasicHttpContext();
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
-            HttpGet httpGet = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170221T102515Z.fc9649d041fb5960.9c4e8caa31a36d7eb789cb3fae48c0e4c2cafd46&text="+getWord().trim()+"&lang=hi&[format=html]&[options=1]");
+           // HttpGet httpGet = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170221T102515Z.fc9649d041fb5960.9c4e8caa31a36d7eb789cb3fae48c0e4c2cafd46&text="+getWord().trim()+"&lang=hi&[format=html]&[options=1]");
+
+            HttpGet httpGet = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170221T102515Z.fc9649d041fb5960.9c4e8caa31a36d7eb789cb3fae48c0e4c2cafd46&text="+getWord().trim()+"&lang="+ LanguageManager.getLanguageCode(editorialFeedActivity)+"&[format=html]&[options=1]");
+
 
             String text = null;
 

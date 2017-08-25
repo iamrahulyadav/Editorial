@@ -23,6 +23,9 @@
 
     </item>
 
+    <item android:title="Remove Ads for free"
+        android:id="@+id/nav_removeads"
+        android:icon="@drawable/ic_menu_camera"/>
 
     <item android:title="Theme">
         <menu>
@@ -48,6 +51,10 @@
 
     </item>
 
+    <item android:title="Select Language"
+        android:id="@+id/nav_language"
+        android:icon="@drawable/ic_menu_camera"/>
+
     <item
         android:title="Options"
         android:titleCondensed="">
@@ -72,24 +79,7 @@
     </item>
 
 
-    <!--<item
-        android:title="Knowledge Gallery"
-        android:titleCondensed="true">
-        <menu>
 
-            <item
-                android:id="@+id/nav_hindu_daily_note"
-                android:icon="@drawable/ic_action_hindu_notes"
-                android:title="Hindu Daily Notes" />
-
-            <item
-                android:id="@+id/nav_current_affair"
-                android:icon="@drawable/ic_action_currentaffair"
-                android:title="Daily Current Affair" />
-
-        </menu>
-    </item>
--->
 
     <item
         android:title="Help and Support"
