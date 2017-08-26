@@ -5,6 +5,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,12 +105,11 @@ public class Dictionary {
 
     public void setMeaningFetched(boolean meaningFetched) {
         this.meaningFetched = meaningFetched;
-        if(!meaningFetched){
+        if (!meaningFetched) {
             intializemeaning();
         }
 
     }
-
 
 
     public boolean isSynonymsFetched() {
@@ -112,7 +118,7 @@ public class Dictionary {
 
     public void setSynonymsFetched(boolean synonymsFetched) {
         this.synonymsFetched = synonymsFetched;
-        if(!synonymsFetched) {
+        if (!synonymsFetched) {
             intializeSynonms();
         }
     }
@@ -145,10 +151,11 @@ public class Dictionary {
     }
 
 
-    public void fetchWordMeaning(String mword , EditorialFeedActivity activity)  {
+    public void fetchWordMeaning(String mword, EditorialFeedActivity activity) {
         this.setWord(mword.trim());
-        editorialFeedActivity =activity;
+        editorialFeedActivity = activity;
         new GetWordMeaning().execute();
+        //fetchWordMeaning();
         Log.d("My TAg", "after Getwordmeaning call");
         new GetRelatedWord().execute();
         Log.d("My TAg", "after GetWordSynonym call");
@@ -163,7 +170,7 @@ public class Dictionary {
     public void completeFetching() {
 
         if (isMeaningFetched() && isSynonymsFetched()) {
-            Log.d("Tag", "completeFetching: "+toString());
+            Log.d("Tag", "completeFetching: " + toString());
 
             editorialFeedActivity.updateDictionaryText(this);
             /*call activity method and inform dictionary mening done fetching*/
@@ -172,7 +179,157 @@ public class Dictionary {
     }
 
 
+    private void fetchWordMeaning() {
+        String url = "https://owlbot.info/api/v1/dictionary/offered?format=json";
+        RequestQueue requestQueue = Volley.newRequestQueue(editorialFeedActivity.getApplicationContext());
+        final JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Json", "onResponse: "+response.toString());
+
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+
+// Access the RequestQueue through your singleton class.
+        requestQueue.add(jsObjRequest);
+    }
+
     private class GetWordMeaning extends AsyncTask<Void, Void, String> {
+
+        protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
+            InputStream in = entity.getContent();
+
+
+            StringBuffer out = new StringBuffer();
+            int n = 1;
+            while (n > 0) {
+                byte[] b = new byte[4096];
+                n = in.read(b);
+
+
+                if (n > 0) out.append(new String(b, 0, n));
+            }
+
+
+            return out.toString();
+        }
+
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+
+            Log.d("My TAg", "doInBackground: calling rest");
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpContext localContext = new BasicHttpContext();
+            // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+
+            HttpGet httpGet = new HttpGet("https://api.pearson.com/v2/dictionaries/lasde/entries?headword="+getWord()+"&apikey=nYfSDm43esItstvE1jH4BNa4ox6xFzWa&limit=2");
+
+            String text = null;
+
+            try {
+                Log.d("My TAg", "doInBackground: going to call rest");
+                HttpResponse response = httpClient.execute(httpGet, localContext);
+
+                Log.d("My TAg", "doInBackground: done calling rest");
+                HttpEntity entity = response.getEntity();
+                text = getASCIIContentFromEntity(entity);
+
+            } catch (Exception e) {
+                return e.getLocalizedMessage();
+            }
+            return text;
+        }
+
+
+        protected void onPostExecute(String results) {
+            if (results != null) {
+                try {
+                    Log.d("Tag", "onPostExecute: " + results);
+
+                    JSONObject jsonObj = new JSONObject(results);
+                    int count = jsonObj.getInt("count");
+
+                    JSONArray jsonArray = jsonObj.getJSONArray("results");
+
+                    if (count>0){
+
+
+                        JSONObject jsonObjectMeaning1 = jsonArray.getJSONObject(0);
+                        setWordPartOfSpeech(jsonObjectMeaning1.getString("part_of_speech"));
+                        JSONArray jsonArrayMeaning1 =jsonObjectMeaning1.getJSONArray("senses");
+
+
+                        JSONObject jsonObjectsenses = jsonArrayMeaning1.getJSONObject(0);
+
+
+                        setWordMeaning(jsonObjectsenses.getJSONArray("definition").getString(0));
+
+
+
+                    }
+
+                    if (count>1){
+
+
+                        JSONObject jsonObjectMeaning1 = jsonArray.getJSONObject(1);
+                        //setWordPartOfSpeech(jsonObjectMeaning1.getString("part_of_speech"));
+                        JSONArray jsonArrayMeaning1 =jsonObjectMeaning1.getJSONArray("senses");
+
+
+                        JSONObject jsonObjectsenses = jsonArrayMeaning1.getJSONObject(0);
+
+
+                        setWordMeaning(getWordMeaning() +" /\n"+jsonObjectsenses.getJSONArray("definition").getString(0));
+
+
+
+                    }
+
+
+
+
+                    //setWord(jsonObj.getString("word"));
+                    //setWordMeaning(jsonObj.getString("defenition"));
+                    //setWordPartOfSpeech(jsonObj.getString("type"));
+                    processWordMeaning();
+
+
+                } catch (JSONException je) {
+                    je.printStackTrace();
+                }
+                //et.setText(allKey);
+                setMeaningFetched(true);
+                completeFetching();
+                Log.d("my text", "onPostExecute meaning: Executed");
+            } else {
+                setMeaningFetched(false);
+                completeFetching();
+            }
+
+
+        }
+
+
+    }
+
+
+  /* private class GetWordMeaning extends AsyncTask<Void, Void, String> {
 
         protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
             InputStream in = entity.getContent();
@@ -253,7 +410,7 @@ public class Dictionary {
 
 
     }
-
+*/
 
     private class GetRelatedWord extends AsyncTask<Void, Void, String> {
 
@@ -285,7 +442,7 @@ public class Dictionary {
             HttpContext localContext = new BasicHttpContext();
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com/v4/word.json/"+getWord()+"/relatedWords?useCanonical=false&relationshipTypes=synonym&limitPerRelationshipType=3&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com/v4/word.json/" + getWord() + "/relatedWords?useCanonical=false&relationshipTypes=synonym&limitPerRelationshipType=3&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
             String text = null;
 
@@ -307,7 +464,7 @@ public class Dictionary {
         protected void onPostExecute(String results) {
             if (results != null) {
                 try {
-                    Log.d("Tag", "onPostExecute: "+results);
+                    Log.d("Tag", "onPostExecute: " + results);
                     JSONArray jsonArray = new JSONArray(results);
                     JSONObject jsonObj = jsonArray.getJSONObject(0);
                     jsonArray = jsonObj.getJSONArray("words");
@@ -325,8 +482,7 @@ public class Dictionary {
                 setSynonymsFetched(true);
                 completeFetching();
                 Log.d("my text", "onPostExecute synonyms: Executed");
-            }
-            else{
+            } else {
                 setSynonymsFetched(false);
                 completeFetching();
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");

@@ -42,6 +42,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.InviteEvent;
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -97,7 +98,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public String selectedSortWord = "";
     //private String activityCurrentTheme = "Day";
-    private boolean isNightMode =false;
+    private boolean isNightMode = false;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -113,9 +114,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         Fabric.with(this, new Crashlytics());
 
         if (AppCompatDelegate.getDefaultNightMode()
-                ==AppCompatDelegate.MODE_NIGHT_YES) {
+                == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.FeedActivityThemeDark);
-            isNightMode =true;
+            isNightMode = true;
         }
         initializeRemoteConfig();
 
@@ -173,7 +174,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
-         // FirebaseMessaging.getInstance().subscribeToTopic("tester");
+        // FirebaseMessaging.getInstance().subscribeToTopic("tester");
         //Log.d("push notifiaction", "onCreate: "+ FirebaseInstanceId.getInstance().getToken());
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
@@ -189,7 +190,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void openDynamicLink() {
 
 
-
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(getIntent())
                 .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
@@ -202,12 +202,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             Log.d("DeepLink", "onSuccess: " + deepLink);
 
                             String editorialID = deepLink.getQueryParameter("editorialID");
-                           // Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
-
+                            // Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
 
 
                             if (editorialID == null) {
-                                String deepLinkstring  = deepLink.toString();
+                                String deepLinkstring = deepLink.toString();
 
                                 //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
 
@@ -231,7 +230,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             try {
                                 Answers.getInstance().logInvite(new InviteEvent()
                                         .putMethod("Dynamic link")
-                                        .putCustomAttribute("editorialID",editorialID)
+                                        .putCustomAttribute("editorialID", editorialID)
                                 );
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -325,16 +324,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (AppCompatDelegate.getDefaultNightMode()
                 == AppCompatDelegate.MODE_NIGHT_YES) {
 
-            if (isNightMode){
+            if (isNightMode) {
 
-            }else{
+            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 recreate();
             }
 
-        }else{
+        } else {
 
-            if (isNightMode){
+            if (isNightMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 recreate();
             }
@@ -388,7 +387,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         }
 */
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, "day" ,this);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, "day", this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -472,7 +471,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }*/
 
     private void changeActivityTheme(String day) {
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day ,this);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day, this);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -486,7 +485,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onRecyclerViewItemClick(int position) {
 
-        if(position <0){
+        if (position < 0) {
             recreate();
         }
 
@@ -499,7 +498,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked", false);
-        i.putExtra("editorial",editorialgenralInfo);
+        i.putExtra("editorial", editorialgenralInfo);
 
 
         startActivity(i);
@@ -517,7 +516,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialSubheading", editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked", false);
-        i.putExtra("editorial",editorialgenralInfo);
+        i.putExtra("editorial", editorialgenralInfo);
 
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -623,7 +622,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     public void initializeAds() {
-       // MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        // MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         final AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
 
         mAdView.setVisibility(View.GONE);
@@ -638,10 +637,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 FirebaseCrash.log(" Editorial list Ad failed to load - " + i);
 
 
-                try{
+                try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                    .putCustomAttribute("Placement","List banner"));
-                }catch (Exception e){
+                            .putCustomAttribute("Placement", "List banner").putCustomAttribute("errorType",i));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -834,7 +833,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             */
 
 
-
             case R.id.nav_rate_us:
                 onRateUs();
                 break;
@@ -869,7 +867,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[] {"Hindi","Telugu","Marathi","Tamil" };
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -879,18 +877,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 // the user clicked on colors[which]
 
-                String languageCode="";
-                if (which ==0){
-                    languageCode ="hi";
-                }else if (which==1){
-                    languageCode ="te";
-                }else if (which ==2){
-                    languageCode ="mr";
-                }else if (which ==3){
-                    languageCode ="ta";
+                String languageCode = "";
+                if (which == 0) {
+                    languageCode = "hi";
+                } else if (which == 1) {
+                    languageCode = "te";
+                } else if (which == 2) {
+                    languageCode = "mr";
+                } else if (which == 3) {
+                    languageCode = "ta";
                 }
 
-                LanguageManager.setLanguageCode(EditorialListWithNavActivity.this ,languageCode);
+                LanguageManager.setLanguageCode(EditorialListWithNavActivity.this, languageCode);
 
 
             }
@@ -902,11 +900,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onRemoveAdsClick() {
 
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Remove all Ads");
+        builder.setTitle("Remove Ads for Free");
 
-        builder.setMessage("Hello Message for subscription")
+        builder.setMessage("Remove all the ads from app for free in just one click\n" +
+                "Press Remove Ads --> Ad will be displayed --> Click on the Ad shown --> Done. All the ads from app will be removed")
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -934,12 +932,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-    public void initializeSubscriptionAds(){
+    public void initializeSubscriptionAds() {
         mSubscriptionInterstitialAd = new InterstitialAd(this);
-        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
         mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
 
-        mSubscriptionInterstitialAd.setAdListener(new AdListener(){
+        mSubscriptionInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
@@ -948,6 +946,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Subscription ad").putCustomAttribute("Error code" ,i));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override
@@ -966,6 +972,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 super.onAdLeftApplication();
 
                 AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this);
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed","1"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -1023,18 +1035,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onShareClick() {
 
 
-
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
-
-
-
-
-
 
 
     }
@@ -1158,22 +1164,23 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public void showInterstitialAd() {
         //set editorialcount to 0
 
+        if (AdsSubscriptionManager.checkShowAds(this)) {
+            if (EDITORIALCOUNTADS > editorialcountAdMax) {
 
-        if (EDITORIALCOUNTADS > editorialcountAdMax) {
+                if (mInterstitialAd != null) {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                        EDITORIALCOUNTADS = 0;
 
-            if (mInterstitialAd != null) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    EDITORIALCOUNTADS = 0;
-
+                    } else {
+                        loadInterstitialAd();
+                    }
                 } else {
                     loadInterstitialAd();
                 }
             } else {
-                loadInterstitialAd();
+                EDITORIALCOUNTADS++;
             }
-        } else {
-            EDITORIALCOUNTADS++;
         }
 
     }

@@ -504,10 +504,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         //Intent i =new Intent(this ,);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        openBottomSheet(true);
+        /*openBottomSheet(true);
         Dictionary dictionary = new Dictionary(selectedWord);
         dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
-
+*/
 
     }
 
@@ -915,7 +915,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native bottom"));
+                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType",i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -959,7 +959,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 super.onAdFailedToLoad(i);
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Bottom sheet"));
+                            .putCustomAttribute("Placement", "Bottom sheet").putCustomAttribute("errorType",i));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -977,6 +978,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "top Native small").putCustomAttribute("errorType",i));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

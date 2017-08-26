@@ -76,7 +76,7 @@ public class AppRater {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         if (editor !=null){
-                            editor.putLong("launch_count", 2);
+                            editor.putLong("launch_count", 0);
                             editor.commit();
 
                         }
