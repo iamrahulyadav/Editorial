@@ -269,6 +269,17 @@
                     android:visibility="visible" />
 
 
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="Remove Ads for Free !"
+                    android:background="?attr/colorAccent"
+                    android:onClick="onRemoveAdClick"
+                    android:visibility="gone"
+                    android:textColor="?attr/primaryTextAccentColor"
+                    android:id="@+id/editorialfeed_removeAd_button"
+                    />
 
                 <com.google.android.gms.ads.NativeExpressAdView
                     android:id="@+id/editorialfeed_native_adView"
@@ -290,6 +301,9 @@
                     android:autoLink="all"
                     android:textColor="?attr/secondaryTextColor"
                     android:textColorLink="?attr/colorAccent" />
+
+
+
 
                 <!--Comment System layout-->
 

@@ -177,11 +177,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         // FirebaseMessaging.getInstance().subscribeToTopic("tester");
         //Log.d("push notifiaction", "onCreate: "+ FirebaseInstanceId.getInstance().getToken());
 
-        if (AdsSubscriptionManager.checkShowAds(this)) {
-            mInterstitialAd = new InterstitialAd(this);
-            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
-            initializeInterstitialAds();
-        }
+
 
         initializeSubscriptionAds();
 
@@ -434,7 +430,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
+
             initializeAds();
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
+            initializeInterstitialAds();
         }
 
 
@@ -857,6 +857,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onLanguageClick();
                 break;
 
+            case R.id.nav_suggestion:
+                onSuggestionClick();
+                break;
+
         }
 
 
@@ -903,7 +907,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Ads for Free");
 
-        builder.setMessage("Remove all the ads from app for free in just one click\n" +
+        builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
                 "Press Remove Ads --> Ad will be displayed --> Click on the Ad shown --> Done. All the ads from app will be removed")
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -941,6 +945,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
 
             @Override
@@ -978,6 +983,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -1052,10 +1059,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-    private void onAboutClick() {
+    private void onSuggestionClick() {
 
-        Intent i = new Intent(this, AboutActivity.class);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"acraftystudio@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion for Editorial App");
+        intent.putExtra(Intent.EXTRA_TEXT, "Your suggestion here \n");
+
+        intent.setType("message/rfc822");
+
+        startActivity(Intent.createChooser(intent, "Select Email App"));
 
     }
 

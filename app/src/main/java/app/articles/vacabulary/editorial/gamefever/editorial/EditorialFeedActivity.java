@@ -90,6 +90,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     boolean isPushNotification = false;
     private boolean notesMode=false;
+    private InterstitialAd mSubscriptionInterstitialAd;
 
 
     @Override
@@ -157,7 +158,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             //initializeAds();
             initializeNativeAds();
             initializeBottomSheetAd();
+            initializeSubscriptionAds();
+            Button button =(Button)findViewById(R.id.editorialfeed_removeAd_button);
+            button.setVisibility(View.VISIBLE);
         }
+
 
         //setThemeinactivity();
 
@@ -646,7 +651,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void initializeSourceLink() {
         TextView textView = (TextView) findViewById(R.id.editorialfeed_sourceLink_textView);
-        textView.setText(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceLink());
+        textView.setText("Read Editorial from - "+currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceLink());
     }
 
     @Override
@@ -1188,5 +1193,95 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void onShareButtonClick(View view) {
         onShareClick();
+    }
+
+    public void initializeSubscriptionAds() {
+        mSubscriptionInterstitialAd = new InterstitialAd(this);
+        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
+        mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mSubscriptionInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Subscription ad feed").putCustomAttribute("Error code" ,i));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                Toast.makeText(EditorialFeedActivity.this, "Ad clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+
+                AdsSubscriptionManager.setSubscriptionTime(EditorialFeedActivity.this);
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed from feed","1"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    public void onRemoveAdClick(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove Ads for Free");
+
+        builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
+                "Press Remove Ads --> Ad will be displayed --> Click on the Ad shown --> Done. All the ads from app will be removed")
+                .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if (mSubscriptionInterstitialAd.isLoaded()) {
+                            mSubscriptionInterstitialAd.show();
+                        } else {
+                            Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
+                        }
+
+                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue","Clicked yes"));
+
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue","Clicked No"));
+
+                    }
+                });
+
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
     }
 }

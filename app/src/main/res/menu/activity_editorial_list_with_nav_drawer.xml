@@ -25,18 +25,15 @@
 
     <item android:title="Remove Ads for free"
         android:id="@+id/nav_removeads"
-        android:icon="@drawable/ic_menu_camera"/>
+        android:icon="@drawable/ic_action_removeads"/>
+
+    <item android:title="Select Language"
+        android:id="@+id/nav_language"
+        android:icon="@drawable/ic_action_language"/>
 
     <item android:title="Theme">
         <menu>
             <group android:checkableBehavior="single">
-
-                <item
-                    android:id="@+id/nav_day_mode"
-                    android:icon="@drawable/ic_action_day"
-                    android:title="Day mode">
-
-                </item>
 
                 <item
                     android:id="@+id/nav_night_mode"
@@ -45,15 +42,23 @@
 
                 </item>
 
+                <item
+                    android:id="@+id/nav_day_mode"
+                    android:icon="@drawable/ic_action_day"
+                    android:title="Day mode">
+
+                </item>
+
+
+
             </group>
 
         </menu>
 
     </item>
 
-    <item android:title="Select Language"
-        android:id="@+id/nav_language"
-        android:icon="@drawable/ic_menu_camera"/>
+
+
 
     <item
         android:title="Options"
@@ -101,6 +106,11 @@
                 android:id="@+id/nav_rate_us"
                 android:icon="@mipmap/ic_rateus"
                 android:title="Rate Us" />
+
+            <item
+                android:id="@+id/nav_suggestion"
+                android:icon="@mipmap/ic_rateus"
+                android:title="Suggestion" />
 
 
         </menu>

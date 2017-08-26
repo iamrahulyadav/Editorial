@@ -36,6 +36,7 @@ public class AdsSubscriptionManager {
         long currentTime = System.currentTimeMillis();
 
         long subscriptionDuration =currentTime -subscriptionTime;
+        //3days subscribe
         if ( subscriptionDuration<259200000l && 0<subscriptionDuration){
             return false ;
         }else{
