@@ -5,13 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -178,6 +171,7 @@ public class Dictionary {
 
     }
 
+/*
 
     private void fetchWordMeaning() {
         String url = "https://owlbot.info/api/v1/dictionary/offered?format=json";
@@ -206,6 +200,7 @@ public class Dictionary {
 // Access the RequestQueue through your singleton class.
         requestQueue.add(jsObjRequest);
     }
+*/
 
     private class GetWordMeaning extends AsyncTask<Void, Void, String> {
 
