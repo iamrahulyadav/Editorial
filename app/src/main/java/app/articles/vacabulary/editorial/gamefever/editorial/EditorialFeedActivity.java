@@ -803,6 +803,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 */
 
 
+
     private void onShareClick() {
 
         String appCode = getString(R.string.app_code);
