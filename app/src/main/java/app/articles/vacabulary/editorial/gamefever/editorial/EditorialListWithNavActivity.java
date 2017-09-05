@@ -103,6 +103,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     boolean isActivityInitialized = false;
     private InterstitialAd mSubscriptionInterstitialAd;
 
+    //sort variable
+    int sortSourceIndex = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -538,7 +541,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         //dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
 
-        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), new DBHelperFirebase.OnEditorialListListener() {
+        DBHelperFirebase.OnEditorialListListener onEditorialListListener = new DBHelperFirebase.OnEditorialListListener() {
             @Override
             public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
 
@@ -547,10 +550,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
 
-                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList ,false);
+                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, false);
             }
-        });
+        };
 
+        if (sortSourceIndex < 0) {
+            dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), onEditorialListListener);
+        } else {
+            dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), sortSourceIndex, onEditorialListListener);
+
+        }
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -850,12 +859,88 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onSuggestionClick();
                 break;
 
+            case R.id.nav_sort_bysource:
+                onSortBySourceClick();
+                break;
+
+            case R.id.nav_sort_bycategory:
+                onSortByCategory();
+                break;
+
+
         }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onSortByCategory() {
+        CharSequence sources[] = new CharSequence[]{"The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose source");
+        builder.setItems(sources, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+
+            }
+        });
+
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
+    }
+
+    private void onSortBySourceClick() {
+        CharSequence sources[] = new CharSequence[]{"The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose source");
+        builder.setItems(sources, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                sortSourceIndex = which;
+                fetchEditorialSourceSortList();
+
+            }
+        });
+
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sortSourceIndex = -1;
+                fetchEditorialGeneralList();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void fetchEditorialSourceSortList() {
+
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+        dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, sortSourceIndex, new DBHelperFirebase.OnEditorialListListener() {
+            @Override
+            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
+            }
+
+            @Override
+            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+
+            }
+        });
+
     }
 
     private void onLanguageClick() {

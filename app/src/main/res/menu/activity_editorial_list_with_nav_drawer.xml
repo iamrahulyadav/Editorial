@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Most read">
+    <item android:title="Sort">
         <menu>
             <group android:checkableBehavior="single">
                 <item
@@ -17,6 +17,18 @@
                 <item
                     android:id="@+id/nav_economic_times"
                     android:title="Economic Times" />
+
+                <item
+                    android:id="@+id/nav_sort_bysource"
+                    android:title="By Source" />
+
+                <item
+                    android:id="@+id/nav_sort_bycategory"
+                    android:title="By Category" />
+
+
+
+
 
             </group>
         </menu>
