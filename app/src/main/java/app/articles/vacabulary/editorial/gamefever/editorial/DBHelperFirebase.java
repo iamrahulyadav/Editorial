@@ -31,17 +31,16 @@ public class DBHelperFirebase {
     }
 
 
-    public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo , final TestActivity activity) {
+    public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo, final TestActivity activity) {
         /*Return Full editorial object using editorial general info */
 
         DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialGeneralInfo.getEditorialID());
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                EditorialExtraInfo editorialExtraInfo =  dataSnapshot.getValue(EditorialExtraInfo.class);
+                EditorialExtraInfo editorialExtraInfo = dataSnapshot.getValue(EditorialExtraInfo.class);
 
                 EditorialFullInfo editorialFullInfo = new EditorialFullInfo(editorialGeneralInfo, editorialExtraInfo);
-
 
 
                 activity.onGetEditorialFullInfo(editorialFullInfo);
@@ -56,16 +55,14 @@ public class DBHelperFirebase {
     }
 
 
-
-
-    public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo , final EditorialFeedActivity activity) {
+    public void getEditorialFullInfoByID(final EditorialGeneralInfo editorialGeneralInfo, final EditorialFeedActivity activity) {
         /*Return Full editorial object using editorial general info */
 
         DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialGeneralInfo.getEditorialID());
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                EditorialExtraInfo editorialExtraInfo =  dataSnapshot.getValue(EditorialExtraInfo.class);
+                EditorialExtraInfo editorialExtraInfo = dataSnapshot.getValue(EditorialExtraInfo.class);
 
 
                 EditorialFullInfo editorialFullInfo = new EditorialFullInfo(editorialGeneralInfo, editorialExtraInfo);
@@ -84,47 +81,47 @@ public class DBHelperFirebase {
     }
 
 
-//editorial updte
-    public void getEditorialExtraInfoByID(String editorialID , final OnEditorialListener onEditorialListener) {
+    //editorial updte
+    public void getEditorialExtraInfoByID(String editorialID, final OnEditorialListener onEditorialListener) {
         /*Return Full editorial object using editorial general info */
 
         DatabaseReference myRef = database.getReference("EditorialFullInfo/" + editorialID);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                EditorialExtraInfo editorialExtraInfo =  dataSnapshot.getValue(EditorialExtraInfo.class);
+                EditorialExtraInfo editorialExtraInfo = dataSnapshot.getValue(EditorialExtraInfo.class);
 
                 //onEditorialFullInfoById(editorialFullInfo);
-                onEditorialListener.onEditorialExtraInfo(editorialExtraInfo ,true);
+                onEditorialListener.onEditorialExtraInfo(editorialExtraInfo, true);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.report(new Exception("article cannot be loadede"));
-                onEditorialListener.onEditorialExtraInfo(null ,false);
+                onEditorialListener.onEditorialExtraInfo(null, false);
             }
         });
 
     }
 
 
-    public void getEditorialGeneralInfoByID(String editorialID , final OnEditorialListener onEditorialListener) {
+    public void getEditorialGeneralInfoByID(String editorialID, final OnEditorialListener onEditorialListener) {
         /*Return Full editorial object using editorial general info */
 
         DatabaseReference myRef = database.getReference("EditorialGeneralInfo/" + editorialID);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                EditorialGeneralInfo editorialGeneralInfo =  dataSnapshot.getValue(EditorialGeneralInfo.class);
+                EditorialGeneralInfo editorialGeneralInfo = dataSnapshot.getValue(EditorialGeneralInfo.class);
 
                 //onEditorialFullInfoById(editorialFullInfo);
-                onEditorialListener.onEditorialGeneralInfo(editorialGeneralInfo ,true);
+                onEditorialListener.onEditorialGeneralInfo(editorialGeneralInfo, true);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.report(new Exception("article cannot be loadede"));
-                onEditorialListener.onEditorialGeneralInfo(null ,false);
+                onEditorialListener.onEditorialGeneralInfo(null, false);
             }
         });
 
@@ -134,17 +131,14 @@ public class DBHelperFirebase {
 //after editorial update
 
 
-    public void getEditorialExtraInfoByID(final String editorialId , final EditorialListWithNavActivity activity) {
+    public void getEditorialExtraInfoByID(final String editorialId, final EditorialListWithNavActivity activity) {
         /*Return Full editorial object using editorial general info */
 
         DatabaseReference myRef = database.getReference("EditorialGeneralInfo/" + editorialId);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                EditorialGeneralInfo editorialGeneralInfo =  dataSnapshot.getValue(EditorialGeneralInfo.class);
-
-
-
+                EditorialGeneralInfo editorialGeneralInfo = dataSnapshot.getValue(EditorialGeneralInfo.class);
 
 
                 //onEditorialFullInfoById(editorialFullInfo);
@@ -158,7 +152,6 @@ public class DBHelperFirebase {
         });
 
     }
-
 
 
     public void insertEditorial(EditorialFullInfo editorialFullInfo) {
@@ -194,7 +187,6 @@ public class DBHelperFirebase {
             query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
 
 
-
         }
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -202,7 +194,7 @@ public class DBHelperFirebase {
                 ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    EditorialGeneralInfo editorialGeneralInfo =  ds.getValue(EditorialGeneralInfo.class);
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
 
 
                     editorialGeneralInfoArraylist.add(editorialGeneralInfo);
@@ -233,7 +225,6 @@ public class DBHelperFirebase {
             query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
 
 
-
         }
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -241,14 +232,14 @@ public class DBHelperFirebase {
                 ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    EditorialGeneralInfo editorialGeneralInfo =  ds.getValue(EditorialGeneralInfo.class);
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
 
 
                     editorialGeneralInfoArraylist.add(editorialGeneralInfo);
                 }
 
 
-               // activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
+                // activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist);
 
             }
 
@@ -262,7 +253,6 @@ public class DBHelperFirebase {
 
 
     }
-
 
 
     public void fetchEditorialList(int limit, String end, final EditorialListWithNavActivity activity, final boolean isFirst) {
@@ -276,7 +266,6 @@ public class DBHelperFirebase {
             query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
 
 
-
         }
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -284,14 +273,14 @@ public class DBHelperFirebase {
                 ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    EditorialGeneralInfo editorialGeneralInfo =  ds.getValue(EditorialGeneralInfo.class);
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
 
 
                     editorialGeneralInfoArraylist.add(editorialGeneralInfo);
                 }
 
 
-                activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist , isFirst);
+                activity.onFetchEditorialGeneralInfo(editorialGeneralInfoArraylist, isFirst);
 
             }
 
@@ -307,8 +296,79 @@ public class DBHelperFirebase {
     }
 
 
+    public void fetchEditorialList(int limit, String end, final OnEditorialListListener onEditorialListListener) {
+        /*return list of editorial of size limit which end at end*/
 
-    public void insertComment(String editorialID , Comment userComment){
+        DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
+        Query query;
+
+        query = myRef2.orderByChild("editorialID").limitToLast(limit).endAt(end);
+
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
+                onEditorialListListener.onMoreEditorialList(editorialGeneralInfoArraylist, true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+                onEditorialListListener.onMoreEditorialList(null, false);
+
+            }
+        });
+
+
+    }
+
+    public void fetchEditorialList(int limit, final OnEditorialListListener onEditorialListListener) {
+        /*return list of editorial of size limit which end at end*/
+
+        DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
+        Query query;
+
+        query = myRef2.limitToLast(limit);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
+                onEditorialListListener.onEditorialList(editorialGeneralInfoArraylist, true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+                onEditorialListListener.onEditorialList(null, false);
+
+            }
+        });
+
+
+    }
+
+
+    public void insertComment(String editorialID, Comment userComment) {
 
         DatabaseReference myRef = database.getReference("Comments/" + editorialID);
         myRef.push().setValue(userComment).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -319,17 +379,17 @@ public class DBHelperFirebase {
         });
     }
 
-    public void fetchComment(String editorialID,int limitTo , final OnCommentListener onCommentListener){
+    public void fetchComment(String editorialID, int limitTo, final OnCommentListener onCommentListener) {
 
 
         DatabaseReference myRef = database.getReference("Comments/" + editorialID);
-        Query query= myRef.orderByKey().limitToLast(limitTo);
+        Query query = myRef.orderByKey().limitToLast(limitTo);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Comment> commentArrayList = new ArrayList<Comment>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     commentArrayList.add(snapshot.getValue(Comment.class));
 
@@ -347,7 +407,6 @@ public class DBHelperFirebase {
 
 
     }
-
 
 
     public void uploadLike(Like like, final OnLikeListener onLikeListener) {
@@ -369,18 +428,27 @@ public class DBHelperFirebase {
     }
 
 
-    public interface OnCommentListener{
-        public void onCommentInserted( Comment comment);
+    public interface OnCommentListener {
+        public void onCommentInserted(Comment comment);
+
         public void onCommentFetched(ArrayList<Comment> commentArrayList);
     }
 
-    public interface OnEditorialListener{
-        public void onEditorialGeneralInfo (EditorialGeneralInfo editorialGeneralInfo ,boolean isSuccessful);
-        public void onEditorialExtraInfo (EditorialExtraInfo editorialExtraInfo ,boolean isSuccessful);
+    public interface OnEditorialListener {
+        public void onEditorialGeneralInfo(EditorialGeneralInfo editorialGeneralInfo, boolean isSuccessful);
+
+        public void onEditorialExtraInfo(EditorialExtraInfo editorialExtraInfo, boolean isSuccessful);
     }
 
     public interface OnLikeListener {
         void onLikeUpload(boolean isSuccessful);
+    }
+
+    public interface OnEditorialListListener {
+        public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful);
+
+        public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful);
+
     }
 
 }

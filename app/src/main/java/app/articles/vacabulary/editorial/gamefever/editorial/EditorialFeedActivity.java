@@ -216,12 +216,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         // Toast.makeText(EditorialFeedActivity.this, "ThankYou", Toast.LENGTH_SHORT).show();
 
                         // Write your code here to invoke YES event
-                        try {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.shareLink)));
 
-                        } catch (Exception exception) {
-
-                        }
                         dialog.cancel();
                     }
                 });
@@ -723,85 +718,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
 
     }
-
-
-
-/*
-
-    private void onShareClick() {
-
-
-        String appCode = getString(R.string.app_code);
-        String appName = getString(R.string.app_name);
-        String packageName = this.getPackageName();
-        String imageUrl = "https://firebasestorage.googleapis.com/v0/b/editorial-8cbf6.appspot.com/o/editorial%20logo%20png.png?alt=media&token=632a8d65-b5cb-4f68-94a0-e65b20890405";
-
-
-        String utmSource = getString(R.string.utm_source);
-        String utmCampaign = getString(R.string.utm_campaign);
-        String utmMedium = getString(R.string.utm_medium);
-
-        String url = "https://" + appCode + "/?link=https://dailyeditorial.com/"
-                + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()
-                + "&apn=" + packageName
-                + "&st=" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
-                + "&sd=" + appName
-                + "&utm_source=" + utmSource
-                + "&utm_medium=" + utmMedium
-                + "&utm_campaign=" + utmCampaign;
-
-        // Toast.makeText(this, "Shared an article " + url, Toast.LENGTH_SHORT).show();
-
-        url = url.replaceAll(" ", "+");
-        url = url.replaceAll("\n", "");
-
-
-        final ProgressDialog pd = new ProgressDialog(EditorialFeedActivity.this);
-        pd.setMessage("Creating link ...");
-        pd.show();
-
-        new UrlShortner(url, new UrlShortner.UrlShortnerListner() {
-
-
-            @Override
-            public void onCancel(String longUrl) {
-                pd.dismiss();
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, longUrl + " \nHey read this editorial");
-                startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
-
-
-            }
-
-            @Override
-            public void onUrlShort(String shortUrl, String longUrl) {
-                pd.dismiss();
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-
-                //sharingIntent.putExtra(Intent.EXTRA_STREAM, newsMetaInfo.getNewsImageLocalPath());
-
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortUrl
-                        + "\n" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
-                        + "\n\nRead full editorial at Daily editorial app  ");
-                startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
-
-            }
-        }).execute("");
-
-
-        Answers.getInstance().logShare(new ShareEvent()
-                .putContentName(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
-                .putContentId(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID()));
-
-
-    }
-*/
-
 
 
     private void onShareClick() {

@@ -129,9 +129,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
-        if(EditorialListWithNavActivity.isShowingAd) {
-            initializeAds();
-        }
+
 
 
 
@@ -263,7 +261,7 @@ public class EditorialListActivity extends AppCompatActivity {
         sharingIntent.setType("text/plain");
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
+        //sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 

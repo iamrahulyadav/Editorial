@@ -77,8 +77,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     private static int sortedListLimit = 0;
-    private List<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
-    private List<EditorialGeneralInfo> editorialListSortedArrayList = new ArrayList<>();
+    private ArrayList<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
+    private ArrayList<EditorialGeneralInfo> editorialListSortedArrayList = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private EditorialGeneralInfoAdapter mAdapter;
@@ -88,23 +88,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     ProgressBar progressBar;
     private boolean isRefreshing = true;
     private boolean isSplashScreenVisible = true;
-    public static boolean isShowingAd = false;
-    public static String shareLink = "https://play.google.com/store/apps/details?id=app.articles.vacabulary.editorial.gamefever.editorial";
-    public static String visitUsLink = "https://appforyou.wixsite.com/android";
 
 
     public static int listLimit = 10;
     public static int EDITORIALCOUNTADS = 0;
 
     public String selectedSortWord = "";
-    //private String activityCurrentTheme = "Day";
     private boolean isNightMode = false;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
     InterstitialAd mInterstitialAd;
     private int editorialcountAdMax = 2;
-    GoogleApiClient mGoogleApiClient;
     boolean isActivityInitialized = false;
     private InterstitialAd mSubscriptionInterstitialAd;
 
@@ -168,15 +163,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         initializeSplashScreen();
 
 
-// Build GoogleApiClient with AppInvite API for receiving deep links
-
         openDynamicLink();
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
-        // FirebaseMessaging.getInstance().subscribeToTopic("tester");
-        //Log.d("push notifiaction", "onCreate: "+ FirebaseInstanceId.getInstance().getToken());
-
 
 
         initializeSubscriptionAds();
@@ -527,15 +517,39 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void fetchEditorialGeneralList() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, "", this, true);
+        //dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, "", this, true);
+
+        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, new DBHelperFirebase.OnEditorialListListener() {
+            @Override
+            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
+            }
+
+            @Override
+            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+
+            }
+        });
 
     }
 
 
     public void loadMoreClick(View view) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get
-                (editorialListArrayList.size() - 1).getEditorialID(), this, false);
+        //dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
+
+        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), new DBHelperFirebase.OnEditorialListListener() {
+            @Override
+            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+
+            }
+
+            @Override
+            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+
+                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList ,false);
+            }
+        });
 
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -639,7 +653,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "List banner").putCustomAttribute("errorType",i));
+                            .putCustomAttribute("Placement", "List banner").putCustomAttribute("errorType", i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -685,23 +699,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         try {
-            EditorialListWithNavActivity.shareLink = mFirebaseRemoteConfig.getString("shareLink");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-            EditorialListWithNavActivity.isShowingAd = Boolean.valueOf(mFirebaseRemoteConfig.getString("isShowingAd"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            EditorialListWithNavActivity.isShowingAd = true;
-            FirebaseCrash.log("Value of isShowingad isWrong");
-        }
-
-        try {
 
             EditorialListWithNavActivity.listLimit = Integer.valueOf(mFirebaseRemoteConfig.getString("listLimit"));
 
@@ -731,14 +728,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             editorialcountAdMax = 2;
             FirebaseCrash.log("Value of editorialcountadmax isWrong");
-        }
-
-        try {
-            EditorialListWithNavActivity.visitUsLink = mFirebaseRemoteConfig.getString("visitAppForYou");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
         }
 
 
@@ -954,7 +943,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Subscription ad").putCustomAttribute("Error code" ,i));
+                            .putCustomAttribute("Placement", "Subscription ad").putCustomAttribute("Error code", i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -979,7 +968,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this);
 
                 try {
-                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed","1"));
+                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed", "1"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1044,9 +1033,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-
+        String link = "https://play.google.com/store/apps/details?id=" + this.getPackageName();
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, EditorialListWithNavActivity.shareLink);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
 

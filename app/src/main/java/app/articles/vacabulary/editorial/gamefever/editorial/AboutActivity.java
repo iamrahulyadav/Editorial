@@ -61,12 +61,6 @@ public class AboutActivity extends AppCompatActivity {
 
     public void visitUsAppForYou(View view) {
 
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(EditorialListWithNavActivity.visitUsLink)));
-
-        } catch (Exception exception) {
-
-        }
 
     }
 }
