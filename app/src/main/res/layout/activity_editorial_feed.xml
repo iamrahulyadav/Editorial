@@ -105,7 +105,9 @@
                             android:text="Source Name"
                             android:textColor="?attr/primaryTextColor"
                             android:textSize="14sp"
-                            android:textStyle="normal" />
+                            android:textStyle="normal"
+                            android:onClick="onSourceTextClick"
+                            />
 
 
                         <TextView
@@ -118,7 +120,10 @@
                             android:textAlignment="textEnd"
                             android:textAllCaps="true"
                             android:textColor="?attr/colorPrimary"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:onClick="onCategoryTextClick"
+
+                            />
 
 
                     </LinearLayout>

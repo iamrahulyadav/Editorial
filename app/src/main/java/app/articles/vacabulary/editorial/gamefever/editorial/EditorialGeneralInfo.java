@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 public class EditorialGeneralInfo implements Serializable {
     private String editorialHeading, editorialDate, editorialSource, editorialID, editorialSubHeading, editorialTag, editorialCategory ,editorialSourceLink;
-    private int editorialSourceIndex ,editorialLike;
+    private int editorialSourceIndex ,editorialLike ,editorialCategoryIndex;
     private long timeInMillis;
 
     public EditorialGeneralInfo() {
@@ -113,6 +113,14 @@ public class EditorialGeneralInfo implements Serializable {
 
     public void setEditorialLike(int editorialLike) {
         this.editorialLike = editorialLike;
+    }
+
+    public int getEditorialCategoryIndex() {
+        return editorialCategoryIndex;
+    }
+
+    public void setEditorialCategoryIndex(int editorialCategoryIndex) {
+        this.editorialCategoryIndex = editorialCategoryIndex;
     }
 
     public static String resolveDate(long editorialTime) {

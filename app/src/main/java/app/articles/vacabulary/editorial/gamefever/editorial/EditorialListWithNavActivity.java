@@ -105,6 +105,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     //sort variable
     int sortSourceIndex = -1;
+    int sortCategoryIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +166,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         initializeSplashScreen();
 
+        //see intentdata for sort condition if any
+        getSortCondition();
 
         openDynamicLink();
 
@@ -173,6 +176,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         initializeSubscriptionAds();
+
+    }
+
+    private void getSortCondition() {
+
+        Intent intent = getIntent();
+
+        sortSourceIndex = intent.getIntExtra("sourceIndex", -1);
+        sortCategoryIndex = intent.getIntExtra("categoryIndex", -1);
+
 
     }
 
@@ -435,6 +448,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                sortCategoryIndex=-1;
+                sortSourceIndex =-1;
                 fetchEditorialGeneralList();
                 swipeRefreshLayout.setRefreshing(true);
             }
@@ -520,9 +535,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void fetchEditorialGeneralList() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        //dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, "", this, true);
 
-        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, new DBHelperFirebase.OnEditorialListListener() {
+        DBHelperFirebase.OnEditorialListListener onEditorialListListener = new DBHelperFirebase.OnEditorialListListener() {
             @Override
             public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
                 onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
@@ -532,7 +546,19 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
 
             }
-        });
+        };
+
+
+        if (sortSourceIndex > -1) {
+            dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, sortSourceIndex, onEditorialListListener);
+
+        } else if (sortCategoryIndex > -1) {
+            dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, sortCategoryIndex, onEditorialListListener);
+
+        } else {
+            dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, onEditorialListListener);
+
+        }
 
     }
 
@@ -554,11 +580,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         };
 
-        if (sortSourceIndex < 0) {
-            dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), onEditorialListListener);
-        } else {
-            dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), sortSourceIndex, onEditorialListListener);
+        if (editorialListArrayList.size() > 0) {
+            if (sortSourceIndex > -1) {
+                dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), sortSourceIndex, onEditorialListListener);
 
+            } else if (sortCategoryIndex > -1) {
+                dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), sortCategoryIndex, onEditorialListListener);
+
+            } else {
+                dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), onEditorialListListener);
+
+            }
         }
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -758,8 +790,26 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                super.onBackPressed();
+
+                if (sortCategoryIndex >-1 || sortSourceIndex >-1){
+                    sortCategoryIndex =-1;
+                    sortSourceIndex =-1;
+
+                    fetchEditorialGeneralList();
+                    try {
+                        swipeRefreshLayout.setRefreshing(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }else{
+                    super.onBackPressed();
+                }
+
+
             }
+        }else {
+            super.onBackPressed();
         }
     }
 
@@ -877,14 +927,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSortByCategory() {
-        CharSequence sources[] = new CharSequence[]{"The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
+        CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
-        builder.setItems(sources, new DialogInterface.OnClickListener() {
+        builder.setItems(category, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                sortCategoryIndex = which;
+                sortSourceIndex = -1;
+                fetchEditorialCategorySortList();
 
 
             }
@@ -894,10 +947,29 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                sortCategoryIndex = -1;
+                sortSourceIndex = -1;
+                fetchEditorialGeneralList();
+
             }
         });
 
         builder.show();
+    }
+
+    private void fetchEditorialCategorySortList() {
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+        dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, sortCategoryIndex, new DBHelperFirebase.OnEditorialListListener() {
+            @Override
+            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
+            }
+
+            @Override
+            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+
+            }
+        });
     }
 
     private void onSortBySourceClick() {
@@ -910,6 +982,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
 
                 sortSourceIndex = which;
+                sortCategoryIndex = -1;
                 fetchEditorialSourceSortList();
 
             }
@@ -919,6 +992,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sortSourceIndex = -1;
+                sortCategoryIndex = -1;
                 fetchEditorialGeneralList();
             }
         });

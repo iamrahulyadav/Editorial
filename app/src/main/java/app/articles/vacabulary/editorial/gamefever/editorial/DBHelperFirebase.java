@@ -437,6 +437,76 @@ public class DBHelperFirebase {
 
     }
 
+    public void fetchCategorySortEditorialList(int limit,int categoryIndex, final OnEditorialListListener onEditorialListListener) {
+        /*return list of editorial of size limit which end at end*/
+
+        DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
+        Query query;
+
+        query = myRef2.orderByChild("editorialCategoryIndex").equalTo(categoryIndex).limitToLast(limit);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
+                onEditorialListListener.onEditorialList(editorialGeneralInfoArraylist, true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+                onEditorialListListener.onEditorialList(null, false);
+
+            }
+        });
+
+
+    }
+
+    public void fetchCategorySortEditorialList(int limit ,String end,int categoryIndex, final OnEditorialListListener onEditorialListListener) {
+        /*return list of editorial of size limit which end at end*/
+
+        DatabaseReference myRef2 = database.getReference("EditorialGeneralInfo");
+        Query query;
+
+        query = myRef2.orderByChild("editorialCategoryIndex").endAt(categoryIndex ,end).limitToLast(limit);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
+                onEditorialListListener.onMoreEditorialList(editorialGeneralInfoArraylist, true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+                onEditorialListListener.onEditorialList(null, false);
+
+            }
+        });
+
+
+    }
+
 
     public void insertComment(String editorialID, Comment userComment) {
 

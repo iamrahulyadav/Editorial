@@ -1201,4 +1201,29 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         builder.create();
         builder.show();
     }
+
+    public void onSourceTextClick(View view) {
+        try {
+            Intent intent =new Intent(EditorialFeedActivity.this ,EditorialListWithNavActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("sourceIndex",currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceIndex());
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void onCategoryTextClick(View view) {
+        try {
+            Intent intent =new Intent(EditorialFeedActivity.this ,EditorialListWithNavActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("categoryIndex",currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialCategoryIndex());
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
