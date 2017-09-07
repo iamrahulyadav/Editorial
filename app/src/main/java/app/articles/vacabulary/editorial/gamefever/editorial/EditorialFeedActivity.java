@@ -132,7 +132,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
 
-                    openBottomSheet(true);
+                   /* openBottomSheet(true);
 
                     Dictionary dictionary = new Dictionary(selectedWord);
                     dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
@@ -140,7 +140,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     TextView tv = (TextView) findViewById(R.id.editorial_bottomsheet_heading_textview);
                     tv.setText(translateText.getText());
 
-                    //initializeBottomSheetAd();
+*/
 
                 }
             }
@@ -462,10 +462,17 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         translateText.setText(mWord);
         selectedWord = mWord;
 
-        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            onDictionaryClick(translateText);
 
-        }
+        fetchWordMeaning();
+
+    }
+
+    private void fetchWordMeaning() {
+        openBottomSheet(true);
+
+        Dictionary dictionary = new Dictionary(selectedWord);
+        dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
+
     }
 
     public void updateTranslateText(Translation translation) {
@@ -475,34 +482,42 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void updateDictionaryText(final Dictionary dictionary) {
-        TextView tv;
-        tv = (TextView) findViewById(R.id.editorial_bottomsheet_meaning_textview);
-        tv.setText(dictionary.getWordMeaning());
-        tv = (TextView) findViewById(R.id.editorial_bottomsheet_partspeech_textview);
-        tv.setText(dictionary.getWordPartOfSpeech());
-        tv = (TextView) findViewById(R.id.editorial_bottomsheet_synonyms_textview);
-        String synonymstring = "";
-        for (int i = 0; i < dictionary.getWordsynonym().length; i++) {
-            synonymstring = synonymstring + dictionary.getWordsynonym()[i] + " , ";
-        }
-        tv.setText(synonymstring);
-
-        Button bt = (Button) findViewById(R.id.editorial_bottomSheet_add_button);
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseHandler databaseHandler = new DatabaseHandler(EditorialFeedActivity.this);
-                databaseHandler.addToDictionary(dictionary);
-                Toast.makeText(EditorialFeedActivity.this, "Word Added To Dictionary", Toast.LENGTH_SHORT).show();
-
-
+        if (selectedWord.equalsIgnoreCase(dictionary.getWord())) {
+            TextView tv;
+            tv = (TextView) findViewById(R.id.editorial_bottomsheet_meaning_textview);
+            tv.setText(dictionary.getWordMeaning());
+            tv = (TextView) findViewById(R.id.editorial_bottomsheet_partspeech_textview);
+            tv.setText(dictionary.getWordPartOfSpeech());
+            tv = (TextView) findViewById(R.id.editorial_bottomsheet_synonyms_textview);
+            String synonymstring = "";
+            for (int i = 0; i < dictionary.getWordsynonym().length; i++) {
+                synonymstring = synonymstring + dictionary.getWordsynonym()[i] + " , ";
             }
-        });
+            tv.setText(synonymstring);
+
+            Button bt = (Button) findViewById(R.id.editorial_bottomSheet_add_button);
+            bt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatabaseHandler databaseHandler = new DatabaseHandler(EditorialFeedActivity.this);
+                    databaseHandler.addToDictionary(dictionary);
+                    Toast.makeText(EditorialFeedActivity.this, "Word Added To Dictionary", Toast.LENGTH_SHORT).show();
+
+
+                }
+            });
+        }
     }
 
     public void onDictionaryClick(View v) {
         //Intent i =new Intent(this ,);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        /*openBottomSheet(true);
+
+        Dictionary dictionary = new Dictionary(selectedWord);
+        dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
+*/
 
         /*openBottomSheet(true);
         Dictionary dictionary = new Dictionary(selectedWord);
