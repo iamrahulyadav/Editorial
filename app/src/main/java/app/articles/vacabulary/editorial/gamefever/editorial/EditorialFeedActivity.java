@@ -642,6 +642,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 
 
+
     }
 
     private void initializeSourceLink() {
