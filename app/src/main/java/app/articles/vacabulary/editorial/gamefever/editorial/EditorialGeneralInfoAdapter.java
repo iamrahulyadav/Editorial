@@ -100,5 +100,8 @@ Context context ;
         return EditorialGeneralInfoList.size();
     }
 
-
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
 }
