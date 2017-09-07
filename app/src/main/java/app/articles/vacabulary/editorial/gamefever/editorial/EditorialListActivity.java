@@ -58,7 +58,7 @@ public class EditorialListActivity extends AppCompatActivity {
         initializeActivity();
 
 
-        fetchEditorialGeneralList();
+        //fetchEditorialGeneralList();
 
 
 
@@ -90,7 +90,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList ,getActivityTheme() ,this);
+        mAdapter = new EditorialGeneralInfoAdapter(new ArrayList<Object> () ,getActivityTheme() ,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -169,24 +169,6 @@ public class EditorialListActivity extends AppCompatActivity {
 
     }
 
-    public void fetchEditorialGeneralList(){
-        DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
-        editorialListArrayList= databaseHandlerBookMark.getAllBookMarkEditorial();
-
-
-
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList,getActivityTheme() ,this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        //recyclerView.addItemDecoration(new DividerItemDecorator(this, LinearLayoutManager.VERTICAL));
-
-        progressBar.setVisibility(View.GONE);
-
-        recyclerView.setAdapter(mAdapter);
-
-    }
 
 
 

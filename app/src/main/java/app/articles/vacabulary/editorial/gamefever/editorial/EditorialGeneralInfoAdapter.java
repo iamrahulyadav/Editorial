@@ -12,17 +12,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.NativeExpressAdView;
+
 import java.util.List;
+
+import utils.AdsSubscriptionManager;
 
 /**
  * Created by gamef on 23-02-2017.
  */
 
-public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<EditorialGeneralInfoAdapter.MyViewHolder> {
+public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     String theme = "Day";
-Context context ;
-    private List<EditorialGeneralInfo> EditorialGeneralInfoList;
+    Context context;
+    private List<Object> editorialGeneralInfoList;
+
+    private static final int EDITORIAL_VIEW_TYPE = 1;
+    private static final int AD_VIEW_TYPE = 0;
+
+    private static boolean checkShowAds;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView heading, date, source, tag, subheading;
@@ -49,26 +58,43 @@ Context context ;
             }*/
 
 
-
         }
     }
 
+    public class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
 
-    public EditorialGeneralInfoAdapter(List<EditorialGeneralInfo> EditorialGeneralInfoList, String themeActivity ,Context context) {
-        this.EditorialGeneralInfoList = EditorialGeneralInfoList;
+        public NativeExpressAdViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public EditorialGeneralInfoAdapter(List<Object> EditorialGeneralInfoList, String themeActivity, Context context) {
+        this.editorialGeneralInfoList = EditorialGeneralInfoList;
         this.theme = themeActivity;
-        this.context =context;
+        this.context = context;
+        checkShowAds = AdsSubscriptionManager.checkShowAds(context);
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.editorial_list_layout, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
 
-        setThemeforItem(itemView);
+            case AD_VIEW_TYPE:
+                View nativeExpressLayoutView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.native_express_ad_container, parent, false);
+                return new NativeExpressAdViewHolder(nativeExpressLayoutView);
 
-        return new MyViewHolder(itemView);
+            case EDITORIAL_VIEW_TYPE:
+            default:
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.editorial_list_layout, parent, false);
+
+                setThemeforItem(itemView);
+
+                return new MyViewHolder(itemView);
+        }
     }
+
 
     private void setThemeforItem(View itemView) {
 
@@ -83,25 +109,48 @@ Context context ;
 
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        EditorialGeneralInfo EditorialGeneralInfo = EditorialGeneralInfoList.get(position);
-        holder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        holder.date.setText(EditorialGeneralInfo.resolveDate(EditorialGeneralInfo.getTimeInMillis()));
-        holder.source.setText(EditorialGeneralInfo.getEditorialSource());
-        holder.tag.setText(EditorialGeneralInfo.getEditorialTag());
-        holder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
+        int viewType = getItemViewType(position);
+        switch (viewType) {
 
+            case AD_VIEW_TYPE:
+                NativeExpressAdViewHolder nativeExpressAdViewHolder = (NativeExpressAdViewHolder) holder;
+                NativeExpressAdView adView = (NativeExpressAdView) editorialGeneralInfoList.get(position);
+                ViewGroup adCardView = (ViewGroup) nativeExpressAdViewHolder.itemView;
+                adCardView.removeAllViews();
+
+                if (adView.getParent() != null) {
+                    ((ViewGroup) adView.getParent()).removeView(adView);
+                }
+
+                if (checkShowAds) {
+                    adCardView.addView(adView);
+                }
+                break;
+
+            case EDITORIAL_VIEW_TYPE:
+            default:
+
+                MyViewHolder myViewHolder = (MyViewHolder) holder;
+                EditorialGeneralInfo EditorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoList.get(position);
+                myViewHolder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
+
+                myViewHolder.date.setText(EditorialGeneralInfo.resolveDate(EditorialGeneralInfo.getTimeInMillis()));
+                myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
+                myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
+                myViewHolder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return EditorialGeneralInfoList.size();
+        return editorialGeneralInfoList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return (position % 8 == 0) ? AD_VIEW_TYPE : EDITORIAL_VIEW_TYPE;
     }
 }

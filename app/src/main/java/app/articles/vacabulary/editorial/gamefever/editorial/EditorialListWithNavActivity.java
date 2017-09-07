@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -45,9 +46,11 @@ import com.crashlytics.android.answers.InviteEvent;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
 import com.google.android.gms.appinvite.AppInviteReferral;
@@ -77,8 +80,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     private static int sortedListLimit = 0;
-    private ArrayList<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
-    private ArrayList<EditorialGeneralInfo> editorialListSortedArrayList = new ArrayList<>();
+    private ArrayList<Object> editorialListArrayList = new ArrayList<>();
+    private ArrayList<Object> editorialListSortedArrayList = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private EditorialGeneralInfoAdapter mAdapter;
@@ -389,7 +392,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         }
 */
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, "day", this);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList, "day", this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -405,7 +408,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         // do whatever
 
                         onRecyclerViewItemClick(position);
-                        showInterstitialAd();
+
 
                     }
 
@@ -448,8 +451,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                sortCategoryIndex=-1;
-                sortSourceIndex =-1;
+                sortCategoryIndex = -1;
+                sortSourceIndex = -1;
                 fetchEditorialGeneralList();
                 swipeRefreshLayout.setRefreshing(true);
             }
@@ -478,11 +481,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         return theme;
     }*/
 
-    private void changeActivityTheme(String day) {
-        mAdapter = new EditorialGeneralInfoAdapter(editorialListSortedArrayList, day, this);
-        recyclerView.setAdapter(mAdapter);
-    }
-
 
     public void initializeSplashScreen() {
 
@@ -497,7 +495,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             recreate();
         }
 
-        EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
+        if ( position % 8 == 0){
+            return;
+        }
+
+        showInterstitialAd();
+
+
+        EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo) editorialListArrayList.get(position);
         Intent i = new Intent(this, EditorialFeedActivity.class);
         i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
         i.putExtra("editorialDate", editorialgenralInfo.getEditorialDate());
@@ -582,13 +587,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (editorialListArrayList.size() > 0) {
             if (sortSourceIndex > -1) {
-                dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), sortSourceIndex, onEditorialListListener);
+                dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortSourceIndex, onEditorialListListener);
 
             } else if (sortCategoryIndex > -1) {
-                dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), sortCategoryIndex, onEditorialListListener);
+                dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortCategoryIndex, onEditorialListListener);
 
             } else {
-                dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), onEditorialListListener);
+                dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), onEditorialListListener);
 
             }
         }
@@ -601,7 +606,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void loadMoreClick() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
+        dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), this, false);
 
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -627,18 +632,69 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         for (EditorialGeneralInfo editorialGeneralInfo : editorialGeneralInfoArraylist) {
             editorialListArrayList.add(insertPosition, editorialGeneralInfo);
         }
+
+        addNativeExpressAds();
+
+        if (isFirst){
+            recyclerView.smoothScrollToPosition(1);
+        }
+
         mAdapter.notifyDataSetChanged();
+
 
 
         addMoreButton.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
         isRefreshing = false;
 
-        sortEditorList(selectedSortWord);
+        //sortEditorList(selectedSortWord);
 
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
         }
+
+    }
+
+    private void addNativeExpressAds() {
+
+        boolean checkShowAds =AdsSubscriptionManager.checkShowAds(this);
+
+        for (int i = 0; i < editorialListArrayList.size(); i += 8) {
+            if (editorialListArrayList.get(i).getClass() != NativeExpressAdView.class) {
+                final NativeExpressAdView adView = new NativeExpressAdView(this);
+
+                adView.setAdUnitId("ca-app-pub-8455191357100024/2270553042");
+                adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+                adView.setAdSize(new AdSize(320, 120));
+                if (checkShowAds) {
+                    adView.loadAd(new AdRequest.Builder().build());
+                }
+                editorialListArrayList.add(i, adView);
+
+            }
+        }
+
+
+
+     /*   recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                final float density = EditorialListWithNavActivity.this.getResources().getDisplayMetrics().density;
+
+                AdSize adSize = new AdSize(
+                        ((int) (recyclerView.getWidth() / density)) - 20,
+                        120
+                );
+
+                for (int i = 0; i < editorialListArrayList.size(); i += 8) {
+                    NativeExpressAdView nativeExpressAdView = (NativeExpressAdView) editorialListArrayList.get(i);
+                    nativeExpressAdView.setAdSize(adSize);
+                    nativeExpressAdView.loadAd(new AdRequest.Builder().build());
+                }
+            }
+        });*/
+
 
     }
 
@@ -649,9 +705,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
             editorialListSortedArrayList.clear();
-            for (EditorialGeneralInfo editorialGeneralInfo : editorialListArrayList) {
+            for (Object editorialGeneralInfo : editorialListArrayList) {
 
-                if (editorialGeneralInfo.getEditorialSource().equals(selectedSortWord)) {
+                if (((EditorialGeneralInfo) editorialGeneralInfo).getEditorialSource().equals(selectedSortWord)) {
                     editorialListSortedArrayList.add(editorialGeneralInfo);
 
 
@@ -659,7 +715,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         } else {
             editorialListSortedArrayList.clear();
-            for (EditorialGeneralInfo editorialGeneralInfo : editorialListArrayList) {
+            for (Object editorialGeneralInfo : editorialListArrayList) {
                 editorialListSortedArrayList.add(editorialGeneralInfo);
             }
 
@@ -791,9 +847,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             } else {
 
-                if (sortCategoryIndex >-1 || sortSourceIndex >-1){
-                    sortCategoryIndex =-1;
-                    sortSourceIndex =-1;
+                if (sortCategoryIndex > -1 || sortSourceIndex > -1) {
+                    sortCategoryIndex = -1;
+                    sortSourceIndex = -1;
 
                     fetchEditorialGeneralList();
                     try {
@@ -802,13 +858,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
                     super.onBackPressed();
                 }
 
 
             }
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -927,7 +983,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSortByCategory() {
-        CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other"};
+        final CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -938,6 +994,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortCategoryIndex = which;
                 sortSourceIndex = -1;
                 fetchEditorialCategorySortList();
+                setToolBarSubTitle(category[which].toString());
 
 
             }
@@ -970,10 +1027,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             }
         });
+
+        try {
+            swipeRefreshLayout.setRefreshing(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void onSortBySourceClick() {
-        CharSequence sources[] = new CharSequence[]{"The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
+        final CharSequence sources[] = new CharSequence[]{"The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -984,6 +1047,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortSourceIndex = which;
                 sortCategoryIndex = -1;
                 fetchEditorialSourceSortList();
+                setToolBarSubTitle(sources[which].toString());
 
             }
         });
@@ -1014,6 +1078,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             }
         });
+
+        try {
+            swipeRefreshLayout.setRefreshing(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
