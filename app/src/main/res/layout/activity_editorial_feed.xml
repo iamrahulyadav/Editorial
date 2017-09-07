@@ -56,8 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    app:adSize="LARGE_BANNER"
                     android:visibility="gone"
+                    app:adSize="LARGE_BANNER"
                     app:adUnitId="@string/banner_ad_unit_id">
 
                 </com.google.android.gms.ads.AdView>
@@ -102,12 +102,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:onClick="onSourceTextClick"
                             android:text="Source Name"
                             android:textColor="?attr/primaryTextColor"
                             android:textSize="14sp"
-                            android:textStyle="normal"
-                            android:onClick="onSourceTextClick"
-                            />
+                            android:textStyle="normal" />
 
 
                         <TextView
@@ -116,12 +115,12 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
+                            android:onClick="onCategoryTextClick"
                             android:text="Tag"
                             android:textAlignment="textEnd"
                             android:textAllCaps="true"
                             android:textColor="?attr/colorPrimary"
                             android:textSize="12sp"
-                            android:onClick="onCategoryTextClick"
 
                             />
 
@@ -145,8 +144,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="?attr/secondaryTextColor"
-                        >
+                        android:background="?attr/secondaryTextColor">
 
                     </ImageView>
 
@@ -158,12 +156,12 @@
                     android:id="@+id/editorialFeed_top_nativeAds"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:adUnitId="ca-app-pub-8455191357100024/2270553042"
                     android:layout_gravity="center"
                     android:descendantFocusability="blocksDescendants"
                     android:visibility="gone"
-                    app:adSize="320x100">
-                </com.google.android.gms.ads.NativeExpressAdView>
+                    app:adSize="320x132"
+                    app:adUnitId="ca-app-pub-8455191357100024/9929021950"
+                    ></com.google.android.gms.ads.NativeExpressAdView>
 
 
                 <TextView
@@ -184,16 +182,15 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/secondaryTextColor"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="12dp"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
+                    android:background="?attr/secondaryTextColor"
 
                     >
-
 
 
                 </ImageView>
@@ -225,15 +222,14 @@
                         app:small_shine_offset_angle="20" />
 
                     <TextView
+                        android:id="@+id/editorialfeed_like_textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:layout_weight="1"
-                        android:layout_marginLeft="12dp"
-                        android:textSize="16sp"
-                        android:id="@+id/editorialfeed_like_textView"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textSize="16sp" />
 
 
                     <com.sackcentury.shinebuttonlib.ShineButton
@@ -259,11 +255,6 @@
                 </LinearLayout>
 
 
-
-
-
-
-
                 <ProgressBar
                     android:id="@+id/editorialfeed_activity_progressbar"
                     style="?android:attr/progressBarStyle"
@@ -273,18 +264,54 @@
                     android:background="@color/colorPrimary"
                     android:visibility="visible" />
 
-
-                <Button
+               <!-- subscription box-->
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="Remove Ads for Free !"
-                    android:background="?attr/colorAccent"
-                    android:onClick="onRemoveAdClick"
-                    android:visibility="gone"
-                    android:textColor="?attr/primaryTextAccentColor"
-                    android:id="@+id/editorialfeed_removeAd_button"
-                    />
+                    android:layout_margin="6dp"
+                    app:cardBackgroundColor="?attr/backgroundCardColor"
+                    app:cardCornerRadius="0dp"
+                    android:id="@+id/editorialfeed_removeAd_cardView"
+                    app:cardElevation="5dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Want to remove ads from app for free ?"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="1. Click on the button bellow \n2. Select remove ad option in pop show \n3. A full screen ad will be displayed \n4. Tap on the ad show to you \n5. Yipee! you are now a pro member for 3 day enjoy Daily Editorial without ads"
+                            />
+
+                        <Button
+                            android:id="@+id/editorialfeed_removeAd_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="?attr/colorAccent"
+                            android:onClick="onRemoveAdClick"
+                            android:text="Remove Ads for Free !"
+                            android:textColor="?attr/primaryTextAccentColor"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+
+                </android.support.v7.widget.CardView>
 
                 <com.google.android.gms.ads.NativeExpressAdView
                     android:id="@+id/editorialfeed_native_adView"
@@ -292,8 +319,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:descendantFocusability="blocksDescendants"
-                    app:adSize="320x320"
                     android:visibility="gone"
+                    app:adSize="320x300"
                     app:adUnitId="ca-app-pub-8455191357100024/9880085376">
 
                 </com.google.android.gms.ads.NativeExpressAdView>
@@ -306,8 +333,6 @@
                     android:autoLink="all"
                     android:textColor="?attr/secondaryTextColor"
                     android:textColorLink="?attr/colorAccent" />
-
-
 
 
                 <!--Comment System layout-->
@@ -597,16 +622,13 @@
                 android:textColor="?attr/secondaryTextAccentColor"
                 android:textSize="20sp" />
 
-
-            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/editorialFeed_bottomSheet_adView"
+            <com.google.android.gms.ads.NativeExpressAdView
+                android:id="@+id/editorialFeed_bottomSheet_native_adView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                ads:adSize="SMART_BANNER"
-                android:visibility="gone"
-                ads:adUnitId="ca-app-pub-8455191357100024/2521126642"></com.google.android.gms.ads.AdView>
+                android:layout_gravity="center_horizontal"
+                app:adSize="320x80"
+                app:adUnitId="ca-app-pub-8455191357100024/8288637223"></com.google.android.gms.ads.NativeExpressAdView>
 
             <Button
                 android:id="@+id/editorial_bottomSheet_add_button"

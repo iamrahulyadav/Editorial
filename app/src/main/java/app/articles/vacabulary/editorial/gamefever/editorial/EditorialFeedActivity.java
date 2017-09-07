@@ -17,6 +17,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
@@ -89,7 +90,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     ArrayList<Comment> commentList = new ArrayList<>();
 
     boolean isPushNotification = false;
-    private boolean notesMode=false;
+    private boolean notesMode = false;
     private InterstitialAd mSubscriptionInterstitialAd;
 
 
@@ -159,8 +160,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             initializeNativeAds();
             initializeBottomSheetAd();
             initializeSubscriptionAds();
-            Button button =(Button)findViewById(R.id.editorialfeed_removeAd_button);
-            button.setVisibility(View.VISIBLE);
+            CardView cardView = (CardView) findViewById(R.id.editorialfeed_removeAd_cardView);
+            cardView.setVisibility(View.VISIBLE);
         }
 
 
@@ -657,12 +658,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 
 
-
     }
 
     private void initializeSourceLink() {
         TextView textView = (TextView) findViewById(R.id.editorialfeed_sourceLink_textView);
-        textView.setText("Read Editorial from - "+currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceLink());
+        textView.setText("Read Editorial from - " + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceLink());
     }
 
     @Override
@@ -703,15 +703,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void onTakeNotesClick(MenuItem item) {
 
-        if (notesMode){
+        if (notesMode) {
             init(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
-            notesMode =false;
+            notesMode = false;
             item.setTitle("Take Notes");
-        }else{
+        } else {
             TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
             definitionView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             definitionView.setTextIsSelectable(true);
-            notesMode =true;
+            notesMode = true;
             item.setTitle("Exit notes mode");
             Toast.makeText(this, "Entered notes mode", Toast.LENGTH_SHORT).show();
         }
@@ -853,7 +853,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType",i));
+                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -885,7 +885,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void initializeBottomSheetAd() {
-        AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_adView);
+        NativeExpressAdView mAdView = (NativeExpressAdView) findViewById(R.id.editorialFeed_bottomSheet_native_adView);
         mAdView.setVisibility(View.VISIBLE);
 
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -897,7 +897,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 super.onAdFailedToLoad(i);
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Bottom sheet").putCustomAttribute("errorType",i));
+                            .putCustomAttribute("Placement", "Bottom sheet").putCustomAttribute("errorType", i));
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -909,6 +909,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void initializeTopNativeAds() {
         NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialFeed_top_nativeAds);
         adView.setVisibility(View.VISIBLE);
+
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
 
@@ -923,7 +924,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 super.onAdFailedToLoad(i);
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "top Native small").putCustomAttribute("errorType",i));
+                            .putCustomAttribute("Placement", "top Native small").putCustomAttribute("errorType", i));
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1130,7 +1131,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void initializeSubscriptionAds() {
         mSubscriptionInterstitialAd = new InterstitialAd(this);
-        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
+        //mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
+        //test ad unit
+        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mSubscriptionInterstitialAd.setAdListener(new AdListener() {
@@ -1138,6 +1141,16 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             public void onAdClosed() {
                 super.onAdClosed();
                 mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+
+                Button button = (Button) EditorialFeedActivity.this.findViewById(R.id.editorialfeed_removeAd_button);
+                if (AdsSubscriptionManager.checkShowAds(EditorialFeedActivity.this)) {
+                    Toast.makeText(EditorialFeedActivity.this, "You need to click on the ad to get Pro features (with no ads) \n Try again", Toast.LENGTH_LONG).show();
+                    button.setText("Try again? Click on the ads");
+                } else {
+                    Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_LONG).show();
+                    button.setText("Thank you for subscription");
+                }
             }
 
             @Override
@@ -1146,7 +1159,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Subscription ad feed").putCustomAttribute("Error code" ,i));
+                            .putCustomAttribute("Placement", "Subscription ad feed").putCustomAttribute("Error code", i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1156,12 +1169,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
+
+                Toast.makeText(EditorialFeedActivity.this, "Now Click on the ads to get pro features", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                Toast.makeText(EditorialFeedActivity.this, "Ad clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EditorialFeedActivity.this, "Ad clicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1171,12 +1186,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 AdsSubscriptionManager.setSubscriptionTime(EditorialFeedActivity.this);
 
                 try {
-                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed from feed","1"));
+                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed from feed", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1184,7 +1198,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void onRemoveAdClick(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+       /* AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Ads for Free");
 
         builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
@@ -1199,7 +1213,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
                         }
 
-                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue","Clicked yes"));
+                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue", "Clicked yes"));
 
                         dialog.dismiss();
                     }
@@ -1208,7 +1222,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.dismiss();
-                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue","Clicked No"));
+                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue", "Clicked No"));
 
                     }
                 });
@@ -1216,13 +1230,30 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         // Create the AlertDialog object and return it
         builder.create();
         builder.show();
+*/
+
+        if (mSubscriptionInterstitialAd.isLoaded()) {
+            mSubscriptionInterstitialAd.show();
+
+            Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
+
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+            Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
+            Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
+
+        }
+
+
+
+
     }
 
     public void onSourceTextClick(View view) {
         try {
-            Intent intent =new Intent(EditorialFeedActivity.this ,EditorialListWithNavActivity.class);
+            Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("sourceIndex",currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceIndex());
+            intent.putExtra("sourceIndex", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceIndex());
             startActivity(intent);
             finish();
         } catch (Exception e) {
@@ -1233,9 +1264,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void onCategoryTextClick(View view) {
         try {
-            Intent intent =new Intent(EditorialFeedActivity.this ,EditorialListWithNavActivity.class);
+            Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("categoryIndex",currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialCategoryIndex());
+            intent.putExtra("categoryIndex", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialCategoryIndex());
             startActivity(intent);
             finish();
         } catch (Exception e) {

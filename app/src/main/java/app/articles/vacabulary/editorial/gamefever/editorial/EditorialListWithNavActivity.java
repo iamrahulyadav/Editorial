@@ -440,7 +440,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
 
-            initializeAds();
+            //initializeAds();
             mInterstitialAd = new InterstitialAd(this);
             mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
             initializeInterstitialAds();
@@ -659,14 +659,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         boolean checkShowAds =AdsSubscriptionManager.checkShowAds(this);
 
+        //main function where ads is merged in editorial list as an object
+
         for (int i = 0; i < editorialListArrayList.size(); i += 8) {
             if (editorialListArrayList.get(i).getClass() != NativeExpressAdView.class) {
                 final NativeExpressAdView adView = new NativeExpressAdView(this);
 
-                adView.setAdUnitId("ca-app-pub-8455191357100024/2270553042");
+                adView.setAdUnitId("ca-app-pub-8455191357100024/8254824112");
                 adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-                adView.setAdSize(new AdSize(320, 120));
+                adView.setAdSize(new AdSize(320, 132));
                 if (checkShowAds) {
                     adView.loadAd(new AdRequest.Builder().build());
                 }
@@ -1089,7 +1091,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil","Bengali"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1108,6 +1110,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "mr";
                 } else if (which == 3) {
                     languageCode = "ta";
+                }else if (which == 4){
+                    languageCode = "bn";
                 }
 
                 LanguageManager.setLanguageCode(EditorialListWithNavActivity.this, languageCode);
@@ -1225,13 +1229,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void onCurrentAffairs() {
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://currentaffairsonly.com/")));
-        } catch (Exception e) {
-
-        }
-    }
 
     private void onRateUs() {
         try {
@@ -1242,14 +1239,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
     }
 
-    private void onTheHinduNoteClick() {
-
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://currentaffairsonly.com/the-hindu-notes/")));
-        } catch (Exception e) {
-
-        }
-    }
 
     private void onVacabularyClick() {
         Intent i = new Intent(this, VacabularyActivity.class);
@@ -1270,12 +1259,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-    private void onSettingClick() {
-
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-
-    }
 
     private void onSuggestionClick() {
 
@@ -1329,11 +1312,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
 
-    private void onTutorialClick() {
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-
-    }
 
     public void setToolBarSubTitle(String subTitle) {
         try {

@@ -29,7 +29,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<Object> editorialGeneralInfoList;
 
     private static final int EDITORIAL_VIEW_TYPE = 1;
-    private static final int AD_VIEW_TYPE = 0;
+    private static final int AD_VIEW_TYPE = 2;
 
     private static boolean checkShowAds;
 
@@ -111,6 +111,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        //switch statment for making native ads in every 8th card
         int viewType = getItemViewType(position);
         switch (viewType) {
 
@@ -151,6 +152,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
+        //logic to implement ad in every 8th card
         return (position % 8 == 0) ? AD_VIEW_TYPE : EDITORIAL_VIEW_TYPE;
     }
 }
