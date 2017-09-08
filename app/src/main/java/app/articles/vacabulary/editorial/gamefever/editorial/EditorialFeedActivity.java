@@ -90,6 +90,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     ArrayList<Comment> commentList = new ArrayList<>();
 
     boolean isPushNotification = false;
+    boolean isDynamicLink =false ;
     private boolean notesMode = false;
     private InterstitialAd mSubscriptionInterstitialAd;
 
@@ -280,6 +281,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
         isPushNotification = i.getBooleanExtra("isPushNotification", false);
+        isDynamicLink =i.getBooleanExtra("isDynamicLink", false);
 
 
         if (isBookMarked) {
@@ -557,16 +559,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            if (isPushNotification) {
+            if (isPushNotification || isDynamicLink) {
                 Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            } else {
+            }else {
 
                 super.onBackPressed();
 
             }
+
+
+
         }
 
     }
@@ -637,21 +642,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         TextView likeTextView = (TextView) findViewById(R.id.editorialfeed_like_textView);
         likeTextView.setText(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialLike() + " Likes");
 
-        final ShineButton likeShineButton = (ShineButton) findViewById(R.id.editorialfeed_like_ShineButton);
-        likeShineButton.setOnCheckStateChangeListener(new ShineButton.OnCheckedChangeListener() {
+        final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialfeed_like_linearLayout);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(View view, boolean checked) {
-                if (checked) {
-                    onLikeClick(view);
-                    likeShineButton.setClickable(false);
-                }
+            public void onClick(View v) {
+                onLikeClick(v);
+                linearLayout.setEnabled(false);
             }
         });
-
-        final ShineButton shareShineButton = (ShineButton) findViewById(R.id.editorialfeed_share_ShineButton);
-        shareShineButton.setOnCheckStateChangeListener(new ShineButton.OnCheckedChangeListener() {
+        final Button button = (Button) findViewById(R.id.editorialFeed_share_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(View view, boolean checked) {
+            public void onClick(View v) {
                 onShareClick();
 
             }
@@ -980,7 +982,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         mCommentAdapter = new CommentsListViewAdapter(this, commentList);
         commentListView.setAdapter(mCommentAdapter);
 
-        resizeCommentListView();
+
+        TextView textView =(TextView)findViewById(R.id.editorialfeed_comment_textView);
+        textView.setText(commentList.size() +" Discussion");
+
+        //resizeCommentListView();
 
 
     }
@@ -1093,13 +1099,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         Like like = new Like();
         like.setEditorialID(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID());
         like.setEditorialTitle(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading());
-        ShineButton shineButton = (ShineButton) findViewById(R.id.editorialfeed_like_ShineButton);
-        if (!shineButton.isChecked()) {
-
-            Toast.makeText(this, "Already liked", Toast.LENGTH_SHORT).show();
-
-            return;
-        }
 
         new DBHelperFirebase().uploadLike(like, new DBHelperFirebase.OnLikeListener() {
             @Override
@@ -1131,9 +1130,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void initializeSubscriptionAds() {
         mSubscriptionInterstitialAd = new InterstitialAd(this);
-        //mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
+        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
         //test ad unit
-        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        //mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mSubscriptionInterstitialAd.setAdListener(new AdListener() {

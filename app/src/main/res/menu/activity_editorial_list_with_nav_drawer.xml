@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Sort">
+    <item android:title="Search">
         <menu>
             <group android:checkableBehavior="single">
-                <item
+               <!-- <item
                     android:id="@+id/nav_all"
                     android:title="All" />
 
@@ -16,11 +16,11 @@
                     android:title="Financial Express" />
                 <item
                     android:id="@+id/nav_economic_times"
-                    android:title="Economic Times" />
+                    android:title="Economic Times" />-->
 
                 <item
                     android:id="@+id/nav_sort_bysource"
-                    android:title="By Source" />
+                    android:title="By Newspaper" />
 
                 <item
                     android:id="@+id/nav_sort_bycategory"

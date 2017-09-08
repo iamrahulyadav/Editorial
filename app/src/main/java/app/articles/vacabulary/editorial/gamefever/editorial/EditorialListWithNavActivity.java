@@ -233,9 +233,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             fetchEditorialByID(editorialID);
 
                             try {
-                                Answers.getInstance().logInvite(new InviteEvent()
-                                        .putMethod("Dynamic link")
-                                        .putCustomAttribute("editorialID", editorialID)
+                                Answers.getInstance().logCustom(new CustomEvent("User via Dynamic link")
+                                        .putCustomAttribute("editorial",editorialID)
                                 );
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -246,6 +245,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             Log.d("editorial", "getInvitation: no deep link found.");
                             fetchEditorialGeneralList();
                             isActivityInitialized = true;
+
                         }
 
 
@@ -275,47 +275,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     protected void onRestart() {
         super.onRestart();
 
-        if (isSplashScreenVisible) {
-            fetchEditorialGeneralList();
-        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-/*        if (isActivityInitialized && mGoogleApiClient != null) {
-
-            boolean autoLaunchDeepLink = false;
-            AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
-                    .setResultCallback(
-                            new ResultCallback<AppInviteInvitationResult>() {
-                                @Override
-                                public void onResult(@NonNull AppInviteInvitationResult result) {
-                                    if (result.getStatus().isSuccess()) {
-                                        // Extract deep link from Intent
-                                        Intent intent = result.getInvitationIntent();
-                                        String deepLink = AppInviteReferral.getDeepLink(intent);
-                                        //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
-
-                                        int lastIndex = deepLink.indexOf("?", 27);
-                                        String editorialID = deepLink.substring(27, lastIndex);
-                                        // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
-
-                                        fetchEditorialByID(editorialID);
-                                        // Handle the deep link. For example, open the linked
-                                        // content, or apply promotional credit to the user's
-                                        // account.
-
-                                        // ...
-                                    } else {
-
-
-                                    }
-                                }
-                            });
-
-        }*/
 
     }
 
@@ -323,7 +289,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        if (isSplashScreenVisible) {
+        if (isSplashScreenVisible && !isRefreshing) {
             fetchEditorialGeneralList();
         }
         if (AppCompatDelegate.getDefaultNightMode()
@@ -521,6 +487,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSharedLinkOpen(EditorialGeneralInfo editorialgenralInfo) {
 
+        if (editorialgenralInfo == null){
+            recreate();
+            return;
+        }
+
         Intent i = new Intent(this, EditorialFeedActivity.class);
         i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
         i.putExtra("editorialDate", editorialgenralInfo.getEditorialDate());
@@ -530,6 +501,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked", false);
         i.putExtra("editorial", editorialgenralInfo);
+        i.putExtra("isDynamicLink",true);
 
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -553,6 +525,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         };
 
+        isRefreshing =true;
 
         if (sortSourceIndex > -1) {
             dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, sortSourceIndex, onEditorialListListener);
@@ -586,15 +559,28 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         };
 
         if (editorialListArrayList.size() > 0) {
-            if (sortSourceIndex > -1) {
-                dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortSourceIndex, onEditorialListListener);
+            if (editorialListArrayList.get(editorialListArrayList.size() - 1).getClass() == EditorialGeneralInfo.class) {
+                if (sortSourceIndex > -1) {
+                    dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortSourceIndex, onEditorialListListener);
 
-            } else if (sortCategoryIndex > -1) {
-                dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortCategoryIndex, onEditorialListListener);
+                } else if (sortCategoryIndex > -1) {
+                    dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortCategoryIndex, onEditorialListListener);
 
-            } else {
-                dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), onEditorialListListener);
+                } else {
+                    dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), onEditorialListListener);
 
+                }
+            }else{
+                if (sortSourceIndex > -1) {
+                    dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 2)).getEditorialID(), sortSourceIndex, onEditorialListListener);
+
+                } else if (sortCategoryIndex > -1) {
+                    dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 2)).getEditorialID(), sortCategoryIndex, onEditorialListListener);
+
+                } else {
+                    dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 2)).getEditorialID(), onEditorialListListener);
+
+                }
             }
         }
         addMoreButton.setVisibility(View.INVISIBLE);
@@ -633,6 +619,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             editorialListArrayList.add(insertPosition, editorialGeneralInfo);
         }
 
+        isRefreshing =false;
+
         addNativeExpressAds();
 
         if (isFirst){
@@ -661,7 +649,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         //main function where ads is merged in editorial list as an object
 
-        for (int i = 0; i < editorialListArrayList.size(); i += 8) {
+        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
             if (editorialListArrayList.get(i).getClass() != NativeExpressAdView.class) {
                 final NativeExpressAdView adView = new NativeExpressAdView(this);
 
@@ -905,7 +893,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_all:
+            /*case R.id.nav_all:
                 onAllClick();
                 break;
 
@@ -920,7 +908,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             case R.id.nav_economic_times:
                 onEconomicTimesClick();
                 break;
-
+*/
 
             case R.id.nav_vacabulary:
                 onVacabularyClick();
@@ -930,13 +918,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onShareClick();
                 break;
 
-
-
-
-             /* case R.id.nav_tutorial:
-                onTutorialClick();
-                break;
-            */
 
 
             case R.id.nav_rate_us:

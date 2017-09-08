@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,8 +27,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.crash.FirebaseCrash;
@@ -36,9 +39,11 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.AdsSubscriptionManager;
+
 public class EditorialListActivity extends AppCompatActivity {
 
-    private List<EditorialGeneralInfo> editorialListArrayList = new ArrayList<>();
+    private List<Object> editorialListArrayList = new ArrayList<>();
     private RecyclerView recyclerView;
     private EditorialGeneralInfoAdapter mAdapter;
 
@@ -62,10 +67,52 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void addNativeExpressAds() {
+
+        boolean checkShowAds = AdsSubscriptionManager.checkShowAds(this);
+
+        //main function where ads is merged in editorial list as an object
+
+        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
+            if (editorialListArrayList.get(i).getClass() != NativeExpressAdView.class) {
+                final NativeExpressAdView adView = new NativeExpressAdView(this);
+
+                adView.setAdUnitId("ca-app-pub-8455191357100024/8254824112");
+                adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+                adView.setAdSize(new AdSize(320, 132));
+                if (checkShowAds) {
+                    adView.loadAd(new AdRequest.Builder().build());
+                }
+                editorialListArrayList.add(i, adView);
+
+            }
+        }
+
+
+
+     /*   recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                final float density = EditorialListWithNavActivity.this.getResources().getDisplayMetrics().density;
+
+                AdSize adSize = new AdSize(
+                        ((int) (recyclerView.getWidth() / density)) - 20,
+                        120
+                );
+
+                for (int i = 0; i < editorialListArrayList.size(); i += 8) {
+                    NativeExpressAdView nativeExpressAdView = (NativeExpressAdView) editorialListArrayList.get(i);
+                    nativeExpressAdView.setAdSize(adSize);
+                    nativeExpressAdView.loadAd(new AdRequest.Builder().build());
+                }
+            }
+        });*/
 
 
     }
-
 
     public void initializeActivity(){
 
@@ -90,7 +137,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
         recyclerView =(RecyclerView)findViewById(R.id.editoriallist_recyclerview);
 
-        mAdapter = new EditorialGeneralInfoAdapter(new ArrayList<Object> () ,getActivityTheme() ,this);
+        mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList ,getActivityTheme() ,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -125,10 +172,20 @@ public class EditorialListActivity extends AppCompatActivity {
         addMoreButton.setVisibility(View.INVISIBLE);
 
         progressBar=(ProgressBar)findViewById(R.id.editoriallist_activity_progressbar);
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
 
 
+        DatabaseHandlerBookMark databaseHandlerBookMark =new DatabaseHandlerBookMark(this);
+        ArrayList<EditorialGeneralInfo> editorialGeneralInfos= databaseHandlerBookMark.getAllBookMarkEditorial();
+
+
+        for (EditorialGeneralInfo editorialGeneralInfo :editorialGeneralInfos){
+            editorialListArrayList.add(editorialGeneralInfo);
+        }
+
+        addNativeExpressAds();
+        mAdapter.notifyDataSetChanged();
 
 
 
@@ -154,7 +211,7 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
     private void onRecyclerViewItemClick(int position) {
-        EditorialGeneralInfo editorialgenralInfo = editorialListArrayList.get(position);
+        EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo)editorialListArrayList.get(position);
         Intent i = new Intent(this , EditorialFeedActivity.class);
         i.putExtra("editorialID",editorialgenralInfo.getEditorialID());
         i.putExtra("editorialDate",editorialgenralInfo.getEditorialDate());

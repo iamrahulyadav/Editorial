@@ -27,18 +27,26 @@ public class LanguageManager {
     }
 
     public static String getLanguageCode(Context mContext ) {
-        if (languageCode ==null) {
-            SharedPreferences prefs = mContext.getSharedPreferences("languagemanager", 0);
+
+        try {
+            if (languageCode == null) {
+                SharedPreferences prefs = mContext.getSharedPreferences("languagemanager", 0);
 
 
-            languageCode = prefs.getString("languageCode", "hi");
+                languageCode = prefs.getString("languageCode", "hi");
 
-            return languageCode;
+                return languageCode;
 
-        }else{
-            return languageCode;
+            } else {
+                return languageCode;
+            }
+        }catch (Exception e){
+            if (languageCode==null) {
+                return "hi";
+            }else{
+                return languageCode;
+            }
         }
-
 
     }
 
