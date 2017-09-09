@@ -6,7 +6,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,7 +73,7 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("article cannot be loadede"));
+
             }
         });
 
@@ -97,7 +96,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("article cannot be loadede"));
                 onEditorialListener.onEditorialExtraInfo(null, false);
             }
         });
@@ -120,7 +118,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("article cannot be loadede"));
                 onEditorialListener.onEditorialGeneralInfo(null, false);
             }
         });
@@ -147,7 +144,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("article cannot be loadede"));
             }
         });
 
@@ -245,7 +241,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
 
 
             }
@@ -286,7 +281,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
 
 
             }
@@ -323,7 +317,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
                 onEditorialListListener.onMoreEditorialList(null, false);
 
             }
@@ -358,7 +351,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
                 onEditorialListListener.onEditorialList(null, false);
 
             }
@@ -393,7 +385,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
                 onEditorialListListener.onEditorialList(null, false);
 
             }
@@ -428,7 +419,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
                 onEditorialListListener.onEditorialList(null, false);
 
             }
@@ -463,7 +453,7 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
+
                 onEditorialListListener.onEditorialList(null, false);
 
             }
@@ -498,7 +488,6 @@ public class DBHelperFirebase {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                FirebaseCrash.report(new Exception("Data list cannot be loadede"));
                 onEditorialListListener.onEditorialList(null, false);
 
             }

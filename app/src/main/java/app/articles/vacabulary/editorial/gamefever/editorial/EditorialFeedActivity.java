@@ -55,12 +55,11 @@ import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.sackcentury.shinebuttonlib.ShineButton;
+
 
 
 import java.text.BreakIterator;
@@ -396,7 +395,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void init(String textToShow) {
 
         try {
-            FirebaseCrash.log("Showing spannable text");
+
             String definition = textToShow;
             TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
             definitionView.setTextIsSelectable(false);
@@ -734,6 +733,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
         databaseHandlerBookMark.addToBookMark(currentEditorialFullInfo.getEditorialGeneralInfo(), currentEditorialFullInfo.getEditorialExtraInfo());
         Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
+
+        try{
+            Answers.getInstance().logCustom(new CustomEvent("Bookmark").putCustomAttribute("Editorial title",currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
+
+        }catch(Exception e){
+
+        }
 
     }
 

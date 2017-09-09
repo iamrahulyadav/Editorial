@@ -50,14 +50,12 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.0.1'
     compile 'com.google.firebase:firebase-ads:11.0.1'
     compile 'com.google.firebase:firebase-config:11.0.1'
-    compile 'com.google.firebase:firebase-crash:11.0.1'
 
     compile 'com.google.firebase:firebase-core:11.0.1'
     compile 'com.google.firebase:firebase-messaging:11.0.1'
     compile 'com.google.firebase:firebase-invites:11.0.1'
 
 
-    compile 'com.sackcentury:shinebutton:0.1.9'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }

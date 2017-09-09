@@ -61,7 +61,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -93,7 +92,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private boolean isSplashScreenVisible = true;
 
 
-    public static int listLimit = 10;
+    public static int listLimit = 20;
     public static int EDITORIALCOUNTADS = 0;
 
     public String selectedSortWord = "";
@@ -295,9 +294,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (AppCompatDelegate.getDefaultNightMode()
                 == AppCompatDelegate.MODE_NIGHT_YES) {
 
-            if (isNightMode) {
-
-            } else {
+            if (!isNightMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 recreate();
             }
@@ -374,6 +371,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         // do whatever
 
                         onRecyclerViewItemClick(position);
+
 
 
                     }
@@ -465,7 +463,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             return;
         }
 
-        showInterstitialAd();
+
 
 
         EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo) editorialListArrayList.get(position);
@@ -482,6 +480,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         startActivity(i);
 
+        showInterstitialAd();
 
     }
 
@@ -735,7 +734,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                FirebaseCrash.log(" Editorial list Ad failed to load - " + i);
 
 
                 try {
@@ -751,7 +749,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onAdLoaded() {
                 super.onAdLoaded();
                 mAdView.setVisibility(View.VISIBLE);
-                FirebaseCrash.log(" Editorial list Ad loaded ");
             }
         });
 
@@ -792,7 +789,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
             EditorialListWithNavActivity.listLimit = 20;
-            FirebaseCrash.log("Value of listLimit isWrong");
         }
 
 
@@ -803,7 +799,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
             EditorialListWithNavActivity.sortedListLimit = 2;
-            FirebaseCrash.log("Value of sortedlistlimit isWrong");
         }
 
         try {
@@ -814,7 +809,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             e.printStackTrace();
 
             editorialcountAdMax = 2;
-            FirebaseCrash.log("Value of editorialcountadmax isWrong");
         }
 
 
@@ -979,6 +973,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 fetchEditorialCategorySortList();
                 setToolBarSubTitle(category[which].toString());
 
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("search Category").putCustomAttribute("Category name",category[which].toString()));
+                }catch (Exception e){
+
+                }
 
             }
         });
@@ -1031,6 +1030,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortCategoryIndex = -1;
                 fetchEditorialSourceSortList();
                 setToolBarSubTitle(sources[which].toString());
+
+                try{
+                    Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name",sources[which].toString()));
+                }catch (Exception e){
+
+                }
 
             }
         });
@@ -1111,7 +1116,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         builder.setTitle("Remove Ads for Free");
 
         builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
-                "Press Remove Ads --> Ad will be displayed --> Click on the Ad shown --> Done. All the ads from app will be removed")
+                "Press Remove Ads button \n--> Ad will be displayed \n--> Click on the Ad shown \n--> Done. All the ads from app will be removed from app for 3 days")
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -1149,6 +1154,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onAdClosed() {
                 super.onAdClosed();
                 mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+                if (AdsSubscriptionManager.checkShowAds(EditorialListWithNavActivity.this)) {
+                    Toast.makeText(EditorialListWithNavActivity.this, "You need to click on the ad to get Pro features (with no ads) \n Try again", Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_LONG).show();
+
+                }
             }
 
             @Override
@@ -1167,6 +1180,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
+                Toast.makeText(EditorialListWithNavActivity.this, "Now Click on the ads to get pro features", Toast.LENGTH_LONG).show();
+
             }
 
             @Override
@@ -1186,7 +1201,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -1322,6 +1336,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onAdClosed() {
                 super.onAdClosed();
                 loadInterstitialAd();
+
             }
 
 
@@ -1329,7 +1344,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
                 //Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
-                FirebaseCrash.log("Ad failed to load - " + i);
             }
 
             @Override
@@ -1340,14 +1354,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                FirebaseCrash.log("Ad opened in editorial count " + EDITORIALCOUNTADS);
+
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
                 //Toast.makeText(EditorialListWithNavActivity.this, "Ad loaded", Toast.LENGTH_SHORT).show();
-                FirebaseCrash.log("Ad loaded in editorial count " + EDITORIALCOUNTADS);
             }
         });
     }
