@@ -1144,8 +1144,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                         if (mSubscriptionInterstitialAd.isLoaded()) {
                             mSubscriptionInterstitialAd.show();
-                        } else {
+                        } else if(mSubscriptionInterstitialAd.isLoading()) {
                             Log.d("TAG", "The interstitial wasn't loaded yet.");
+                        }else{
+                            mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
                         }
 
 

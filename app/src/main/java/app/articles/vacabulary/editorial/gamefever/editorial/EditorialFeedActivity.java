@@ -1243,11 +1243,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
 
+           }else if(mSubscriptionInterstitialAd.isLoading()){
+               Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try in few minutes", Toast.LENGTH_SHORT).show();
+
            } else {
                Log.d("TAG", "The interstitial wasn't loaded yet.");
                Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
                Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
-
+               mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
            }
 
        }
