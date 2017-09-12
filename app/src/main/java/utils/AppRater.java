@@ -48,7 +48,7 @@ public class AppRater {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Rate Us");
 
-        builder.setMessage("Love our app ? \nRate us on play store")
+        builder.setMessage("Love Daily Editorial app ? \nRate us on play store, it motivates us to improve it further.")
                 .setPositiveButton("Rate Now", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=app.craftystudio.vocabulary.dailyeditorial")));
