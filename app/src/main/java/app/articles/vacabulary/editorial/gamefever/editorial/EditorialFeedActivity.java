@@ -1201,7 +1201,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-
     public void onRemoveAdClick(View view) {
        /* AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Ads for Free");
