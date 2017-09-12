@@ -1237,19 +1237,20 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         builder.show();
 */
 
-        if (mSubscriptionInterstitialAd.isLoaded()) {
-            mSubscriptionInterstitialAd.show();
+       if (mSubscriptionInterstitialAd != null) {
+           if (mSubscriptionInterstitialAd.isLoaded()) {
+               mSubscriptionInterstitialAd.show();
 
-            Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
+               Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
 
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
-            Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
-            Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
+           } else {
+               Log.d("TAG", "The interstitial wasn't loaded yet.");
+               Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
+               Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
 
-        }
+           }
 
-
+       }
 
 
     }

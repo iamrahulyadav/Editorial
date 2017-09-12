@@ -72,8 +72,7 @@
 
 
 
-    <item
-        android:title="Options"
+    <item android:title="Options"
         android:titleCondensed="">
         <menu>
 
@@ -87,19 +86,14 @@
                 android:icon="@drawable/ic_action_bookmark"
                 android:title="Bookmark" />
 
-            <!--<item
-                android:id="@+id/nav_setting"
-                android:icon="@drawable/ic_action_setting"
-                android:title="Setting" />-->
+
 
         </menu>
     </item>
 
 
 
-
-    <item
-        android:title="Help and Support"
+    <item android:title="Help and Support"
         android:titleCondensed="true">
         <menu>
 

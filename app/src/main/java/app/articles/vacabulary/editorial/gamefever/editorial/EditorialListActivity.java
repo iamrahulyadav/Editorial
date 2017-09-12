@@ -211,6 +211,14 @@ public class EditorialListActivity extends AppCompatActivity {
     }
 
     private void onRecyclerViewItemClick(int position) {
+        if ( position % 8 == 0){
+            return;
+        }
+
+        if (position < 0) {
+            recreate();
+        }
+
         EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo)editorialListArrayList.get(position);
         Intent i = new Intent(this , EditorialFeedActivity.class);
         i.putExtra("editorialID",editorialgenralInfo.getEditorialID());

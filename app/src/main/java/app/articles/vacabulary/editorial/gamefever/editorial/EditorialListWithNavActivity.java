@@ -70,6 +70,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import io.fabric.sdk.android.Fabric;
 import utils.AdsSubscriptionManager;
 import utils.LanguageManager;
+import utils.PushNotificationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -334,7 +335,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -951,6 +952,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 break;
 
 
+
         }
 
 
@@ -959,8 +961,28 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         return true;
     }
 
+    private void onPushNotification() {
+        String languages[] = new String[]{"On","Off"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enable Push Notification ?");
+        builder.setItems(languages, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // the user clicked on colors[which]
+
+               if (which==1){
+                   PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this ,false);
+               }else{
+                   PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this ,true);
+               }
+
+            }
+        });
+        builder.show();
+    }
+
     private void onSortByCategory() {
-        final CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other"};
+        final CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other","Environment","Social"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
