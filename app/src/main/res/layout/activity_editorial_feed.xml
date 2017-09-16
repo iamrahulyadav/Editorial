@@ -170,12 +170,27 @@
                     android:layout_margin="16dp"
                     android:autoLink="all"
                     android:fontFamily="serif"
-                    android:lineSpacingMultiplier="1.2"
                     android:text=""
+                    android:lineSpacingMultiplier="1.2"
                     android:textColor="?attr/primaryTextColor"
                     android:textColorLink="@color/colorPrimary"
                     android:textSize="18sp"
                     android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/editorialfeed_notesText_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:autoLink="all"
+                    android:fontFamily="serif"
+                    android:text=""
+                    android:lineSpacingMultiplier="1.2"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textColorLink="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+
 
 
                 <ImageView

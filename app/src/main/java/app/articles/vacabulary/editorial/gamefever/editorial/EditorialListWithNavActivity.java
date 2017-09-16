@@ -234,7 +234,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                             try {
                                 Answers.getInstance().logCustom(new CustomEvent("User via Dynamic link")
-                                        .putCustomAttribute("editorial",editorialID)
+                                        .putCustomAttribute("editorial", editorialID)
                                 );
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -374,7 +374,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         onRecyclerViewItemClick(position);
 
 
-
                     }
 
                     @Override
@@ -460,11 +459,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             recreate();
         }
 
-        if ( position % 8 == 0){
+        if (position % 8 == 0) {
             return;
         }
-
-
 
 
         EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo) editorialListArrayList.get(position);
@@ -487,7 +484,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSharedLinkOpen(EditorialGeneralInfo editorialgenralInfo) {
 
-        if (editorialgenralInfo == null){
+        if (editorialgenralInfo == null) {
             recreate();
             return;
         }
@@ -501,7 +498,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         i.putExtra("editorialTag", editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked", false);
         i.putExtra("editorial", editorialgenralInfo);
-        i.putExtra("isDynamicLink",true);
+        i.putExtra("isDynamicLink", true);
 
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -525,7 +522,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         };
 
-        isRefreshing =true;
+        isRefreshing = true;
 
         if (sortSourceIndex > -1) {
             dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, sortSourceIndex, onEditorialListListener);
@@ -570,7 +567,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), onEditorialListListener);
 
                 }
-            }else{
+            } else {
                 if (sortSourceIndex > -1) {
                     dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 2)).getEditorialID(), sortSourceIndex, onEditorialListListener);
 
@@ -619,16 +616,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             editorialListArrayList.add(insertPosition, editorialGeneralInfo);
         }
 
-        isRefreshing =false;
+        isRefreshing = false;
 
         addNativeExpressAds();
 
-        if (isFirst){
+        if (isFirst) {
             recyclerView.smoothScrollToPosition(1);
         }
 
         mAdapter.notifyDataSetChanged();
-
 
 
         addMoreButton.setVisibility(View.VISIBLE);
@@ -645,7 +641,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void addNativeExpressAds() {
 
-        boolean checkShowAds =AdsSubscriptionManager.checkShowAds(this);
+        boolean checkShowAds = AdsSubscriptionManager.checkShowAds(this);
 
         //main function where ads is merged in editorial list as an object
 
@@ -914,7 +910,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 break;
 
 
-
             case R.id.nav_rate_us:
                 onRateUs();
                 break;
@@ -951,7 +946,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onSortByCategory();
                 break;
 
-
+            case R.id.nav_notes:
+                onNotesClick();
+                break;
 
         }
 
@@ -961,8 +958,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         return true;
     }
 
+    private void onNotesClick() {
+        Intent intent = new Intent(EditorialListWithNavActivity.this, NotesActivity.class);
+        startActivity(intent);
+    }
+
     private void onPushNotification() {
-        String languages[] = new String[]{"On","Off"};
+        String languages[] = new String[]{"On", "Off"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enable Push Notification ?");
         builder.setItems(languages, new DialogInterface.OnClickListener() {
@@ -970,11 +972,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 // the user clicked on colors[which]
 
-               if (which==1){
-                   PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this ,false);
-               }else{
-                   PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this ,true);
-               }
+                if (which == 1) {
+                    PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this, false);
+                } else {
+                    PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this, true);
+                }
 
             }
         });
@@ -982,7 +984,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSortByCategory() {
-        final CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other","Environment","Social"};
+        final CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other", "Environment", "Social"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -995,9 +997,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 fetchEditorialCategorySortList();
                 setToolBarSubTitle(category[which].toString());
 
-                try{
-                    Answers.getInstance().logCustom(new CustomEvent("search Category").putCustomAttribute("Category name",category[which].toString()));
-                }catch (Exception e){
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("search Category").putCustomAttribute("Category name", category[which].toString()));
+                } catch (Exception e) {
 
                 }
 
@@ -1053,9 +1055,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 fetchEditorialSourceSortList();
                 setToolBarSubTitle(sources[which].toString());
 
-                try{
-                    Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name",sources[which].toString()));
-                }catch (Exception e){
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", sources[which].toString()));
+                } catch (Exception e) {
 
                 }
 
@@ -1099,7 +1101,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil","Bengali"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1118,7 +1120,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "mr";
                 } else if (which == 3) {
                     languageCode = "ta";
-                }else if (which == 4){
+                } else if (which == 4) {
                     languageCode = "bn";
                 }
 
@@ -1144,9 +1146,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                         if (mSubscriptionInterstitialAd.isLoaded()) {
                             mSubscriptionInterstitialAd.show();
-                        } else if(mSubscriptionInterstitialAd.isLoading()) {
+                        } else if (mSubscriptionInterstitialAd.isLoading()) {
                             Log.d("TAG", "The interstitial wasn't loaded yet.");
-                        }else{
+                        } else {
                             mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
                         }
 
@@ -1329,7 +1331,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         selectedSortWord = "";
         sortEditorList(selectedSortWord);
     }
-
 
 
     public void setToolBarSubTitle(String subTitle) {

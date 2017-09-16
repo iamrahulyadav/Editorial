@@ -14,8 +14,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import utils.Like;
+import utils.ShortNotesManager;
 
 /**
  * Created by gamef on 23-02-2017.
@@ -557,6 +559,38 @@ public class DBHelperFirebase {
     }
 
 
+    public void fetchShortNotesList(String userUID, int limitTo , final OnShortNoteListListener onShortNoteListListener){
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID);
+
+        database.limitToLast(limitTo).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<ShortNotesManager> shortNotesManagerArrayList =new ArrayList<ShortNotesManager>();
+
+                for (DataSnapshot snapshot :dataSnapshot.getChildren()){
+                    ShortNotesManager shortNotesManager =snapshot.getValue(ShortNotesManager.class);
+
+                    shortNotesManagerArrayList.add(shortNotesManager);
+                }
+
+                Collections.reverse(shortNotesManagerArrayList);
+
+                onShortNoteListListener.onShortNoteList(shortNotesManagerArrayList ,true);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onShortNoteListListener.onShortNoteList(null ,false);
+            }
+        });
+
+
+    }
+
+
     public interface OnCommentListener {
         public void onCommentInserted(Comment comment);
 
@@ -578,6 +612,11 @@ public class DBHelperFirebase {
 
         public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful);
 
+    }
+
+    public interface OnShortNoteListListener{
+        public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList ,boolean isSuccessful);
+        public void onShortNoteUplode(boolean isSuccessful);
     }
 
 }

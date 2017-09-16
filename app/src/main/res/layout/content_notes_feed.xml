@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="app.articles.vacabulary.editorial.gamefever.editorial.NotesFeedActivity"
+    tools:showIn="@layout/activity_notes_feed">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/notesFeed_heading_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:fontFamily="serif"
+                android:text="Heading text"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="?attr/primaryTextColor"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/notesFeed_source_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onSourceTextClick"
+                    android:text="Source Name"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/notesFeed_tag_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:onClick="onCategoryTextClick"
+                    android:text="Tag"
+                    android:textAlignment="textEnd"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+
+                    />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/notesFeed_date_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:text="Date"
+                android:textAlignment="center"
+                android:textColor="?attr/secondaryTextColor"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/secondaryTextColor">
+
+            </ImageView>
+
+        </LinearLayout>
+
+
+        <!--admob native ad-->
+        <com.google.android.gms.ads.NativeExpressAdView
+            android:id="@+id/notesFeed_top_nativeAds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:descendantFocusability="blocksDescendants"
+            android:visibility="gone"
+            app:adSize="320x132"
+            app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+
+        </com.google.android.gms.ads.NativeExpressAdView>
+
+
+        <TextView
+            android:id="@+id/notesFeed_text_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:autoLink="all"
+            android:fontFamily="serif"
+            android:lineSpacingMultiplier="1.2"
+            android:text=""
+            android:textColor="?attr/primaryTextColor"
+            android:textColorLink="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/secondaryTextColor">
+
+        </ImageView>
+
+    </LinearLayout>
+
+
+</ScrollView>

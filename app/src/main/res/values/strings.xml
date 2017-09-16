@@ -16,8 +16,6 @@
     <string name="action_settings">Settings</string>
 
 
-
-
     <!--dynamic link and smart sharing variable-->
 
     <string name="app_code">tt93a.app.goo.gl</string>
@@ -30,7 +28,10 @@
     <string name="pref_title_select_font_size">Select Font Size</string>
     <string name="pref_title_select_voice_speed">Select Voice Pitch</string>
     <string name="aboutActivity_contentManager_contactString">For feedback and review \n Feel free to Contact us</string>
-    <string name="splashScreen_extraText" >Best Editorial App </string>
+    <string name="splashScreen_extraText">Best Editorial App </string>
+    <string name="title_activity_sign_in">Sign In</string>
+    <string name="title_activity_notes">Notes</string>
+    <string name="title_activity_notes_feed">Notes</string>
 
 
 </resources>

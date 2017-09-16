@@ -10,31 +10,29 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-
         android:theme="@style/FeedActivityThemeLight">
         <activity android:name=".TestActivity" />
-        <activity android:name=".EditorialFeedActivity"
-            android:label="Editorial"
-            >
+        <activity
+            android:name=".EditorialFeedActivity"
+            android:label="Editorial">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity" android:scheme="http"/>
-                <data android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity" android:scheme="https"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity"
+                    android:scheme="http" />
+                <data
+                    android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".EditorialListActivity">
-
-
-        </activity>
-
+        <activity android:name=".EditorialListActivity" />
         <activity android:name=".VacabularyActivity" />
         <activity android:name=".AboutActivity" />
-
         <activity android:name=".SettingActivity" />
-
 
         <service android:name="utils.FireBasePushNotificationService">
             <intent-filter>
@@ -48,17 +46,30 @@
 
         <activity
             android:name=".EditorialListWithNavActivity"
-            android:label="@string/app_name"
-            >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="acc1b0b9ec29985ac9dbef0f05837dac47e0b387" />
+
+        <activity
+            android:name=".SignInActivity"
+            android:label="@string/title_activity_sign_in"
+            android:theme="@style/FeedActivityThemeLight" />
+        <activity
+            android:name=".NotesActivity"
+            android:label="@string/title_activity_notes"
+            android:theme="@style/FeedActivityThemeLight" />
+        <activity
+            android:name=".NotesFeedActivity"
+            android:label="@string/title_activity_notes_feed"
+            android:theme="@style/FeedActivityThemeLight"></activity>
     </application>
 
 </manifest>

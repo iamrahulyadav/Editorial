@@ -26,6 +26,7 @@ import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -61,16 +62,18 @@ import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 
-
 import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 import utils.AdsSubscriptionManager;
 import utils.AppRater;
+import utils.AuthenticationManager;
 import utils.Like;
+import utils.ShortNotesManager;
 import utils.UrlShortner;
 
 public class EditorialFeedActivity extends AppCompatActivity implements
@@ -89,9 +92,75 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     ArrayList<Comment> commentList = new ArrayList<>();
 
     boolean isPushNotification = false;
-    boolean isDynamicLink =false ;
+    boolean isDynamicLink = false;
     private boolean notesMode = false;
     private InterstitialAd mSubscriptionInterstitialAd;
+
+    private ActionMode mActionMode;
+    private ShortNotesManager shortNotesManager = new ShortNotesManager(new HashMap<String, String>());
+    private boolean saveShortNotes;
+    private android.view.ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            menu.add(2,2,2, "Add To note");
+            menu.add(1, 1, 1, "Save");
+            menu.add(0, 0, 0, "Cancel").setIcon(R.drawable.ic_action_audio);
+
+            saveShortNotes=false;
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            String selectedString = "";
+            if (item.getItemId() == 2) {
+                TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
+                if (definitionView.hasSelection()) {
+                    selectedString = currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().substring(definitionView.getSelectionStart(), definitionView.getSelectionEnd());
+
+                }
+
+
+                Toast.makeText(EditorialFeedActivity.this, "Text selected is " + selectedString, Toast.LENGTH_SHORT).show();
+
+                shortNotesManager.getShortNotePointList().put(definitionView.getSelectionStart() + "-" + definitionView.getSelectionEnd(), selectedString);
+
+                definitionView.clearFocus();
+                saveShortNotes=true;
+
+            } else if (item.getItemId() == 1) {
+
+                if (mActionMode!= null) {
+                    mActionMode.finish();
+                }
+            }else if(item.getItemId() == 0){
+                saveShortNotes=false;
+                if (mActionMode!= null) {
+                    mActionMode.finish();
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            //storyTextView.setTextIsSelectable(false);
+
+            if (saveShortNotes) {
+                shortNotesManager.uploadShortNote(AuthenticationManager.getUserUID(EditorialFeedActivity.this));
+            }
+
+        }
+    };
 
 
     @Override
@@ -280,7 +349,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
         isPushNotification = i.getBooleanExtra("isPushNotification", false);
-        isDynamicLink =i.getBooleanExtra("isDynamicLink", false);
+        isDynamicLink = i.getBooleanExtra("isDynamicLink", false);
 
 
         if (isBookMarked) {
@@ -563,12 +632,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            }else {
+            } else {
 
                 super.onBackPressed();
 
             }
-
 
 
         }
@@ -705,16 +773,50 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void onTakeNotesClick(MenuItem item) {
 
         if (notesMode) {
+            TextView notesTextview = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
+            notesTextview.setText(null);
+
             init(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             notesMode = false;
             item.setTitle("Take Notes");
+
+
         } else {
-            TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+            TextView editorialText = (TextView) findViewById(R.id.editorial_text_textview);
+            editorialText.setText(null);
+
+            final TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
             definitionView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             definitionView.setTextIsSelectable(true);
             notesMode = true;
             item.setTitle("Exit notes mode");
             Toast.makeText(this, "Entered notes mode", Toast.LENGTH_SHORT).show();
+
+            definitionView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mActionMode != null) {
+                        return false;
+                    }
+
+                    // Start the CAB using the ActionMode.Callback defined above
+                    mActionMode = EditorialFeedActivity.this.startActionMode(mActionModeCallback);
+
+                    definitionView.setSelected(true);
+
+                    return false;
+
+                }
+            });
+
+            definitionView.setCustomSelectionActionModeCallback(mActionModeCallback);
+
+            shortNotesManager.setNoteArticleID(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID());
+            shortNotesManager.setShortNoteHeading(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading());
+            shortNotesManager.setNoteArticleSource(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSource());
+            shortNotesManager.setShortNoteEditTimeInMillis(currentEditorialFullInfo.getEditorialGeneralInfo().getTimeInMillis());
+
+
         }
 
     }
@@ -734,10 +836,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         databaseHandlerBookMark.addToBookMark(currentEditorialFullInfo.getEditorialGeneralInfo(), currentEditorialFullInfo.getEditorialExtraInfo());
         Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
 
-        try{
-            Answers.getInstance().logCustom(new CustomEvent("Bookmark").putCustomAttribute("Editorial title",currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
+        try {
+            Answers.getInstance().logCustom(new CustomEvent("Bookmark").putCustomAttribute("Editorial title", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
 
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -989,8 +1091,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         commentListView.setAdapter(mCommentAdapter);
 
 
-        TextView textView =(TextView)findViewById(R.id.editorialfeed_comment_textView);
-        textView.setText(commentList.size() +" Discussion");
+        TextView textView = (TextView) findViewById(R.id.editorialfeed_comment_textView);
+        textView.setText(commentList.size() + " Discussion");
 
         //resizeCommentListView();
 
@@ -1236,23 +1338,23 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         builder.show();
 */
 
-       if (mSubscriptionInterstitialAd != null) {
-           if (mSubscriptionInterstitialAd.isLoaded()) {
-               mSubscriptionInterstitialAd.show();
+        if (mSubscriptionInterstitialAd != null) {
+            if (mSubscriptionInterstitialAd.isLoaded()) {
+                mSubscriptionInterstitialAd.show();
 
-               Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
+                Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
 
-           }else if(mSubscriptionInterstitialAd.isLoading()){
-               Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try in few minutes", Toast.LENGTH_SHORT).show();
+            } else if (mSubscriptionInterstitialAd.isLoading()) {
+                Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try in few minutes", Toast.LENGTH_SHORT).show();
 
-           } else {
-               Log.d("TAG", "The interstitial wasn't loaded yet.");
-               Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
-               Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
-               mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-           }
+            } else {
+                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
+                Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
+                mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
 
-       }
+        }
 
 
     }
