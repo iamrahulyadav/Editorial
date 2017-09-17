@@ -428,22 +428,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        /*if (!isSplashScreenVisible) {
 
-            if (!activityCurrentTheme.contentEquals(getActivityTheme())) {
-                changeActivityTheme(getActivityTheme());
-            }
-        }*/
     }
 
-   /* private String getActivityTheme() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-
-        String theme = sharedPref.getString("theme_list", "Day" );
-        this.activityCurrentTheme = theme;
-        return theme;
-    }*/
 
 
     public void initializeSplashScreen() {
@@ -950,6 +938,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onNotesClick();
                 break;
 
+            case R.id.nav_pushNotification:
+                onPushNotification();
+                break;
+
         }
 
 
@@ -980,6 +972,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             }
         });
+
+        if (!PushNotificationManager.getPushNotification(this)){
+            Log.d("Test", "onPushNotification: ");
+        }
+
         builder.show();
     }
 
@@ -1101,7 +1098,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1122,6 +1119,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "ta";
                 } else if (which == 4) {
                     languageCode = "bn";
+                } else if (which == 5) {
+                    languageCode = "kn";
                 }
 
                 LanguageManager.setLanguageCode(EditorialListWithNavActivity.this, languageCode);

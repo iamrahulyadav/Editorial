@@ -30,7 +30,9 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
 
-
+        if (!PushNotificationManager.getPushNotification(this)){
+            return;
+        }
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {

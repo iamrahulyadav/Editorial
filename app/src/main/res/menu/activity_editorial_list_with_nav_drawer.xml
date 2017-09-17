@@ -4,19 +4,6 @@
     <item android:title="Search">
         <menu>
             <group android:checkableBehavior="single">
-               <!-- <item
-                    android:id="@+id/nav_all"
-                    android:title="All" />
-
-                <item
-                    android:id="@+id/nav_the_hindu"
-                    android:title="The Hindu" />
-                <item
-                    android:id="@+id/nav_financial_express"
-                    android:title="Financial Express" />
-                <item
-                    android:id="@+id/nav_economic_times"
-                    android:title="Economic Times" />-->
 
                 <item
                     android:id="@+id/nav_sort_bysource"
@@ -25,10 +12,6 @@
                 <item
                     android:id="@+id/nav_sort_bycategory"
                     android:title="By Category" />
-
-
-
-
 
             </group>
         </menu>
@@ -69,9 +52,6 @@
 
     </item>
 
-
-
-
     <item android:title="Options"
         android:titleCondensed="">
         <menu>
@@ -95,6 +75,9 @@
         </menu>
     </item>
 
+    <item android:title="Turn off Push notifiacation"
+        android:id="@+id/nav_pushNotification"
+        android:icon="@drawable/ic_action_removeads"/>
 
 
     <item android:title="Help and Support"
@@ -125,6 +108,5 @@
 
         </menu>
     </item>
-
 
 </menu>

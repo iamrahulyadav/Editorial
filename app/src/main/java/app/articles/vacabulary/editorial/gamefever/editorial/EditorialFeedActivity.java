@@ -14,6 +14,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -66,7 +67,9 @@ import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import utils.AdsSubscriptionManager;
@@ -96,17 +99,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private boolean notesMode = false;
     private InterstitialAd mSubscriptionInterstitialAd;
 
-    private ActionMode mActionMode;
+
     private ShortNotesManager shortNotesManager = new ShortNotesManager(new HashMap<String, String>());
     private boolean saveShortNotes;
+    /*
+    private ActionMode mActionMode;
     private android.view.ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            menu.add(2,2,2, "Add To note");
-            menu.add(1, 1, 1, "Save");
-            menu.add(0, 0, 0, "Cancel").setIcon(R.drawable.ic_action_audio);
+            menu.add(2, 2, 2, "Add this point").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.add(1, 1, 1, "Done").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.add(0, 0, 0, "Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            saveShortNotes=false;
+            saveShortNotes = false;
 
             return true;
         }
@@ -133,16 +138,16 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 shortNotesManager.getShortNotePointList().put(definitionView.getSelectionStart() + "-" + definitionView.getSelectionEnd(), selectedString);
 
                 definitionView.clearFocus();
-                saveShortNotes=true;
+                saveShortNotes = true;
 
             } else if (item.getItemId() == 1) {
 
-                if (mActionMode!= null) {
+                if (mActionMode != null) {
                     mActionMode.finish();
                 }
-            }else if(item.getItemId() == 0){
-                saveShortNotes=false;
-                if (mActionMode!= null) {
+            } else if (item.getItemId() == 0) {
+                saveShortNotes = false;
+                if (mActionMode != null) {
                     mActionMode.finish();
                 }
             }
@@ -156,12 +161,37 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             //storyTextView.setTextIsSelectable(false);
 
             if (saveShortNotes) {
-                shortNotesManager.uploadShortNote(AuthenticationManager.getUserUID(EditorialFeedActivity.this));
+                final ProgressDialog pd = ProgressDialog.show(EditorialFeedActivity.this, "Saving Notes", "Please wait");
+                new DBHelperFirebase().uploadShortNote(AuthenticationManager.getUserUID(EditorialFeedActivity.this), shortNotesManager, new DBHelperFirebase.OnShortNoteListListener() {
+                    @Override
+                    public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList, boolean isSuccessful) {
+
+                    }
+
+                    @Override
+                    public void onShortNoteUpload(boolean isSuccessful) {
+
+                        try {
+                            if (pd.isShowing()) {
+                                pd.dismiss();
+                            }
+
+                        } catch (Exception e) {
+
+                        }
+
+                        if (isSuccessful) {
+                            Toast.makeText(EditorialFeedActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
             }
 
         }
     };
-
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -627,6 +657,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
+
+            if (saveShortNotes) {
+                onNotesSaveClick();
+            }
+
             if (isPushNotification || isDynamicLink) {
                 Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -736,9 +771,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+        if (notesMode) {
 
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.activity_notes_mode_action, menu);
+        } else {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -761,8 +801,20 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onBookmark();
                 return true;
             case R.id.action_notes:
-                onTakeNotesClick(item);
+                onTakeNotesClick();
+                return true;
 
+            case R.id.notes_mode_action_add_point:
+                onAddPointClick();
+                return true;
+
+
+            case R.id.notes_mode_action_save:
+                onNotesSaveClick();
+                return true;
+
+            case R.id.notes_mode_action_cancel:
+                onNotesCancelClick();
                 return true;
 
             default:
@@ -770,7 +822,77 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
     }
 
-    private void onTakeNotesClick(MenuItem item) {
+    private void onNotesCancelClick() {
+        Toast.makeText(this, "Cancel notes", Toast.LENGTH_SHORT).show();
+        saveShortNotes = false;
+        onTakeNotesClick();
+    }
+
+    private void onNotesSaveClick() {
+        //Toast.makeText(this, "save notes", Toast.LENGTH_SHORT).show();
+
+        String userUID =AuthenticationManager.getUserUID(EditorialFeedActivity.this);
+        if (userUID ==null){
+            return ;
+        }
+
+        if (saveShortNotes) {
+            saveShortNotes=false;
+
+
+            final ProgressDialog pd = ProgressDialog.show(EditorialFeedActivity.this, "Saving Notes", "Please wait");
+            new DBHelperFirebase().uploadShortNote(userUID, shortNotesManager, new DBHelperFirebase.OnShortNoteListListener() {
+                @Override
+                public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList, boolean isSuccessful) {
+
+                }
+
+                @Override
+                public void onShortNoteUpload(boolean isSuccessful) {
+
+                    try {
+                        if (pd.isShowing()) {
+                            pd.dismiss();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (isSuccessful) {
+                        Toast.makeText(EditorialFeedActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+
+        }
+
+        onTakeNotesClick();
+
+    }
+
+    private void onAddPointClick() {
+        Toast.makeText(this, "add point notes", Toast.LENGTH_SHORT).show();
+
+        TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
+        String selectedString = "";
+        if (definitionView.hasSelection()) {
+            selectedString = currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().substring(definitionView.getSelectionStart(), definitionView.getSelectionEnd());
+
+        }
+
+
+        Toast.makeText(EditorialFeedActivity.this, "Text selected is " + selectedString, Toast.LENGTH_SHORT).show();
+
+        shortNotesManager.getShortNotePointList().put(definitionView.getSelectionStart() + "-" + definitionView.getSelectionEnd(), selectedString);
+
+        definitionView.clearFocus();
+        saveShortNotes = true;
+
+    }
+
+    private void onTakeNotesClick() {
 
         if (notesMode) {
             TextView notesTextview = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
@@ -778,8 +900,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             init(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             notesMode = false;
-            item.setTitle("Take Notes");
-
+            //item.setTitle("Take Notes");
+            try {
+                getSupportActionBar().setSubtitle("Feeds");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ActivityCompat.invalidateOptionsMenu(this);
 
         } else {
             TextView editorialText = (TextView) findViewById(R.id.editorial_text_textview);
@@ -789,32 +916,21 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             definitionView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             definitionView.setTextIsSelectable(true);
             notesMode = true;
-            item.setTitle("Exit notes mode");
+           // item.setTitle("Exit notes mode");
             Toast.makeText(this, "Entered notes mode", Toast.LENGTH_SHORT).show();
 
-            definitionView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mActionMode != null) {
-                        return false;
-                    }
-
-                    // Start the CAB using the ActionMode.Callback defined above
-                    mActionMode = EditorialFeedActivity.this.startActionMode(mActionModeCallback);
-
-                    definitionView.setSelected(true);
-
-                    return false;
-
-                }
-            });
-
-            definitionView.setCustomSelectionActionModeCallback(mActionModeCallback);
+            try {
+                getSupportActionBar().setSubtitle("Notes");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             shortNotesManager.setNoteArticleID(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID());
             shortNotesManager.setShortNoteHeading(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading());
             shortNotesManager.setNoteArticleSource(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSource());
             shortNotesManager.setShortNoteEditTimeInMillis(currentEditorialFullInfo.getEditorialGeneralInfo().getTimeInMillis());
+
+            ActivityCompat.invalidateOptionsMenu(this);
 
 
         }

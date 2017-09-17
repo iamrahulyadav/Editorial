@@ -1,6 +1,7 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -590,6 +591,46 @@ public class DBHelperFirebase {
 
     }
 
+    public void deleteShortNotes(String userUID , String pushKey, final OnShortNoteListListener onShortNoteListListener){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID+"/"+pushKey);
+
+        database.removeValue().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                onShortNoteListListener.onShortNoteUpload(false);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                onShortNoteListListener.onShortNoteUpload(true);
+
+            }
+        });
+
+    }
+
+    public void uploadShortNote(String userUID , ShortNotesManager shortNotesManager , final OnShortNoteListListener onShortNoteListListener){
+        if (userUID == null){
+            onShortNoteListListener.onShortNoteUpload(false);
+        }
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID+"/"+shortNotesManager.getNoteArticleID());
+        database.setValue(shortNotesManager).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("uploaded", "onSuccess: ");
+                onShortNoteListListener.onShortNoteUpload(true);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                onShortNoteListListener.onShortNoteUpload(false);
+            }
+        });
+
+    }
 
     public interface OnCommentListener {
         public void onCommentInserted(Comment comment);
@@ -616,7 +657,7 @@ public class DBHelperFirebase {
 
     public interface OnShortNoteListListener{
         public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList ,boolean isSuccessful);
-        public void onShortNoteUplode(boolean isSuccessful);
+        public void onShortNoteUpload(boolean isSuccessful);
     }
 
 }

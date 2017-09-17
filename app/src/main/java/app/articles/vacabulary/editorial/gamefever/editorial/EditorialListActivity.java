@@ -1,7 +1,9 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -9,6 +11,7 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -37,9 +40,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import utils.AdsSubscriptionManager;
+import utils.AuthenticationManager;
+import utils.ShortNotesManager;
 
 public class EditorialListActivity extends AppCompatActivity {
 
@@ -63,7 +69,6 @@ public class EditorialListActivity extends AppCompatActivity {
         initializeActivity();
 
 
-        //fetchEditorialGeneralList();
 
 
 
@@ -160,6 +165,8 @@ public class EditorialListActivity extends AppCompatActivity {
 
                     @Override public void onLongItemClick(View view, int position) {
                         // do whatever
+                        onRecyclerViewItemLongClick(position);
+
                     }
                 })
         );
@@ -176,6 +183,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
+
         DatabaseHandlerBookMark databaseHandlerBookMark =new DatabaseHandlerBookMark(this);
         ArrayList<EditorialGeneralInfo> editorialGeneralInfos= databaseHandlerBookMark.getAllBookMarkEditorial();
 
@@ -184,6 +192,8 @@ public class EditorialListActivity extends AppCompatActivity {
             editorialListArrayList.add(editorialGeneralInfo);
         }
 
+        Collections.reverse(editorialListArrayList);
+
         addNativeExpressAds();
         mAdapter.notifyDataSetChanged();
 
@@ -191,6 +201,42 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
     }
+
+
+    private void onRecyclerViewItemLongClick(final int position) {
+        if (position % 8 == 0) {
+            return;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure you want to delete this Bookmark")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteNotes(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+
+    }
+
+    private void deleteNotes(final int position) {
+
+       boolean result= new DatabaseHandlerBookMark(this).deleteBookMarkEditorial(((EditorialGeneralInfo)editorialListArrayList.get(position)).getEditorialID());
+        if (result){
+            editorialListArrayList.remove(position);
+            mAdapter.notifyDataSetChanged();
+        }
+
+    }
+
 
 
     public void initializeSplashScreen(){
@@ -327,7 +373,7 @@ public class EditorialListActivity extends AppCompatActivity {
         editorialListArrayList.clear();
         mAdapter.notifyDataSetChanged();
         addMoreButton.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
        /* if(!isRefreshing) {
             fetchEditorialGeneralList();
             isRefreshing =true;

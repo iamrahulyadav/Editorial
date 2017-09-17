@@ -1,9 +1,11 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -54,6 +56,15 @@ public class VacabularyActivity extends AppCompatActivity {
             }
         });
 
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                onRecyclerViewItemLongClick(position);
+                return true;
+            }
+        });
+
         View bottomSheet = findViewById(R.id.vacabulary_activity_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -62,6 +73,41 @@ public class VacabularyActivity extends AppCompatActivity {
         setActivityTheme();
 
     }
+
+    private void onRecyclerViewItemLongClick(final int position) {
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure you want to delete this Bookmark")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteNotes(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+
+    }
+
+    private void deleteNotes(final int position) {
+
+        boolean result= new DatabaseHandler(this).deleteDictionaryWord(dictionaryArrayList.get(position).getWord());
+
+        if (result){
+            arrayListword.remove(position);
+            mAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+
 
     private void setActivityTheme() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);

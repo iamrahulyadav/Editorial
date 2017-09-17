@@ -10,6 +10,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +23,12 @@ public class ShortNotesManager implements Serializable{
     private String shortNoteHeading ,noteArticleID ,noteArticleSource, noteArticleDate;
     private long shortNoteEditTimeInMillis;
 
-    Map<String ,String> shortNotePointList;
+    HashMap<String ,String> shortNotePointList;
 
     public ShortNotesManager() {
     }
 
-    public ShortNotesManager(Map<String ,String> shortNotePointList) {
+    public ShortNotesManager(HashMap<String ,String> shortNotePointList) {
         this.shortNotePointList =shortNotePointList;
     }
 
@@ -70,11 +72,11 @@ public class ShortNotesManager implements Serializable{
         this.shortNoteEditTimeInMillis = shortNoteEditTimeInMillis;
     }
 
-    public Map<String, String> getShortNotePointList() {
+    public HashMap<String, String> getShortNotePointList() {
         return shortNotePointList;
     }
 
-    public void setShortNotePointList(Map<String, String> shortNotePointList) {
+    public void setShortNotePointList(HashMap<String, String> shortNotePointList) {
         this.shortNotePointList = shortNotePointList;
     }
 

@@ -43,7 +43,7 @@ public class AuthenticationManager {
 
     private static void showSignUpDialogue(final Context mContext) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setCancelable(false)
+        builder.setCancelable(true)
                 .setTitle("Sign in")
                 .setMessage("Sign in to create notes")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -51,7 +51,12 @@ public class AuthenticationManager {
                         Intent intent = new Intent(mContext, SignInActivity.class);
                         mContext.startActivity(intent);
                     }
-                });
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
 
         // Create the AlertDialog object and return it
         builder.setCancelable(false);

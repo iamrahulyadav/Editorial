@@ -22,4 +22,5 @@
         app:headerLayout="@layout/nav_header_editorial_list_with_nav"
         app:menu="@menu/activity_editorial_list_with_nav_drawer" />
 
+
 </android.support.v4.widget.DrawerLayout>

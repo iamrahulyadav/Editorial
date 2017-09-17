@@ -1,9 +1,12 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
@@ -69,6 +75,7 @@ public class NotesActivity extends AppCompatActivity {
                     @Override
                     public void onLongItemClick(View view, int position) {
                         // do whatever
+                        onRecyclerViewItemLongClick(position);
                     }
                 })
         );
@@ -92,12 +99,58 @@ public class NotesActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onShortNoteUplode(boolean isSuccessful) {
+            public void onShortNoteUpload(boolean isSuccessful) {
 
             }
         });
 
     }
+
+    private void onRecyclerViewItemLongClick(final int position) {
+        if (position % 8 == 0) {
+            return;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure you want to delete this Notes")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteNotes(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+
+    }
+
+    private void deleteNotes(final int position) {
+        final ProgressDialog pd = ProgressDialog.show(this,"Deleting","Please wait");
+
+        DBHelperFirebase dbHelperFirebase =new DBHelperFirebase();
+        dbHelperFirebase.deleteShortNotes(AuthenticationManager.getUserUID(this),((ShortNotesManager)shortNotesArrayList.get(position)).getNoteArticleID(), new DBHelperFirebase.OnShortNoteListListener() {
+            @Override
+            public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList, boolean isSuccessful) {
+
+            }
+
+            @Override
+            public void onShortNoteUpload(boolean isSuccessful) {
+                shortNotesArrayList.remove(position);
+                mAdapter.notifyDataSetChanged();
+                pd.dismiss();
+
+                Toast.makeText(NotesActivity.this, "Notes Deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void onRecyclerViewItemClick(int position) {
         if (position % 8 == 0) {

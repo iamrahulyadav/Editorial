@@ -21,6 +21,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+
                 <data
                     android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity"
                     android:scheme="http" />
