@@ -21,5 +21,10 @@
         android:title="Exit Notes"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_open_notes"
+        android:title="Open Notes"
+        app:showAsAction="never" />
+
+
 
 </menu>

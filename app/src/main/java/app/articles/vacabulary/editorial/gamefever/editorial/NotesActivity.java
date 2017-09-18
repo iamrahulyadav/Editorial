@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,22 +36,25 @@ public class NotesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ShortNotesAdapter mAdapter;
+    private boolean isMoreNotesAvailable=true;
+    private boolean isLodingMoreNotes=true;
+
+    private DBHelperFirebase.OnShortNoteListListener onShortNoteListListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AppCompatDelegate.getDefaultNightMode()
+                == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.FeedActivityThemeDark);
+
+        }
+
         setContentView(R.layout.activity_notes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         recyclerView = (RecyclerView) findViewById(R.id.notes_list_recyclerView);
         mAdapter = new ShortNotesAdapter(shortNotesArrayList, this);
@@ -81,16 +85,48 @@ public class NotesActivity extends AppCompatActivity {
         );
 
 
-        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchShortNotesList(AuthenticationManager.getUserUID(this), 20, new DBHelperFirebase.OnShortNoteListListener() {
+        //loading more
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                                              @Override
+                                              public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                                  super.onScrolled(recyclerView, dx, dy);
+                                                  if (!recyclerView.canScrollVertically(1)) {
+
+                                                      if (isMoreNotesAvailable) {
+                                                          if (!isLodingMoreNotes) {
+
+                                                              loadMoreNotes();
+                                                          } else {
+
+                                                          }
+                                                      }
+                                                  }
+                                              }
+                                          }
+
+        );
+
+
+        onShortNoteListListener= new DBHelperFirebase.OnShortNoteListListener() {
             @Override
             public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList, boolean isSuccessful) {
 
+                isLodingMoreNotes=false;
                 if (isSuccessful) {
                     //initialize list
+
+                    if (shortNotesManagerArrayList.size() >19){
+                        isMoreNotesAvailable =true;
+                    }else{
+                        isMoreNotesAvailable=false;
+                    }
+
+
                     for (Object shortNotes :shortNotesManagerArrayList){
                         shortNotesArrayList.add(shortNotes);
                     }
+
 
                     addNativeExpressAds();
                     mAdapter.notifyDataSetChanged();
@@ -102,7 +138,31 @@ public class NotesActivity extends AppCompatActivity {
             public void onShortNoteUpload(boolean isSuccessful) {
 
             }
-        });
+        };
+
+
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+        dbHelperFirebase.fetchShortNotesList(AuthenticationManager.getUserUID(this), 20, onShortNoteListListener);
+
+    }
+
+    private void loadMoreNotes() {
+        isLodingMoreNotes =true;
+
+
+        if (shortNotesArrayList.get(shortNotesArrayList.size()-1).getClass()==ShortNotesManager.class){
+
+            new DBHelperFirebase().fetchShortNotesList(AuthenticationManager.getUserUID(this),20
+            ,((ShortNotesManager)shortNotesArrayList.get(shortNotesArrayList.size()-1)).getNoteArticleID() ,
+                    onShortNoteListListener);
+
+        }else{
+
+            new DBHelperFirebase().fetchShortNotesList(AuthenticationManager.getUserUID(this),20
+                    ,((ShortNotesManager)shortNotesArrayList.get(shortNotesArrayList.size()-2)).getNoteArticleID() ,
+                    onShortNoteListListener);
+        }
+
 
     }
 
@@ -194,11 +254,8 @@ public class NotesActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
     }
+
 
 
 }

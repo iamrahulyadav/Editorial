@@ -102,6 +102,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private ShortNotesManager shortNotesManager = new ShortNotesManager(new HashMap<String, String>());
     private boolean saveShortNotes;
+
+    boolean muteVoice=false;
     /*
     private ActionMode mActionMode;
     private android.view.ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -601,6 +603,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View v) {
                     DatabaseHandler databaseHandler = new DatabaseHandler(EditorialFeedActivity.this);
+                    dictionary.setWord(translateText.getText().toString());
                     databaseHandler.addToDictionary(dictionary);
                     Toast.makeText(EditorialFeedActivity.this, "Word Added To Dictionary", Toast.LENGTH_SHORT).show();
 
@@ -642,12 +645,17 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Don't forget to shutdown tts!
+        super.onDestroy();
+    }
+
+    @Override
+    public  void onStop(){
+        super.onStop();
         if (tts != null) {
             speakOutWord(".");
             tts.stop();
             tts.shutdown();
         }
-        super.onDestroy();
     }
 
     @Override
@@ -704,7 +712,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void speakOutWord(String speakWord) {
 
         try {
-            tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+            if (!muteVoice) {
+                tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+            }
         } catch (Exception e) {
 
         }
@@ -800,6 +810,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 // refresh
                 onBookmark();
                 return true;
+
+            case R.id.action_tts_reader:
+                onTtsReaderClick(item);
+                return true;
+
             case R.id.action_notes:
                 onTakeNotesClick();
                 return true;
@@ -817,9 +832,31 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onNotesCancelClick();
                 return true;
 
+            case R.id.action_open_notes:
+                onOpenNotesActivity();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void onTtsReaderClick(MenuItem item) {
+
+        if (tts.isSpeaking()) {
+            speakOutWord("");
+            item.setTitle("Read Editorial (Voice)");
+
+        } else {
+            item.setTitle("Stop Reader");
+            speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+        }
+
+    }
+
+    private void onOpenNotesActivity() {
+        Intent intent =new Intent(EditorialFeedActivity.this ,NotesActivity.class);
+        startActivity(intent);
     }
 
     private void onNotesCancelClick() {
@@ -1020,7 +1057,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-
     private void openShareDialog(Uri shortLink) {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
@@ -1086,24 +1122,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
 
 
-            @Override
-            public void onAdClicked() {
-                super.onAdClicked();
 
-
-            }
-
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad impression")
-                            .putCustomAttribute("Placement", "Feed native bottom"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         });
 
 
@@ -1161,12 +1180,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void readFullArticle(View view) {
-        if (tts.isSpeaking()) {
-            speakOutWord("");
-
-        } else {
-            speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
-        }
+       if (muteVoice){
+          muteVoice =false ;
+           Toast.makeText(this, "Voice enabled", Toast.LENGTH_SHORT).show();
+       }else{
+           Toast.makeText(this, "Voice disabled", Toast.LENGTH_SHORT).show();
+           muteVoice=true;
+       }
     }
 
 

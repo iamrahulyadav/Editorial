@@ -564,7 +564,7 @@ public class DBHelperFirebase {
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID);
 
-        database.limitToLast(limitTo).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.orderByKey().limitToLast(limitTo).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -631,6 +631,42 @@ public class DBHelperFirebase {
         });
 
     }
+
+    public void fetchShortNotesList(String userUID, int limitTo ,String lastID, final OnShortNoteListListener onShortNoteListListener){
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID);
+
+        Query query = database.orderByKey().limitToLast(limitTo).endAt(lastID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<ShortNotesManager> shortNotesManagerArrayList =new ArrayList<ShortNotesManager>();
+
+                for (DataSnapshot snapshot :dataSnapshot.getChildren()){
+                    ShortNotesManager shortNotesManager =snapshot.getValue(ShortNotesManager.class);
+
+                    shortNotesManagerArrayList.add(shortNotesManager);
+                }
+
+                shortNotesManagerArrayList.remove(shortNotesManagerArrayList.size()-1);
+
+                Collections.reverse(shortNotesManagerArrayList);
+
+                onShortNoteListListener.onShortNoteList(shortNotesManagerArrayList ,true);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onShortNoteListListener.onShortNoteList(null ,false);
+            }
+        });
+
+
+    }
+
 
     public interface OnCommentListener {
         public void onCommentInserted(Comment comment);

@@ -24,6 +24,10 @@
         android:title="Take Notes"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_tts_reader"
+        android:title="Read Editorial (Voice)"
+        app:showAsAction="never" />
+
 
 
 

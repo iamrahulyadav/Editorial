@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
@@ -15,72 +16,99 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
+
 import java.util.ArrayList;
 
+import utils.AdsSubscriptionManager;
 import utils.AuthenticationManager;
 import utils.ShortNotesManager;
 
 
 public class NotesFeedActivity extends AppCompatActivity {
     ShortNotesManager shortNotesManager;
-    String shortNotesText ;
+    String shortNotesText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AppCompatDelegate.getDefaultNightMode()
+                == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.FeedActivityThemeDark);
+        }
+
         setContentView(R.layout.activity_notes_feed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         initializeActivity();
 
     }
 
     private void initializeActivity() {
-        Intent intent =getIntent();
+        Intent intent = getIntent();
 
-         shortNotesManager =(ShortNotesManager) intent.getSerializableExtra("shortNotes");
-        shortNotesText =intent.getStringExtra("shortNotesText");
-        if (shortNotesManager!= null){
+        shortNotesManager = (ShortNotesManager) intent.getSerializableExtra("shortNotes");
+        shortNotesText = intent.getStringExtra("shortNotesText");
+        if (shortNotesManager != null) {
 
             initializeView();
 
-        }else{
+        } else {
 
         }
+
+        if (AdsSubscriptionManager.checkShowAds(this)) {
+            NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.notesFeed_top_nativeAds);
+            adView.setVisibility(View.VISIBLE);
+
+            AdRequest request = new AdRequest.Builder().build();
+            adView.loadAd(request);
+
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+
+                    try {
+                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                .putCustomAttribute("Placement", "notes feed native").putCustomAttribute("errorType", i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            });
+        }
+
 
     }
 
     private void initializeView() {
-        TextView textView = (TextView)findViewById(R.id.notesFeed_heading_textview);
+        TextView textView = (TextView) findViewById(R.id.notesFeed_heading_textview);
         textView.setText(shortNotesManager.getShortNoteHeading());
 
-        textView =(TextView)findViewById(R.id.notesFeed_date_textview);
+        textView = (TextView) findViewById(R.id.notesFeed_date_textview);
         textView.setText(shortNotesManager.getNoteArticleDate());
 
-        textView =(TextView)findViewById(R.id.notesFeed_source_textview);
+        textView = (TextView) findViewById(R.id.notesFeed_source_textview);
         textView.setText(shortNotesManager.getNoteArticleSource());
 
-        textView=(TextView)findViewById(R.id.notesFeed_text_textview);
+        textView = (TextView) findViewById(R.id.notesFeed_text_textview);
 
 
-        String notesString ="";
-        for (String tempstr :shortNotesManager.getShortNotePointList().values()){
-            tempstr ="• "+tempstr+"\n\n" ;
-            notesString=notesString.concat(tempstr);
+        String notesString = "";
+        for (String tempstr : shortNotesManager.getShortNotePointList().values()) {
+            tempstr = "• " + tempstr + "\n\n";
+            notesString = notesString.concat(tempstr);
         }
 
         textView.setText(notesString);
-
-
 
 
     }
@@ -88,7 +116,7 @@ public class NotesFeedActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-         getMenuInflater().inflate(R.menu.activity_notes_menu, menu);
+        getMenuInflater().inflate(R.menu.activity_notes_menu, menu);
         return true;
     }
 
@@ -105,11 +133,25 @@ public class NotesFeedActivity extends AppCompatActivity {
                 onDeleteClicked();
                 return true;
 
+            case R.id.notes_action_read_editorial:
+                onReadEditorialClick();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
 
 
         }
+    }
+
+    private void onReadEditorialClick() {
+        Intent intent = new Intent(this, EditorialFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("editorialID", shortNotesManager.getNoteArticleID());
+        intent.putExtra("isPushNotification", true);
+
+        startActivity(intent);
+
     }
 
     private void onDeleteClicked() {
@@ -128,14 +170,14 @@ public class NotesFeedActivity extends AppCompatActivity {
                     }
                 });
         // Create the AlertDialog object and return it
-         builder.create();
+        builder.create();
         builder.show();
     }
 
     private void deleteNotes() {
-        final ProgressDialog pd = ProgressDialog.show(this,"Deleting","Please wait");
+        final ProgressDialog pd = ProgressDialog.show(this, "Deleting", "Please wait");
 
-        DBHelperFirebase dbHelperFirebase =new DBHelperFirebase();
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         dbHelperFirebase.deleteShortNotes(AuthenticationManager.getUserUID(this), shortNotesManager.getNoteArticleID(), new DBHelperFirebase.OnShortNoteListListener() {
             @Override
             public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList, boolean isSuccessful) {

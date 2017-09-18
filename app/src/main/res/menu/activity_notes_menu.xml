@@ -8,5 +8,10 @@
         app:showAsAction="always"
         />
 
+    <item android:title="Read Editorial"
+        android:id="@+id/notes_action_read_editorial"
+
+        app:showAsAction="never"
+        />
 
 </menu>

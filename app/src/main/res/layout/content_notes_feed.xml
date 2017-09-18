@@ -112,7 +112,7 @@
             android:descendantFocusability="blocksDescendants"
             android:visibility="gone"
             app:adSize="320x132"
-            app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+            app:adUnitId="ca-app-pub-8455191357100024/2084564213">
 
         </com.google.android.gms.ads.NativeExpressAdView>
 
