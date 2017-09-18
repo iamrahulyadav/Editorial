@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -29,10 +30,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private int RC_SIGN_IN=1;
+    private int RC_SIGN_IN = 1;
 
     GoogleApiClient mGoogleApiClient;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,18 +41,19 @@ public class SignInActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
 
         mAuth = FirebaseAuth.getInstance();
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            try {
+                TextView textView = (TextView) findViewById(R.id.signIn_notification_textView);
+                textView.setText("Signed in as - "+currentUser.getEmail());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -59,7 +61,7 @@ public class SignInActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-         mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -68,16 +70,15 @@ public class SignInActivity extends AppCompatActivity {
                 } /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        
+
     }
 
     public void onSignInClick(View view) {
-       
+
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
 
 
     @Override
@@ -112,7 +113,13 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d("Sign in", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            Toast.makeText(SignInActivity.this, "Authenticated", Toast.LENGTH_SHORT).show();
+                            try {
+                                Toast.makeText(SignInActivity.this, "Signed in as " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            }
+
+                            finish();
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -133,7 +140,7 @@ public class SignInActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
 
     }
 

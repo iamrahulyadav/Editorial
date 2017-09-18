@@ -1051,7 +1051,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditorialFeedActivity.this, "Connection Failed! Try again later", Toast.LENGTH_SHORT).show();
-                        pd.dismiss();
+                       try {
+                           pd.dismiss();
+                       }catch (Exception exception){
+                           e.printStackTrace();
+                       }
                     }
                 });
 
@@ -1206,6 +1210,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
 
+
+        TextView textView = (TextView) findViewById(R.id.editorialfeed_comment_textView);
+        textView.setText(commentList.size() + " Discussion");
+
         if (commentList.size() == 0) {
             //commentList = new ArrayList<>();
 
@@ -1227,8 +1235,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         commentListView.setAdapter(mCommentAdapter);
 
 
-        TextView textView = (TextView) findViewById(R.id.editorialfeed_comment_textView);
-        textView.setText(commentList.size() + " Discussion");
 
         //resizeCommentListView();
 

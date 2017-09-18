@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -872,22 +873,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            /*case R.id.nav_all:
-                onAllClick();
-                break;
 
-            case R.id.nav_the_hindu:
-                onTheHinduClick();
-                break;
-
-            case R.id.nav_financial_express:
-                onfinancialExpClick();
-                break;
-
-            case R.id.nav_economic_times:
-                onEconomicTimesClick();
-                break;
-*/
 
             case R.id.nav_vacabulary:
                 onVacabularyClick();
@@ -942,6 +928,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onPushNotification();
                 break;
 
+            case R.id.nav_sign_in:
+                onSignInOpenClick();
+                break;
+
         }
 
 
@@ -950,13 +940,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         return true;
     }
 
+    private void onSignInOpenClick() {
+        Intent intent =new Intent(EditorialListWithNavActivity.this , SignInActivity.class);
+        startActivity(intent);
+    }
+
     private void onNotesClick() {
         Intent intent = new Intent(EditorialListWithNavActivity.this, NotesActivity.class);
         startActivity(intent);
     }
 
     private void onPushNotification() {
-        String languages[] = new String[]{"On", "Off"};
+       /* String languages[] = new String[]{"On", "Off"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enable Push Notification ?");
         builder.setItems(languages, new DialogInterface.OnClickListener() {
@@ -977,7 +972,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             Log.d("Test", "onPushNotification: ");
         }
 
-        builder.show();
+        builder.show();*/
+
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+
     }
 
     private void onSortByCategory() {
@@ -1098,7 +1100,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada","Urdu"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1121,6 +1123,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "bn";
                 } else if (which == 5) {
                     languageCode = "kn";
+                }else if(which == 6){
+                    languageCode ="ur";
                 }
 
                 LanguageManager.setLanguageCode(EditorialListWithNavActivity.this, languageCode);

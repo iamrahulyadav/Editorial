@@ -5,9 +5,10 @@
     android:id="@+id/editorial_list_layout_background_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="6dp"
-    android:layout_marginRight="6dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="false"
     android:focusable="true"
@@ -22,66 +23,86 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/editorial_list_layout_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="source"
+            android:textAlignment="center"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:typeface="monospace"
+            android:textAllCaps="true"
+            />
+
+
+        <TextView
             android:id="@+id/editorial_list_layout_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="0dp"
             android:text="This is heading text for demo purpose and testing layout"
             android:textAlignment="center"
             android:textColor="?attr/primaryTextColor"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_margin="4dp"
-            tools:elevation="100dp" />
+             />
 
         <TextView
             android:id="@+id/editorial_list_layout_subheading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="8dp"
             android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
             android:textColor="?attr/secondaryTextColor"
             android:textSize="12sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            android:typeface="sans"
+            />
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/colorPrimary"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            >
+            android:layout_marginTop="4dp"
+            android:background="?attr/colorPrimary">
 
         </ImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
-            android:layout_marginTop="8dp"
-
-
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
 
+
             <TextView
-                android:id="@+id/editorial_list_layout_source"
+                android:id="@+id/editorial_list_layout_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="source"
+                android:text="2 like"
                 android:textAlignment="center"
                 android:textColor="?attr/secondaryTextColor"
                 android:textSize="12sp"
-                android:textStyle="italic"
-
+                android:layout_gravity="center_vertical"
                 />
-
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="4dp"
+                android:src="@drawable/ic_action_like"
+                />
 
             <TextView
                 android:id="@+id/editorial_list_layout_date"
@@ -92,20 +113,20 @@
                 android:text="date"
                 android:textAlignment="center"
                 android:textColor="?attr/secondaryTextColor"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
 
             <TextView
                 android:id="@+id/editorial_list_layout_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="italic"
                 android:layout_gravity="end"
                 android:text="Tag"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="?attr/secondaryTextColor"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textStyle="italic" />
 
 
         </LinearLayout>

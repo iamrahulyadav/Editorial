@@ -34,7 +34,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
     private static boolean checkShowAds;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView heading, date, source, tag, subheading;
+        public TextView heading, date, source, tag, subheading, likeText;
 
         public MyViewHolder(View view) {
             super(view);
@@ -43,7 +43,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             source = (TextView) view.findViewById(R.id.editorial_list_layout_source);
             tag = (TextView) view.findViewById(R.id.editorial_list_layout_tag);
             subheading = (TextView) view.findViewById(R.id.editorial_list_layout_subheading);
-
+            likeText = (TextView) view.findViewById(R.id.editorial_list_layout_like);
 
 
 
@@ -141,6 +141,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
                 myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
                 myViewHolder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
+                myViewHolder.likeText.setText(EditorialGeneralInfo.getEditorialLike()+" ");
         }
 
     }
