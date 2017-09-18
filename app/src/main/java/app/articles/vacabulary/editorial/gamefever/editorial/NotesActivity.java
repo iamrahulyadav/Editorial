@@ -3,6 +3,7 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -144,6 +147,12 @@ public class NotesActivity extends AppCompatActivity {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         dbHelperFirebase.fetchShortNotesList(AuthenticationManager.getUserUID(this), 20, onShortNoteListListener);
 
+
+        try {
+            Answers.getInstance().logCustom(new CustomEvent("Notes activity open").putCustomAttribute("User id", AuthenticationManager.getUserEmail(this)));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void loadMoreNotes() {
@@ -211,6 +220,38 @@ public class NotesActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_notes_tutorial_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+
+
+            case R.id.notes_action_tutorial:
+                onTutorialClick();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+
+        }
+    }
+
+    private void onTutorialClick() {
+        Answers.getInstance().logCustom(new CustomEvent("On tutorial open").putCustomAttribute("User id", AuthenticationManager.getUserEmail(this)));
+
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://dailyeditorial.quora.com/How-to-make-Editorials-Notes-in-Daily-Editorial"));
+        startActivity(intent);
+    }
 
     private void onRecyclerViewItemClick(int position) {
         if (position % 8 == 0) {

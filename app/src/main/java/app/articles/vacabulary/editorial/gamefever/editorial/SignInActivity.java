@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SignUpEvent;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -115,6 +117,9 @@ public class SignInActivity extends AppCompatActivity {
 
                             try {
                                 Toast.makeText(SignInActivity.this, "Signed in as " + user.getEmail(), Toast.LENGTH_SHORT).show();
+
+                                Answers.getInstance().logSignUp(new SignUpEvent().putSuccess(true).putCustomAttribute("Email id",user.getEmail()));
+
                             } catch (NullPointerException e) {
                                 e.printStackTrace();
                             }
@@ -126,6 +131,8 @@ public class SignInActivity extends AppCompatActivity {
                             Log.w("Sign in", "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            Answers.getInstance().logSignUp(new SignUpEvent().putSuccess(false));
+
                             //updateUI(null);
                         }
 

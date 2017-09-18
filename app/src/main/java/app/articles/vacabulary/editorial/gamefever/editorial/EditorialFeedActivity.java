@@ -920,7 +920,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
 
-        Toast.makeText(EditorialFeedActivity.this, "Text selected is " + selectedString, Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditorialFeedActivity.this, "Point added to notes" , Toast.LENGTH_SHORT).show();
 
         shortNotesManager.getShortNotePointList().put(definitionView.getSelectionStart() + "-" + definitionView.getSelectionEnd(), selectedString);
 
@@ -1025,7 +1025,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         new DynamicLink.SocialMetaTagParameters.Builder()
                                 .setTitle(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
                                 .setDescription(appName)
-                                .setImageUrl(Uri.parse("https://firebasestorage.googleapis.com/v0/b/editorial-8cbf6.appspot.com/o/logo.png?alt=media&token=e2c451aa-e7ef-4f57-8e77-2c783dcc290e"))
+                                .setImageUrl(Uri.parse("https://firebasestorage.googleapis.com/v0/b/editorial-8cbf6.appspot.com/o/newlogogpng.png?alt=media&token=feb60ba4-ce3c-42cb-abf9-1c876cb01a63"))
                                 .build())
                 .setGoogleAnalyticsParameters(
                         new DynamicLink.GoogleAnalyticsParameters.Builder()

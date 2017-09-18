@@ -34,7 +34,7 @@ public class ShortNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static boolean checkShowAds;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView heading, date, source, tag, subheading;
+        public TextView heading, date, source, tag, subheading,likeTextView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -43,6 +43,7 @@ public class ShortNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             source = (TextView) view.findViewById(R.id.editorial_list_layout_source);
             tag = (TextView) view.findViewById(R.id.editorial_list_layout_tag);
             subheading = (TextView) view.findViewById(R.id.editorial_list_layout_subheading);
+            likeTextView = (TextView) view.findViewById(R.id.editorial_list_layout_like);
 
 
         }

@@ -167,7 +167,10 @@
                     android:id="@+id/editorial_text_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:autoLink="all"
                     android:fontFamily="serif"
                     android:text=""
@@ -181,7 +184,10 @@
                     android:id="@+id/editorialfeed_notesText_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:autoLink="all"
                     android:fontFamily="serif"
                     android:text=""
@@ -191,6 +197,18 @@
                     android:textSize="18sp"
                     android:textStyle="normal" />
 
+
+                <TextView
+                    android:id="@+id/editorialfeed_sourceLink_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="4dp"
+                    android:autoLink="all"
+                    android:textColor="?attr/secondaryTextColor"
+                    android:textColorLink="?attr/colorAccent" />
 
 
                 <ImageView
@@ -358,14 +376,6 @@
 
                 </com.google.android.gms.ads.NativeExpressAdView>
 
-                <TextView
-                    android:id="@+id/editorialfeed_sourceLink_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:autoLink="all"
-                    android:textColor="?attr/secondaryTextColor"
-                    android:textColorLink="?attr/colorAccent" />
 
 
                 <!--Comment System layout-->

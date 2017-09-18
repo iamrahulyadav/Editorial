@@ -45,6 +45,11 @@ public class NotesFeedActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        try {
+            Answers.getInstance().logCustom(new CustomEvent("Notes activity feed open").putCustomAttribute("Editorial heading",shortNotesManager.getShortNoteHeading()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         initializeActivity();
 

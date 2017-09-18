@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +41,25 @@ public class AuthenticationManager {
 
         return null;
     }
+
+
+    public static String getUserEmail( Context mContext) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        try {
+            if (currentUser != null) {
+                return currentUser.getEmail();
+            } else {
+                //showSignUpDialogue(mContext);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     private static void showSignUpDialogue(final Context mContext) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

@@ -79,10 +79,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="6dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
 
@@ -91,7 +91,7 @@
                 android:id="@+id/editorial_list_layout_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 like"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="?attr/secondaryTextColor"
                 android:textSize="12sp"
