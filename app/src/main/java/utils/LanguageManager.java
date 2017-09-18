@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 
 public class LanguageManager {
 
+
     static String languageCode;
 
     public static void setLanguageCode(Context mContext ,String languageCode ) {
