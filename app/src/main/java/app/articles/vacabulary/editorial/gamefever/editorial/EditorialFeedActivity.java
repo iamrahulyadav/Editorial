@@ -1072,6 +1072,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 + "\n" + currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()
                 + "\n\nRead full editorial at Daily editorial app");
         startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
+        try {
+            Answers.getInstance().logCustom(new CustomEvent("Share link created").putCustomAttribute("Content Id", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID())
+                    .putCustomAttribute("Shares", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
