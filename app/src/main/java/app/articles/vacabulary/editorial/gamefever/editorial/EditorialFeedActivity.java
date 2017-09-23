@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -103,7 +104,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private ShortNotesManager shortNotesManager = new ShortNotesManager(new HashMap<String, String>());
     private boolean saveShortNotes;
 
-    boolean muteVoice=false;
+    boolean muteVoice = false;
     /*
     private ActionMode mActionMode;
     private android.view.ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -234,15 +235,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
 
-                   /* openBottomSheet(true);
-
-                    Dictionary dictionary = new Dictionary(selectedWord);
-                    dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
-
-                    TextView tv = (TextView) findViewById(R.id.editorial_bottomsheet_heading_textview);
-                    tv.setText(translateText.getText());
-
-*/
+                    loadWebview(selectedWord);
 
                 }
             }
@@ -269,6 +262,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         //setThemeinactivity();
 
         //checkRateUsOption();
+
+
 
 
     }
@@ -649,7 +644,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     @Override
-    public  void onStop(){
+    public void onStop() {
         super.onStop();
         if (tts != null) {
             speakOutWord(".");
@@ -855,7 +850,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onOpenNotesActivity() {
-        Intent intent =new Intent(EditorialFeedActivity.this ,NotesActivity.class);
+        Intent intent = new Intent(EditorialFeedActivity.this, NotesActivity.class);
         startActivity(intent);
     }
 
@@ -868,13 +863,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void onNotesSaveClick() {
         //Toast.makeText(this, "save notes", Toast.LENGTH_SHORT).show();
 
-        String userUID =AuthenticationManager.getUserUID(EditorialFeedActivity.this);
-        if (userUID ==null){
-            return ;
+        String userUID = AuthenticationManager.getUserUID(EditorialFeedActivity.this);
+        if (userUID == null) {
+            return;
         }
 
         if (saveShortNotes) {
-            saveShortNotes=false;
+            saveShortNotes = false;
 
 
             final ProgressDialog pd = ProgressDialog.show(EditorialFeedActivity.this, "Saving Notes", "Please wait");
@@ -920,7 +915,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
 
-        Toast.makeText(EditorialFeedActivity.this, "Point added to notes" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditorialFeedActivity.this, "Point added to notes", Toast.LENGTH_SHORT).show();
 
         shortNotesManager.getShortNotePointList().put(definitionView.getSelectionStart() + "-" + definitionView.getSelectionEnd(), selectedString);
 
@@ -953,7 +948,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             definitionView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             definitionView.setTextIsSelectable(true);
             notesMode = true;
-           // item.setTitle("Exit notes mode");
+            // item.setTitle("Exit notes mode");
             Toast.makeText(this, "Entered notes mode", Toast.LENGTH_SHORT).show();
 
             try {
@@ -1051,11 +1046,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditorialFeedActivity.this, "Connection Failed! Try again later", Toast.LENGTH_SHORT).show();
-                       try {
-                           pd.dismiss();
-                       }catch (Exception exception){
-                           e.printStackTrace();
-                       }
+                        try {
+                            pd.dismiss();
+                        } catch (Exception exception) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -1132,7 +1127,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
 
 
-
         });
 
 
@@ -1141,7 +1135,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void initializeBottomSheetAd() {
         NativeExpressAdView mAdView = (NativeExpressAdView) findViewById(R.id.editorialFeed_bottomSheet_native_adView);
-        mAdView.setVisibility(View.VISIBLE);
+        mAdView.setVisibility(View.GONE);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -1190,13 +1184,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void readFullArticle(View view) {
-       if (muteVoice){
-          muteVoice =false ;
-           Toast.makeText(this, "Voice enabled", Toast.LENGTH_SHORT).show();
-       }else{
-           Toast.makeText(this, "Voice disabled", Toast.LENGTH_SHORT).show();
-           muteVoice=true;
-       }
+        if (muteVoice) {
+            muteVoice = false;
+            Toast.makeText(this, "Voice enabled", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Voice disabled", Toast.LENGTH_SHORT).show();
+            muteVoice = true;
+        }
     }
 
 
@@ -1239,7 +1233,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         mCommentAdapter = new CommentsListViewAdapter(this, commentList);
         commentListView.setAdapter(mCommentAdapter);
-
 
 
         //resizeCommentListView();
@@ -1530,5 +1523,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadWebview(String mWord) {
+        WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
+        webView.loadUrl("https://www.vocabulary.com/dictionary/" + mWord);
     }
 }

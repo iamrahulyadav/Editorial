@@ -512,7 +512,7 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/editorial_activity_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
         android:clipToPadding="true"
         android:orientation="vertical"
@@ -523,7 +523,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -577,6 +577,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="12dp"
                 android:contentDescription="down"
+                android:visibility="gone"
                 android:onClick="hideBottomsheet"
                 android:src="@mipmap/bottomsheet_down_arrow" />
 
@@ -600,6 +601,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:text="Meaning :"
+                android:visibility="gone"
                 android:textAlignment="textStart"
                 android:textColor="?attr/primaryTextAccentColor"
                 android:textSize="17sp"
@@ -612,6 +614,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/editorial_bottomsheet_heading_textview"
                 android:text="meaning"
+                android:visibility="gone"
                 android:textAlignment="center"
                 android:textColor="?attr/secondaryTextAccentColor"
                 android:textSize="18sp" />
@@ -625,6 +628,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:text="Synonyms:"
+                android:visibility="gone"
                 android:textAlignment="textStart"
                 android:textColor="?attr/primaryTextAccentColor"
                 android:textSize="17sp"
@@ -638,6 +642,7 @@
                 android:layout_below="@id/editorial_bottomsheet_heading_textview"
                 android:text="synonyms"
                 android:textAlignment="center"
+                android:visibility="gone"
                 android:textColor="?attr/secondaryTextAccentColor"
                 android:textSize="20sp" />
 
@@ -650,6 +655,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
                 android:text="Part Of speech :"
+                android:visibility="gone"
                 android:textAlignment="textStart"
                 android:textColor="?attr/primaryTextAccentColor"
                 android:textSize="17sp"
@@ -663,6 +669,7 @@
                 android:layout_below="@id/editorial_bottomsheet_heading_textview"
                 android:layout_marginBottom="5dp"
                 android:text="part of speech"
+                android:visibility="gone"
                 android:textAlignment="center"
                 android:textColor="?attr/secondaryTextAccentColor"
                 android:textSize="20sp" />
@@ -671,14 +678,18 @@
                 android:id="@+id/editorialFeed_bottomSheet_native_adView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_gravity="center_horizontal"
                 app:adSize="320x80"
-                app:adUnitId="ca-app-pub-8455191357100024/8288637223"></com.google.android.gms.ads.NativeExpressAdView>
+                app:adUnitId="ca-app-pub-8455191357100024/8288637223">
+
+            </com.google.android.gms.ads.NativeExpressAdView>
 
             <Button
                 android:id="@+id/editorial_bottomSheet_add_button"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:visibility="gone"
                 android:layout_below="@+id/editorial_bottomsheet_parofspeech_layout"
                 android:background="?attr/backgroundCardColor"
                 android:text="ADD To vocabulary"
@@ -686,6 +697,12 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <WebView
+                android:layout_width="match_parent"
+                android:id="@+id/editorial_bottomSheet_webview"
+                android:layout_height="match_parent">
+
+            </WebView>
 
         </LinearLayout>
 
