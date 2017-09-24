@@ -1,5 +1,6 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -33,7 +35,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -264,6 +268,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         //checkRateUsOption();
 
 
+        initializeWebView();
 
 
     }
@@ -1525,8 +1530,42 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
     }
 
+    public void initializeWebView(){
+        final WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
+
+        webView.getSettings().setLoadsImagesAutomatically(false);
+
+            webView.setWebViewClient(new WebViewClient() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView webView, String url)
+                {
+                    return shouldOverrideUrlLoading(url);
+                }
+
+                @TargetApi(Build.VERSION_CODES.N)
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request)
+                {
+                    Uri uri = request.getUrl();
+                    return shouldOverrideUrlLoading(uri.toString());
+                }
+
+                private boolean shouldOverrideUrlLoading(final String url)
+                {
+                   // Log.i(TAG, "shouldOverrideUrlLoading() URL : " + url);
+
+                    // Here put your code
+                    webView.loadUrl(url);
+
+                    return true; // Returning True means that application wants to leave the current WebView and handle the url itself, otherwise return false.
+                }
+            });
+
+    }
+
     public void loadWebview(String mWord) {
         WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
-        webView.loadUrl("https://www.vocabulary.com/dictionary/" + mWord);
+        webView.loadUrl("http://www.dictionary.com/browse/" + mWord);
     }
 }
