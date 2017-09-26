@@ -13,7 +13,7 @@ import java.util.Date;
 public class AdsSubscriptionManager {
 
 
-    public static void setSubscriptionTime(Context mContext ) {
+    public static void setSubscriptionTime(Context mContext ,int subscriptionDays ) {
         SharedPreferences prefs = mContext.getSharedPreferences("adsmanager", 0);
 
 
@@ -22,6 +22,8 @@ public class AdsSubscriptionManager {
         // Increment launch counter
 
         editor.putLong("subscriptionTime", System.currentTimeMillis());
+        editor.putInt("subscriptionDays", subscriptionDays);
+
 
 
         editor.apply();
@@ -32,12 +34,14 @@ public class AdsSubscriptionManager {
 
 
         long subscriptionTime = prefs.getLong("subscriptionTime", 0) ;
+        int subscriptionDays = prefs.getInt("subscriptionDays",3);
 
         long currentTime = System.currentTimeMillis();
 
         long subscriptionDuration =currentTime -subscriptionTime;
+
         //3days subscribe
-        if ( subscriptionDuration<259200000l && 0<subscriptionDuration){
+        if ( subscriptionDuration<(86400000l *subscriptionDays) && 0<subscriptionDuration){
             return false ;
         }else{
             return true ;

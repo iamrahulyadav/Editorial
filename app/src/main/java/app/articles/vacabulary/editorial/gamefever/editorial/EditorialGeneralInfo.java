@@ -13,6 +13,7 @@ public class EditorialGeneralInfo implements Serializable {
     private String editorialHeading, editorialDate, editorialSource, editorialID, editorialSubHeading, editorialTag, editorialCategory ,editorialSourceLink;
     private int editorialSourceIndex ,editorialLike ,editorialCategoryIndex;
     private long timeInMillis;
+    private String editorialImageUrl;
 
     public EditorialGeneralInfo() {
     }
@@ -121,6 +122,14 @@ public class EditorialGeneralInfo implements Serializable {
 
     public void setEditorialCategoryIndex(int editorialCategoryIndex) {
         this.editorialCategoryIndex = editorialCategoryIndex;
+    }
+
+    public String getEditorialImageUrl() {
+        return editorialImageUrl;
+    }
+
+    public void setEditorialImageUrl(String editorialImageUrl) {
+        this.editorialImageUrl = editorialImageUrl;
     }
 
     public static String resolveDate(long editorialTime) {

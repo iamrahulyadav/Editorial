@@ -33,6 +33,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -52,6 +53,9 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
 import com.google.android.gms.appinvite.AppInviteReferral;
@@ -110,6 +114,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     //sort variable
     int sortSourceIndex = -1;
     int sortCategoryIndex = -1;
+
+    private RewardedVideoAd mAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,6 +294,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        mAd.resume(this);
+
         super.onResume();
 
         if (isSplashScreenVisible && !isRefreshing) {
@@ -309,6 +317,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    @Override
+    public void onPause() {
+        mAd.pause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mAd.destroy(this);
+        super.onDestroy();
     }
 
     private void fetchEditorialByID(String editorialID) {
@@ -1147,15 +1167,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        if (mSubscriptionInterstitialAd.isLoaded()) {
-                            mSubscriptionInterstitialAd.show();
-                        } else if (mSubscriptionInterstitialAd.isLoading()) {
-                            Log.d("TAG", "The interstitial wasn't loaded yet.");
-                        } else {
-                            mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-                        }
-
-
+                      showSubscriptionAd();
                         dialog.dismiss();
                     }
                 })
@@ -1173,8 +1185,28 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
+    private void showSubscriptionAd() {
+     /*   if (mSubscriptionInterstitialAd.isLoaded()) {
+            mSubscriptionInterstitialAd.show();
+        } else if (mSubscriptionInterstitialAd.isLoading()) {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        } else {
+            mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
+        }
+
+*/
+
+        if (mAd.isLoaded()) {
+            mAd.show();
+        }else{
+            Toast.makeText(this, "Ad not loaded yet! Try again later", Toast.LENGTH_SHORT).show();
+            initializeSubscriptionAds();
+        }
+
+    }
+
     public void initializeSubscriptionAds() {
-        mSubscriptionInterstitialAd = new InterstitialAd(this);
+        /*mSubscriptionInterstitialAd = new InterstitialAd(this);
         mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
         mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
 
@@ -1223,7 +1255,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
 
-                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this);
+                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this,3);
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed", "1"));
@@ -1233,6 +1265,62 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             }
         });
+*/
+
+        mAd =MobileAds.getRewardedVideoAdInstance(this);
+        mAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+        mAd.setImmersiveMode(true);
+        mAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onRewardedVideoAdLoaded() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+
+
+
+            }
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+
+                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this,rewardItem.getAmount());
+
+                Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for "+rewardItem.getAmount()+" days", Toast.LENGTH_LONG).show();
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Subscribed").putCustomAttribute("user subscribed from nav drawer", "nav drawer"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+
+            }
+        });
+
 
     }
 

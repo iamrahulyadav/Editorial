@@ -40,12 +40,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
@@ -59,6 +62,10 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -109,96 +116,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private boolean saveShortNotes;
 
     boolean muteVoice = false;
-    /*
-    private ActionMode mActionMode;
-    private android.view.ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            menu.add(2, 2, 2, "Add this point").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            menu.add(1, 1, 1, "Done").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            menu.add(0, 0, 0, "Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            saveShortNotes = false;
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            String selectedString = "";
-            if (item.getItemId() == 2) {
-                TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
-                if (definitionView.hasSelection()) {
-                    selectedString = currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().substring(definitionView.getSelectionStart(), definitionView.getSelectionEnd());
-
-                }
-
-
-                Toast.makeText(EditorialFeedActivity.this, "Text selected is " + selectedString, Toast.LENGTH_SHORT).show();
-
-                shortNotesManager.getShortNotePointList().put(definitionView.getSelectionStart() + "-" + definitionView.getSelectionEnd(), selectedString);
-
-                definitionView.clearFocus();
-                saveShortNotes = true;
-
-            } else if (item.getItemId() == 1) {
-
-                if (mActionMode != null) {
-                    mActionMode.finish();
-                }
-            } else if (item.getItemId() == 0) {
-                saveShortNotes = false;
-                if (mActionMode != null) {
-                    mActionMode.finish();
-                }
-            }
-
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
-            //storyTextView.setTextIsSelectable(false);
-
-            if (saveShortNotes) {
-                final ProgressDialog pd = ProgressDialog.show(EditorialFeedActivity.this, "Saving Notes", "Please wait");
-                new DBHelperFirebase().uploadShortNote(AuthenticationManager.getUserUID(EditorialFeedActivity.this), shortNotesManager, new DBHelperFirebase.OnShortNoteListListener() {
-                    @Override
-                    public void onShortNoteList(ArrayList<ShortNotesManager> shortNotesManagerArrayList, boolean isSuccessful) {
-
-                    }
-
-                    @Override
-                    public void onShortNoteUpload(boolean isSuccessful) {
-
-                        try {
-                            if (pd.isShowing()) {
-                                pd.dismiss();
-                            }
-
-                        } catch (Exception e) {
-
-                        }
-
-                        if (isSuccessful) {
-                            Toast.makeText(EditorialFeedActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-
-            }
-
-        }
-    };
-*/
+    private RewardedVideoAd mAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,8 +169,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         });
 
+
         if (AdsSubscriptionManager.checkShowAds(this)) {
             MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+
+            mAd = MobileAds.getRewardedVideoAdInstance(this);
 
             initializeTopNativeAds();
             //initializeAds();
@@ -645,7 +567,20 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Don't forget to shutdown tts!
+        mAd.destroy(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        mAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mAd.pause(this);
+        super.onPause();
     }
 
     @Override
@@ -1316,30 +1251,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-    public void setThemeinactivity() {
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String theme = sharedPref.getString("theme_list", "Day");
-
-        TextView mainText = (TextView) findViewById(R.id.editorial_text_textview);
-
-        if (theme.contentEquals("Night")) {
-
-            ScrollView scrollView = (ScrollView) findViewById(R.id.editorialFeed_scrollView);
-            try {
-                scrollView.setBackgroundColor(getResources().getColor(R.color.nightThemeBackGroundColor));
-
-                mainText.setTextColor(getResources().getColor(R.color.nightThemeTextColor));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        mainText.setTextSize(TypedValue.COMPLEX_UNIT_SP, Float.valueOf(sharedPref.getString("font_size_list", "16")));
-
-    }
-
 
     public void hideBottomsheet(View view) {
         if (mBottomSheetBehavior != null) {
@@ -1383,7 +1294,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void initializeSubscriptionAds() {
-        mSubscriptionInterstitialAd = new InterstitialAd(this);
+     /*   mSubscriptionInterstitialAd = new InterstitialAd(this);
         mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
         //test ad unit
         //mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -1419,18 +1330,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             }
 
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
 
-                Toast.makeText(EditorialFeedActivity.this, "Now Click on the ads to get pro features", Toast.LENGTH_LONG).show();
-            }
 
-            @Override
-            public void onAdClicked() {
-                super.onAdClicked();
-                //Toast.makeText(EditorialFeedActivity.this, "Ad clicked", Toast.LENGTH_SHORT).show();
-            }
 
             @Override
             public void onAdLeftApplication() {
@@ -1446,44 +1347,71 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             }
         });
+*/
+
+        mAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+        mAd.setImmersiveMode(true);
+        mAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onRewardedVideoAdLoaded() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+
+                Button button = (Button) EditorialFeedActivity.this.findViewById(R.id.editorialfeed_removeAd_button);
+                if (AdsSubscriptionManager.checkShowAds(EditorialFeedActivity.this)) {
+                    button.setText("Try again? Watch full video");
+                } else {
+                    button.setText("Thank you for subscription");
+                }
+
+            }
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+
+                AdsSubscriptionManager.setSubscriptionTime(EditorialFeedActivity.this, rewardItem.getAmount());
+
+                Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for " + rewardItem.getAmount() + " days", Toast.LENGTH_LONG).show();
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Subscribed").putCustomAttribute("user subscribed from feed", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+
+            }
+        });
 
     }
 
     public void onRemoveAdClick(View view) {
-       /* AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Remove Ads for Free");
 
-        builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
-                "Press Remove Ads --> Ad will be displayed --> Click on the Ad shown --> Done. All the ads from app will be removed")
-                .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
 
-                        if (mSubscriptionInterstitialAd.isLoaded()) {
-                            mSubscriptionInterstitialAd.show();
-                        } else {
-                            Log.d("TAG", "The interstitial wasn't loaded yet.");
-                            Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
-                        }
-
-                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue", "Clicked yes"));
-
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        dialog.dismiss();
-                        Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user show dialogue", "Clicked No"));
-
-                    }
-                });
-
-        // Create the AlertDialog object and return it
-        builder.create();
-        builder.show();
-*/
-
+/*
         if (mSubscriptionInterstitialAd != null) {
             if (mSubscriptionInterstitialAd.isLoaded()) {
                 mSubscriptionInterstitialAd.show();
@@ -1501,7 +1429,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
 
         }
-
+*/
+        if (mAd != null) {
+            if (mAd.isLoaded()) {
+                mAd.show();
+            } else {
+                initializeSubscriptionAds();
+            }
+        }
 
     }
 
@@ -1530,42 +1465,59 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
     }
 
-    public void initializeWebView(){
+    public void initializeWebView() {
         final WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
 
         webView.getSettings().setLoadsImagesAutomatically(false);
 
-            webView.setWebViewClient(new WebViewClient() {
-                @SuppressWarnings("deprecation")
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView webView, String url)
-                {
-                    return shouldOverrideUrlLoading(url);
-                }
+        webView.setWebViewClient(new WebViewClient() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+                return shouldOverrideUrlLoading(url);
+            }
 
-                @TargetApi(Build.VERSION_CODES.N)
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request)
-                {
-                    Uri uri = request.getUrl();
-                    return shouldOverrideUrlLoading(uri.toString());
-                }
+            @TargetApi(Build.VERSION_CODES.N)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request) {
+                Uri uri = request.getUrl();
+                return shouldOverrideUrlLoading(uri.toString());
+            }
 
-                private boolean shouldOverrideUrlLoading(final String url)
-                {
-                   // Log.i(TAG, "shouldOverrideUrlLoading() URL : " + url);
+            private boolean shouldOverrideUrlLoading(final String url) {
+                // Log.i(TAG, "shouldOverrideUrlLoading() URL : " + url);
 
-                    // Here put your code
-                    webView.loadUrl(url);
+                // Here put your code
+                webView.loadUrl(url);
 
-                    return true; // Returning True means that application wants to leave the current WebView and handle the url itself, otherwise return false.
-                }
-            });
+                return true; // Returning True means that application wants to leave the current WebView and handle the url itself, otherwise return false.
+            }
+        });
 
     }
 
     public void loadWebview(String mWord) {
         WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
         webView.loadUrl("http://www.dictionary.com/browse/" + mWord);
+    }
+
+    public void initializeImage() {
+  /*      ImageView imageView = (ImageView) findViewById(R.id.editorialfeed_feedImage_imageView);
+        currentEditorialFullInfo.getEditorialGeneralInfo().setEditorialImageUrl("http://images.indianexpress.com/2017/09/piyush-goyal.jpg");
+
+        String imageUrl = currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialImageUrl();
+
+        if (imageUrl !=null && !imageUrl.isEmpty() ) {
+            Glide.with(this)
+                    .load("http://images.indianexpress.com/2017/09/piyush-goyal.jpg")
+                    .thumbnail(0.3f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imageView);
+
+        }else{
+            imageView.setVisibility(View.GONE);
+        }
+*/
     }
 }

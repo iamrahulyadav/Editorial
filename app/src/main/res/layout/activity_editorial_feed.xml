@@ -160,7 +160,9 @@
                     android:descendantFocusability="blocksDescendants"
                     android:visibility="gone"
                     app:adSize="320x132"
-                    app:adUnitId="ca-app-pub-8455191357100024/9929021950"></com.google.android.gms.ads.NativeExpressAdView>
+                    app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+
+                </com.google.android.gms.ads.NativeExpressAdView>
 
 
                 <TextView
@@ -324,6 +326,7 @@
                     android:layout_margin="6dp"
                     app:cardBackgroundColor="?attr/backgroundCardColor"
                     app:cardCornerRadius="0dp"
+                    android:visibility="gone"
                     app:cardElevation="5dp">
 
 
