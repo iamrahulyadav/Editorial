@@ -204,6 +204,7 @@ public class VacabularyActivity extends AppCompatActivity {
     private void onRefreashClick() {
 
 
+
     }
 
     public boolean onSupportNavigateUp() {
