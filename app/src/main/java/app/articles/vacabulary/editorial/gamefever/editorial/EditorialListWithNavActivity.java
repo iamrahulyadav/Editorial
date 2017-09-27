@@ -1449,8 +1449,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
     }
 
-
-
     public void getEditorialExtraInfoByIDListner(EditorialGeneralInfo editorialGeneralInfo) {
         onSharedLinkOpen(editorialGeneralInfo);
     }
