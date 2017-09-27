@@ -47,8 +47,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
@@ -1382,7 +1381,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     button.setText("Try again? Watch full video");
                 } else {
                     button.setText("Thank you for subscription");
-                    Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for days", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for 2 days", Toast.LENGTH_LONG).show();
 
                 }
 

@@ -138,7 +138,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 // set the icon
         try {
-            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            //getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setSubtitle("BookMarks");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }catch(Exception e){

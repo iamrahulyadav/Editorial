@@ -349,7 +349,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
-                            android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad \n4. Yipee! you are now a pro member for 3 day. Enjoy Daily Editorial without ads" />
+                            android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad \n4. Yipee! you are now a pro member for 2 day. Enjoy Daily Editorial without ads" />
 
                         <Button
                             android:id="@+id/editorialfeed_removeAd_button"

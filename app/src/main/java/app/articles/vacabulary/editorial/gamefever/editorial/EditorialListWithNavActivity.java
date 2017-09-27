@@ -75,6 +75,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import io.fabric.sdk.android.Fabric;
 import utils.AdsSubscriptionManager;
 import utils.LanguageManager;
+import utils.NightModeManager;
 import utils.PushNotificationManager;
 
 import java.util.ArrayList;
@@ -122,11 +123,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
-        if (AppCompatDelegate.getDefaultNightMode()
-                == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.FeedActivityThemeDark);
             isNightMode = true;
         }
+
+
+        
         initializeRemoteConfig();
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
@@ -1005,6 +1008,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         intent.setData(uri);
         startActivity(intent);
 
+        Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
+
     }
 
     private void onSortByCategory() {
@@ -1169,8 +1174,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Ads for Free");
 
-        builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
-                "Press Remove Ads button \n--> Video Ad will be Shown \n--> Watch the full video ad \n--> Done. All the ads from app will be removed from app for 3 days")
+        builder.setMessage("Remove all the ads from app for free in just one click for 2 days\n" +
+                "Press Remove Ads button \n--> Video Ad will be Shown \n--> Watch the full video ad \n--> Done. All the ads from app will be removed from app for 2 days")
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -1299,7 +1304,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 if (AdsSubscriptionManager.checkShowAds(EditorialListWithNavActivity.this)) {
 
                 } else {
-                    Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for days", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for 2 days", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -1337,14 +1342,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onNightMode() {
-        AppCompatDelegate
-                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        //NightModeManager.setNightMode(EditorialListWithNavActivity.this,true);
         recreate();
     }
 
     private void onDayMode() {
-        AppCompatDelegate
-                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        //NightModeManager.setNightMode(EditorialListWithNavActivity.this,false);
         recreate();
     }
 
