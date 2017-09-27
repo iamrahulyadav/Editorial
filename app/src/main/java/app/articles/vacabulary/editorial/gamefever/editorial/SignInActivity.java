@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -51,9 +52,17 @@ public class SignInActivity extends AppCompatActivity {
             try {
                 TextView textView = (TextView) findViewById(R.id.signIn_notification_textView);
                 textView.setText("Signed in as - "+currentUser.getEmail());
+
+                CardView cardView =(CardView)findViewById(R.id.signIn_signOut_cardView);
+                cardView.setVisibility(View.VISIBLE);
+
+                cardView =(CardView)findViewById(R.id.signIn_cardView);
+                cardView.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+        }else{
 
         }
 
@@ -151,4 +160,16 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
+    public void onSignOutClick(View view) {
+        if (mAuth!= null) {
+            mAuth.signOut();
+
+
+            CardView cardView =(CardView)findViewById(R.id.signIn_signOut_cardView);
+            cardView.setVisibility(View.GONE);
+
+            cardView =(CardView)findViewById(R.id.signIn_cardView);
+            cardView.setVisibility(View.VISIBLE);
+        }
+    }
 }

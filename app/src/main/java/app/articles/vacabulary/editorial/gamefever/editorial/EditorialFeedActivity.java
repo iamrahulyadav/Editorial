@@ -158,7 +158,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
 
-                    loadWebview(selectedWord);
+                   // loadWebview(selectedWord);
 
                 }
             }
@@ -170,10 +170,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 
 
-        if (AdsSubscriptionManager.checkShowAds(this)) {
-            MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        mAd = MobileAds.getRewardedVideoAdInstance(this);
 
-            mAd = MobileAds.getRewardedVideoAdInstance(this);
+        if (AdsSubscriptionManager.checkShowAds(this)) {
 
             initializeTopNativeAds();
             //initializeAds();
@@ -493,11 +493,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void fetchWordMeaning() {
-        openBottomSheet(true);
+        //openBottomSheet(true);
 
-        Dictionary dictionary = new Dictionary(selectedWord);
+       /* Dictionary dictionary = new Dictionary(selectedWord);
         dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
+*/
 
+       loadWebview(selectedWord);
     }
 
     public void updateTranslateText(Translation translation) {
@@ -528,7 +530,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     dictionary.setWord(translateText.getText().toString());
                     databaseHandler.addToDictionary(dictionary);
                     Toast.makeText(EditorialFeedActivity.this, "Word Added To Dictionary", Toast.LENGTH_SHORT).show();
-
 
                 }
             });
@@ -567,19 +568,25 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Don't forget to shutdown tts!
-        mAd.destroy(this);
+        if (mAd != null) {
+            mAd.destroy(this);
+        }
         super.onDestroy();
     }
 
     @Override
     public void onResume() {
-        mAd.resume(this);
+        if (mAd != null) {
+            mAd.resume(this);
+        }
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        mAd.pause(this);
+        if (mAd!= null) {
+            mAd.pause(this);
+        }
         super.onPause();
     }
 
@@ -1349,7 +1356,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 */
 
-        mAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+        mAd.loadAd("ca-app-pub-8455191357100024/4421294382", new AdRequest.Builder().build());
         mAd.setImmersiveMode(true);
         mAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
@@ -1375,6 +1382,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     button.setText("Try again? Watch full video");
                 } else {
                     button.setText("Thank you for subscription");
+                    Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for days", Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -1384,7 +1393,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 AdsSubscriptionManager.setSubscriptionTime(EditorialFeedActivity.this, rewardItem.getAmount());
 
-                Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for " + rewardItem.getAmount() + " days", Toast.LENGTH_LONG).show();
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Subscribed").putCustomAttribute("user subscribed from feed", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
@@ -1434,6 +1442,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             if (mAd.isLoaded()) {
                 mAd.show();
             } else {
+                Toast.makeText(this, "Ad not loaded yet! Try again later", Toast.LENGTH_SHORT).show();
+
                 initializeSubscriptionAds();
             }
         }

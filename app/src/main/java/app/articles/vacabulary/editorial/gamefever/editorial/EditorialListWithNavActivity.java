@@ -294,8 +294,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        mAd.resume(this);
-
+        if (mAd != null) {
+            mAd.resume(this);
+        }
         super.onResume();
 
         if (isSplashScreenVisible && !isRefreshing) {
@@ -321,13 +322,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     @Override
     public void onPause() {
-        mAd.pause(this);
+        if (mAd != null) {
+            mAd.pause(this);
+        }
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
-        mAd.destroy(this);
+        if (mAd != null) {
+            mAd.destroy(this);
+        }
         super.onDestroy();
     }
 
@@ -1120,7 +1125,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada","Urdu"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada","Urdu","Malayalam"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1145,6 +1150,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "kn";
                 }else if(which == 6){
                     languageCode ="ur";
+                }else  if (which ==7){
+                    languageCode = "ml";
                 }
 
                 LanguageManager.setLanguageCode(EditorialListWithNavActivity.this, languageCode);
@@ -1163,7 +1170,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         builder.setTitle("Remove Ads for Free");
 
         builder.setMessage("Remove all the ads from app for free in just one click for 3 days\n" +
-                "Press Remove Ads button \n--> Ad will be displayed \n--> Click on the Ad shown \n--> Done. All the ads from app will be removed from app for 3 days")
+                "Press Remove Ads button \n--> Video Ad will be Shown \n--> Watch the full video ad \n--> Done. All the ads from app will be removed from app for 3 days")
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -1268,7 +1275,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 */
 
         mAd =MobileAds.getRewardedVideoAdInstance(this);
-        mAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+        mAd.loadAd("ca-app-pub-8455191357100024/4421294382", new AdRequest.Builder().build());
         mAd.setImmersiveMode(true);
         mAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
@@ -1289,7 +1296,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onRewardedVideoAdClosed() {
 
+                if (AdsSubscriptionManager.checkShowAds(EditorialListWithNavActivity.this)) {
 
+                } else {
+                    Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for days", Toast.LENGTH_LONG).show();
+
+                }
 
             }
 
@@ -1298,7 +1310,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this,rewardItem.getAmount());
 
-                Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for "+rewardItem.getAmount()+" days", Toast.LENGTH_LONG).show();
+                //Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for "+rewardItem.getAmount()+" days", Toast.LENGTH_LONG).show();
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Subscribed").putCustomAttribute("user subscribed from nav drawer", "nav drawer"));

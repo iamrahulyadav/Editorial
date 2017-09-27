@@ -349,7 +349,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
-                            android:text="1. Click on the button bellow \n2. A full screen ad will be displayed \n3. Click on the ad shown to you \n4. Yipee! you are now a pro member for 3 day. Enjoy Daily Editorial without ads" />
+                            android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad \n4. Yipee! you are now a pro member for 3 day. Enjoy Daily Editorial without ads" />
 
                         <Button
                             android:id="@+id/editorialfeed_removeAd_button"
@@ -512,7 +512,7 @@
 
 
     <!--layout of bottom sheet for showing word meaning and translation-->
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:id="@+id/editorial_activity_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -520,9 +520,10 @@
         android:clipToPadding="true"
         android:orientation="vertical"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="50dp"
+        app:behavior_peekHeight="44dp"
         app:elevation="10dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -700,6 +701,10 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <WebView
                 android:layout_width="match_parent"
                 android:id="@+id/editorial_bottomSheet_webview"
@@ -707,9 +712,13 @@
 
             </WebView>
 
+
+            </android.support.v4.widget.NestedScrollView>
+
+
         </LinearLayout>
 
 
-    </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
