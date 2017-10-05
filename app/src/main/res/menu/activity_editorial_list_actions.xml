@@ -4,39 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <!-- Location Found -->
-    <item android:id="@+id/action_share"
-        android:icon="@drawable/ic_action_share"
-        android:title="Share"
+
+    <item android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="Refresh"
         app:showAsAction="always" />
-
-    <item android:id="@+id/action_bookmark"
-        android:icon="@drawable/ic_action_name"
-        android:title="BookMark"
-        app:showAsAction="always" />
-
-    <item android:id="@+id/action_toggle"
-        android:icon="@drawable/ic_action_night_light"
-        android:title="Night Mode"
-        app:showAsAction="always" />
-
-    <item android:id="@+id/action_notes"
-        android:title="Take Notes"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/action_tts_reader"
-        android:title="Read Editorial (Voice)"
-        app:showAsAction="never" />
-
-
-
-
-    <!-- Help -->
-   <!-- <item android:id="@+id/action_setting"
-        android:icon="@drawable/common_google_signin_btn_text_dark"
-        android:title="Setting"
-        app:showAsAction="never"/>-->
-    <!-- Help -->
 
 
 

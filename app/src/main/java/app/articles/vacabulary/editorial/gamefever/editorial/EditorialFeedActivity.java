@@ -61,6 +61,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.Logger;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
@@ -717,7 +718,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             inflater.inflate(R.menu.activity_notes_mode_action, menu);
         } else {
             MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.activity_editorial_list_actions, menu);
+            inflater.inflate(R.menu.activity_editorial_feed_actions, menu);
         }
         return super.onCreateOptionsMenu(menu);
     }

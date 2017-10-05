@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -33,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -66,6 +68,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Logger;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -293,6 +297,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onStart();
 
 
+        //FirebaseDatabase.getInstance().setLogLevel(Logger.Level.valueOf("DEBUG"));
+
     }
 
     @Override
@@ -353,9 +359,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+
+
         try {
             // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-            getSupportActionBar().setTitle(getString(R.string.app_name));
+            //toolbar.setTitle(getString(R.string.app_name));
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         } catch (Exception e) {
 
@@ -869,8 +882,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
+         //Inflate the menu; this adds items to the action bar if it is present.
+         getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
         return true;
     }
 
@@ -882,9 +895,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
 
-            case R.id.action_share:
+            case R.id.action_refresh:
                 // help action
-                onShareClick();
+                onRefreashClick();
                 return true;
 
             default:

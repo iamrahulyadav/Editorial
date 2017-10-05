@@ -33,5 +33,12 @@
     <string name="title_activity_notes">Notes</string>
     <string name="title_activity_notes_feed">Notes</string>
 
+    <string-array name="source_list">
+        <item>The Hindu</item>
+        <item>TOI</item>
+        <item>HT</item>
+
+    </string-array>
+
 
 </resources>

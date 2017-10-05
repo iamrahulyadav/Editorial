@@ -1,5 +1,6 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.app.Application;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -24,12 +25,16 @@ import utils.ShortNotesManager;
  * Created by gamef on 23-02-2017.
  */
 
-public class DBHelperFirebase {
+public class DBHelperFirebase  {
     FirebaseDatabase database;
 
+   
 
     public DBHelperFirebase() {
         database = FirebaseDatabase.getInstance();
+
+        //database.setPersistenceEnabled(true);
+
     }
 
 
@@ -369,6 +374,8 @@ public class DBHelperFirebase {
         Query query;
 
         query = myRef2.orderByChild("editorialSourceIndex").equalTo(sourceIndex).limitToLast(limit);
+
+
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
