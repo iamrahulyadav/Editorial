@@ -48,13 +48,20 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.InviteEvent;
 import com.crashlytics.android.answers.PurchaseEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.NativeAppInstallAd;
+import com.google.android.gms.ads.formats.NativeContentAd;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
@@ -78,6 +85,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import io.fabric.sdk.android.Fabric;
 import utils.AdsSubscriptionManager;
+import utils.ClickListener;
 import utils.LanguageManager;
 import utils.NightModeManager;
 import utils.PushNotificationManager;
@@ -133,7 +141,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
 
-        
         initializeRemoteConfig();
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
@@ -361,9 +368,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-
-
-
         try {
             // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             //toolbar.setTitle(getString(R.string.app_name));
@@ -407,7 +411,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         recyclerView.setAdapter(mAdapter);
 
 
-        recyclerView.addOnItemTouchListener(
+        /*recyclerView.addOnItemTouchListener(
                 new RecyclerTouchListener(this, recyclerView, new RecyclerTouchListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -423,18 +427,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         // do whatever
                     }
                 })
-        );
+        );*/
 
-        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mAdapter.setOnclickListener(new ClickListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(EditorialListWithNavActivity.this, "loading more items ", Toast.LENGTH_SHORT).show();
-                    loadMoreClick();
-                }
+            public void onItemClick(View view, int position) {
+                onRecyclerViewItemClick(position);
             }
-        });*/
+        });
 
 
         addMoreButton = (View) findViewById(R.id.editoriallist_activity_add_button);
@@ -448,7 +448,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             //initializeAds();
             mInterstitialAd = new InterstitialAd(this);
-            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
+            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
             initializeInterstitialAds();
         }
 
@@ -472,8 +472,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onPostResume();
 
     }
-
-
 
 
     public void initializeSplashScreen() {
@@ -675,7 +673,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         //main function where ads is merged in editorial list as an object
 
-        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
+      /*  for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
             if (editorialListArrayList.get(i).getClass() != NativeExpressAdView.class) {
                 final NativeExpressAdView adView = new NativeExpressAdView(this);
 
@@ -689,27 +687,85 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 editorialListArrayList.add(i, adView);
 
             }
-        }
+        }*/
+
+/*
+
+        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
+            if (editorialListArrayList.get(i) != null) {
+                if (editorialListArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
+
+                    final int finalI = i;
+                    AdLoader adLoader = new AdLoader.Builder(EditorialListWithNavActivity.this, "ca-app-pub-3940256099942544/2247696110")
+                            .forAppInstallAd(new NativeAppInstallAd.OnAppInstallAdLoadedListener() {
+                                @Override
+                                public void onAppInstallAdLoaded(NativeAppInstallAd appInstallAd) {
+                                    // Show the app install ad.
+
+                                    editorialListArrayList.set(finalI, appInstallAd);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            })
+                            .withAdListener(new AdListener() {
+                                @Override
+                                public void onAdFailedToLoad(int errorCode) {
+                                    // Handle the failure by logging, altering the UI, and so on.
+                                    Log.d("ADMOB", "onAdFailedToLoad: " + errorCode);
+                                }
+                            })
+                            .build();
+
+                    adLoader.loadAd(new AdRequest.Builder().build());
 
 
+                    editorialListArrayList.add(finalI, null);
 
-     /*   recyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                final float density = EditorialListWithNavActivity.this.getResources().getDisplayMetrics().density;
-
-                AdSize adSize = new AdSize(
-                        ((int) (recyclerView.getWidth() / density)) - 20,
-                        120
-                );
-
-                for (int i = 0; i < editorialListArrayList.size(); i += 8) {
-                    NativeExpressAdView nativeExpressAdView = (NativeExpressAdView) editorialListArrayList.get(i);
-                    nativeExpressAdView.setAdSize(adSize);
-                    nativeExpressAdView.loadAd(new AdRequest.Builder().build());
                 }
             }
-        });*/
+        }
+
+        Log.d("list", "addNativeExpressAds: " + editorialListArrayList);
+*/
+
+        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
+            if (editorialListArrayList.get(i) != null) {
+                if (editorialListArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
+
+
+                    NativeAd nativeAd = new NativeAd(this, "113079036048193_119892505366846");
+                    nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+                        @Override
+                        public void onError(Ad ad, AdError error) {
+                            // Ad error callback
+                        }
+
+                        @Override
+                        public void onAdLoaded(Ad ad) {
+                            // Ad loaded callback
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAdClicked(Ad ad) {
+                            // Ad clicked callback
+                        }
+
+                        @Override
+                        public void onLoggingImpression(Ad ad) {
+                            // Ad impression logged callback
+                        }
+                    });
+
+                    // Request an ad
+                    nativeAd.loadAd();
+
+
+                    editorialListArrayList.add(i, nativeAd);
+
+                }
+            }
+        }
 
 
     }
@@ -882,8 +938,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-         //Inflate the menu; this adds items to the action bar if it is present.
-         getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
+        //Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_editorial_list_actions, menu);
         return true;
     }
 
@@ -982,7 +1038,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSignInOpenClick() {
-        Intent intent =new Intent(EditorialListWithNavActivity.this , SignInActivity.class);
+        Intent intent = new Intent(EditorialListWithNavActivity.this, SignInActivity.class);
         startActivity(intent);
     }
 
@@ -1143,7 +1199,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada","Urdu","Malayalam"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1166,9 +1222,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "bn";
                 } else if (which == 5) {
                     languageCode = "kn";
-                }else if(which == 6){
-                    languageCode ="ur";
-                }else  if (which ==7){
+                } else if (which == 6) {
+                    languageCode = "ur";
+                } else if (which == 7) {
                     languageCode = "ml";
                 }
 
@@ -1192,7 +1248,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 .setPositiveButton("Remove Ads", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                      showSubscriptionAd();
+                        showSubscriptionAd();
                         dialog.dismiss();
                     }
                 })
@@ -1223,7 +1279,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (mAd.isLoaded()) {
             mAd.show();
-        }else{
+        } else {
             Toast.makeText(this, "Ad not loaded yet! Try again later", Toast.LENGTH_SHORT).show();
             initializeSubscriptionAds();
         }
@@ -1292,7 +1348,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
 */
 
-        mAd =MobileAds.getRewardedVideoAdInstance(this);
+        mAd = MobileAds.getRewardedVideoAdInstance(this);
         mAd.loadAd("ca-app-pub-8455191357100024/4421294382", new AdRequest.Builder().build());
         mAd.setImmersiveMode(true);
         mAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
@@ -1326,7 +1382,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onRewarded(RewardItem rewardItem) {
 
-                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this,rewardItem.getAmount());
+                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this, rewardItem.getAmount());
 
                 //Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session for "+rewardItem.getAmount()+" days", Toast.LENGTH_LONG).show();
 
@@ -1335,7 +1391,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
 
             }
@@ -1488,7 +1543,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                //Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
             }
 
             @Override

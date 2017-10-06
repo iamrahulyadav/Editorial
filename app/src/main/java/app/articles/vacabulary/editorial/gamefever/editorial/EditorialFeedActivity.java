@@ -49,6 +49,10 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.InviteEvent;
 import com.crashlytics.android.answers.RatingEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -166,7 +170,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             initializeTopNativeAds();
             //initializeAds();
-            initializeNativeAds();
+            initializeNativeAds(true);
             initializeBottomSheetAd();
             initializeSubscriptionAds();
             CardView cardView = (CardView) findViewById(R.id.editorialfeed_removeAd_cardView);
@@ -1067,6 +1071,51 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
+
+    public void initializeNativeAds(boolean isFacebook) {
+
+         final NativeAd nativeAd = new NativeAd(this, "113079036048193_119919118697518");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+
+                initializeNativeAds();
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+
+                CardView linearLayout = (CardView) findViewById(R.id.editorialfeed_facebook_cardView);
+                linearLayout.setVisibility(View.VISIBLE);
+
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400);
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(adView);
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
+
+
+    }
+
+
 
 
     public void initializeBottomSheetAd() {

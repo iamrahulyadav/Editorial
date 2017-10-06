@@ -5,18 +5,31 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
+import com.facebook.ads.NativeAdViewAttributes;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.NativeAppInstallAd;
+import com.google.android.gms.ads.formats.NativeAppInstallAdView;
 
 import java.util.List;
 
 import utils.AdsSubscriptionManager;
+import utils.ClickListener;
 
 /**
  * Created by gamef on 23-02-2017.
@@ -32,8 +45,11 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int AD_VIEW_TYPE = 2;
 
     private static boolean checkShowAds;
+    private ClickListener clicklistener;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    private boolean nightMode = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView heading, date, source, tag, subheading, likeText;
 
         public MyViewHolder(View view) {
@@ -46,25 +62,32 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             likeText = (TextView) view.findViewById(R.id.editorial_list_layout_like);
 
 
-
-           /* if (theme.contentEquals("Night")) {
-                CardView cv = (CardView) view.findViewById(R.id.editorial_list_layout_background_card);
-                cv.setCardBackgroundColor(ContextCompat.getColor(context ,R.color.card_background_night));
-
-                heading.setTextColor(ContextCompat.getColor(context ,R.color.main_white));
-                date.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
-                source.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
-                subheading.setTextColor(ContextCompat.getColor(context ,R.color.off_white));
-            }*/
+            view.setOnClickListener(this);
 
 
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            if (clicklistener != null) {
+                clicklistener.onItemClick(v, getAdapterPosition());
+            }
         }
     }
 
     public class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout linearLayout;
+        CardView cardView;
+
         public NativeExpressAdViewHolder(View itemView) {
             super(itemView);
+
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.nativeExpress_container_linearLayout);
+
+            cardView = (CardView) itemView.findViewById(R.id.nativeExpress_background_cardView);
+
         }
     }
 
@@ -73,6 +96,10 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
         this.theme = themeActivity;
         this.context = context;
         checkShowAds = AdsSubscriptionManager.checkShowAds(context);
+    }
+
+    public void setOnclickListener(ClickListener clicklistener) {
+        this.clicklistener = clicklistener;
     }
 
     @Override
@@ -116,8 +143,9 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (viewType) {
 
             case AD_VIEW_TYPE:
-                NativeExpressAdViewHolder nativeExpressAdViewHolder = (NativeExpressAdViewHolder) holder;
-                NativeExpressAdView adView = (NativeExpressAdView) editorialGeneralInfoList.get(position);
+                NativeExpressAdViewHolder adView = (NativeExpressAdViewHolder) holder;
+
+                /*NativeExpressAdView adView = (NativeExpressAdView) editorialGeneralInfoList.get(position);
                 ViewGroup adCardView = (ViewGroup) nativeExpressAdViewHolder.itemView;
                 adCardView.removeAllViews();
 
@@ -128,6 +156,42 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (checkShowAds) {
                     adCardView.addView(adView);
                 }
+                */
+
+
+                NativeAd nativeAd = (NativeAd) editorialGeneralInfoList.get(position);
+                if (nativeAd.isAdLoaded()) {
+                    adView.cardView.setVisibility(View.VISIBLE);
+                    View view;
+                    if (nightMode){
+
+                        NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                                .setBackgroundColor(Color.parseColor("#28292e"))
+                                .setTitleTextColor(Color.WHITE)
+                                .setButtonTextColor(Color.WHITE)
+                                .setDescriptionTextColor(Color.WHITE)
+                                .setButtonColor(Color.parseColor("#F44336"));
+
+                        view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120 ,viewAttributes);
+                    }else {
+                        NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                                .setButtonTextColor(Color.WHITE)
+                                .setButtonColor(Color.parseColor("#F44336"));
+
+                        view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120, viewAttributes);
+                    }
+
+
+                    adView.linearLayout.removeAllViews();
+                    adView.linearLayout.addView(view);
+
+                } else {
+
+                    adView.cardView.setVisibility(View.GONE);
+
+
+                }
+
                 break;
 
             case EDITORIAL_VIEW_TYPE:
@@ -141,7 +205,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
                 myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
                 myViewHolder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
-                myViewHolder.likeText.setText(EditorialGeneralInfo.getEditorialLike()+" ");
+                myViewHolder.likeText.setText(EditorialGeneralInfo.getEditorialLike() + " ");
         }
 
     }

@@ -66,6 +66,8 @@ dependencies {
     compile 'com.facebook.android:audience-network-sdk:4.26.0'
     compile 'com.google.ads.mediation:facebook:4.26.0.0'
 
+    compile 'com.facebook.android:audience-network-sdk:4.+'
+
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
