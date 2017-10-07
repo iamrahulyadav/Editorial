@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -111,6 +112,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     boolean muteVoice = false;
 
     private RewardedVideoAd mAd;
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +153,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
 
-                   // loadWebview(selectedWord);
+                    // loadWebview(selectedWord);
 
                 }
             }
@@ -492,7 +494,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         dictionary.fetchWordMeaning(selectedWord, EditorialFeedActivity.this);
 */
 
-       loadWebview(selectedWord);
+        loadWebview(selectedWord);
     }
 
     public void updateTranslateText(Translation translation) {
@@ -503,7 +505,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void updateDictionaryText(final Dictionary dictionary) {
         if (selectedWord.equalsIgnoreCase(dictionary.getWord())) {
-            TextView tv;
+        /*    TextView tv;
             tv = (TextView) findViewById(R.id.editorial_bottomsheet_meaning_textview);
             tv.setText(dictionary.getWordMeaning());
             tv = (TextView) findViewById(R.id.editorial_bottomsheet_partspeech_textview);
@@ -525,7 +527,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     Toast.makeText(EditorialFeedActivity.this, "Word Added To Dictionary", Toast.LENGTH_SHORT).show();
 
                 }
-            });
+            });*/
         }
     }
 
@@ -548,14 +550,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void openBottomSheet(boolean b) {
 
-        TextView tv;
+        /*TextView tv;
         tv = (TextView) findViewById(R.id.editorial_bottomsheet_meaning_textview);
         tv.setText("Loading...");
         tv = (TextView) findViewById(R.id.editorial_bottomsheet_partspeech_textview);
         tv.setText("Loading...");
         tv = (TextView) findViewById(R.id.editorial_bottomsheet_synonyms_textview);
 
-        tv.setText("Loading...");
+        tv.setText("Loading...");*/
     }
 
     @Override
@@ -577,7 +579,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     @Override
     public void onPause() {
-        if (mAd!= null) {
+        if (mAd != null) {
             mAd.pause(this);
         }
         super.onPause();
@@ -1074,7 +1076,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void initializeNativeAds(boolean isFacebook) {
 
-         final NativeAd nativeAd = new NativeAd(this, "113079036048193_119919118697518");
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_119919118697518");
         nativeAd.setAdListener(new com.facebook.ads.AdListener() {
 
             @Override
@@ -1116,11 +1118,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
 
-
-
     public void initializeBottomSheetAd() {
-        NativeExpressAdView mAdView = (NativeExpressAdView) findViewById(R.id.editorialFeed_bottomSheet_native_adView);
-        mAdView.setVisibility(View.GONE);
+        AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
+        mAdView.setVisibility(View.VISIBLE);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -1514,7 +1514,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void initializeWebView() {
-        final WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
+        webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
 
         webView.getSettings().setLoadsImagesAutomatically(false);
 
@@ -1542,10 +1542,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         });
 
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setAppCachePath(this.getCacheDir().getPath());
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+
     }
 
     public void loadWebview(String mWord) {
-        WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
         webView.loadUrl("http://www.dictionary.com/browse/" + mWord);
     }
 
@@ -1567,5 +1571,17 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             imageView.setVisibility(View.GONE);
         }
 */
+    }
+
+    public void onAddToVocabularyClick(View view) {
+        DatabaseHandler databaseHandler = new DatabaseHandler(EditorialFeedActivity.this);
+        Dictionary dictionary = new Dictionary();
+        dictionary.setWord(selectedWord);
+        //dictionary.setWord(translateText.getText().toString());
+        WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
+        dictionary.setWordMeaning(webView.getUrl());
+        databaseHandler.addToDictionary(dictionary);
+        Toast.makeText(EditorialFeedActivity.this, "Word Added To Vocabulary", Toast.LENGTH_SHORT).show();
+
     }
 }

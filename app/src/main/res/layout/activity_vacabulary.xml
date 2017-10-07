@@ -51,14 +51,15 @@
 
 
     <!--layout of bottom sheet for showing word meaning and translation-->
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/vacabulary_activity_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="match_parent"
         android:background="@color/editorialFeedDictionaryBottomsheetcolor"
         android:clipToPadding="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
+        android:orientation="vertical"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
 
         >
@@ -68,127 +69,41 @@
             android:id="@+id/vacabulary_bottomsheet_heading_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="hint and dictionary text"
+            android:text="Vocabulary"
             android:textAlignment="center"
             android:textColor="@color/heading_color"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
 
-        <LinearLayout
-            android:id="@+id/vacabulary_bottomsheet_meaning_layout"
+
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <WebView
+                android:id="@+id/editorial_bottomSheet_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </WebView>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/vocabulary_bottomSheet_bannerAdview"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/vacabulary_bottomsheet_heading_textview"
-            android:orientation="vertical">
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-8455191357100024/2064940399">
+        </com.google.android.gms.ads.AdView>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="4dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Meaning"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-            </android.support.v7.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/vacabulary_bottomsheet_meaning_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/vacabulary_bottomsheet_heading_textview"
-                android:text="meaning"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/vacabulary_bottomsheet_synonyms_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/vacabulary_bottomsheet_meaning_layout"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="4dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="synonyms"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-            </android.support.v7.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/vacabulary_bottomsheet_synonyms_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/vacabulary_bottomsheet_heading_textview"
-                android:text="synonyms"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/vacabulary_bottomsheet_synonyms_layout"
-            android:id="@+id/vacabulary_bottomsheet_parofspeech_layout"
-
-            android:orientation="vertical">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="4dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Part Of speech"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-            </android.support.v7.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/vacabulary_bottomsheet_partspeech_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/vacabulary_bottomsheet_heading_textview"
-                android:text="part of speech"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-
-
-
-
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

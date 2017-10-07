@@ -30,6 +30,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -38,6 +41,7 @@ import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
@@ -78,6 +82,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
     }
+/*
 
     private void addNativeExpressAds() {
 
@@ -103,7 +108,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
-     /*   recyclerView.post(new Runnable() {
+        recyclerView.post(new Runnable() {
             @Override
             public void run() {
                 final float density = EditorialListWithNavActivity.this.getResources().getDisplayMetrics().density;
@@ -119,10 +124,61 @@ public class EditorialListActivity extends AppCompatActivity {
                     nativeExpressAdView.loadAd(new AdRequest.Builder().build());
                 }
             }
-        });*/
+        });
 
 
     }
+*/
+
+    private void addNativeExpressAds() {
+
+        boolean checkShowAds = AdsSubscriptionManager.checkShowAds(this);
+
+
+        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
+            if (editorialListArrayList.get(i) != null) {
+                if (editorialListArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
+
+
+                    NativeAd nativeAd = new NativeAd(this, "113079036048193_119873465368750");
+                    nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+                        @Override
+                        public void onError(Ad ad, AdError error) {
+                            // Ad error callback
+                        }
+
+                        @Override
+                        public void onAdLoaded(Ad ad) {
+                            // Ad loaded callback
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAdClicked(Ad ad) {
+                            // Ad clicked callback
+                        }
+
+                        @Override
+                        public void onLoggingImpression(Ad ad) {
+                            // Ad impression logged callback
+                        }
+                    });
+
+                    // Request an ad
+                    if (checkShowAds) {
+                        nativeAd.loadAd();
+                    }
+
+                    editorialListArrayList.add(i, nativeAd);
+
+                }
+            }
+        }
+
+
+    }
+
 
     public void initializeActivity(){
 

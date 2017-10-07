@@ -196,8 +196,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         openDynamicLink();
 
 
-        FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
-
+        if (PushNotificationManager.getPushNotification(this)) {
+            FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
+        }
 
         initializeSubscriptionAds();
 
@@ -758,8 +759,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     });
 
                     // Request an ad
-                    nativeAd.loadAd();
-
+                    if (checkShowAds) {
+                        nativeAd.loadAd();
+                    }
 
                     editorialListArrayList.add(i, nativeAd);
 
@@ -1048,7 +1050,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onPushNotification() {
-       /* String languages[] = new String[]{"On", "Off"};
+        String languages[] = new String[]{"On", "Off"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enable Push Notification ?");
         builder.setItems(languages, new DialogInterface.OnClickListener() {
@@ -1058,8 +1060,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 if (which == 1) {
                     PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this, false);
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("subscribed");
+
                 } else {
                     PushNotificationManager.setPushNotification(EditorialListWithNavActivity.this, true);
+                    FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
                 }
 
             }
@@ -1069,14 +1074,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             Log.d("Test", "onPushNotification: ");
         }
 
-        builder.show();*/
+        builder.show();
 
-        Intent intent = new Intent();
+       /* Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         intent.setData(uri);
         startActivity(intent);
-
+*/
         Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
 
     }
@@ -1199,7 +1204,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam","Gujarati"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1226,6 +1231,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "ur";
                 } else if (which == 7) {
                     languageCode = "ml";
+                }else if(which == 8){
+                    languageCode = "gu";
+                }else{
+                    languageCode = "hi";
                 }
 
                 LanguageManager.setLanguageCode(EditorialListWithNavActivity.this, languageCode);

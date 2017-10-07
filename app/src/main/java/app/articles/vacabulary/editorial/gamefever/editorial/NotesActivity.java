@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
@@ -296,6 +299,58 @@ public class NotesActivity extends AppCompatActivity {
 
 
     }
+/*
+
+    private void addNativeExpressAds() {
+
+        boolean checkShowAds = AdsSubscriptionManager.checkShowAds(this);
+
+
+        for (int i = 0; i < (shortNotesArrayList.size()); i += 8) {
+            if (shortNotesArrayList.get(i) != null) {
+                if (shortNotesArrayList.get(i).getClass() == ShortNotesManager.class) {
+
+
+                    NativeAd nativeAd = new NativeAd(this, "113079036048193_119873465368750");
+                    nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+                        @Override
+                        public void onError(Ad ad, AdError error) {
+                            // Ad error callback
+                        }
+
+                        @Override
+                        public void onAdLoaded(Ad ad) {
+                            // Ad loaded callback
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAdClicked(Ad ad) {
+                            // Ad clicked callback
+                        }
+
+                        @Override
+                        public void onLoggingImpression(Ad ad) {
+                            // Ad impression logged callback
+                        }
+                    });
+
+                    // Request an ad
+                    if (checkShowAds) {
+                        nativeAd.loadAd();
+                    }
+
+                    shortNotesArrayList.add(i, nativeAd);
+
+                }
+            }
+        }
+
+
+    }
+*/
+
 
 
 
