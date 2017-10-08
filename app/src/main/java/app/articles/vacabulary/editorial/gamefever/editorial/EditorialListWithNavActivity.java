@@ -968,6 +968,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
 
+
     @Override
     public void onBackPressed() {
         if (!isSplashScreenVisible) {
