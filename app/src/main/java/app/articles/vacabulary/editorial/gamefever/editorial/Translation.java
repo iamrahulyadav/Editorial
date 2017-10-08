@@ -1,9 +1,20 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Xml;
 import android.widget.TextView;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +29,7 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import cz.msebera.android.httpclient.ExceptionLogger;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
@@ -28,6 +40,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 import cz.msebera.android.httpclient.protocol.HttpContext;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import utils.LanguageManager;
+import utils.VolleyManager;
 
 import static android.content.ContentValues.TAG;
 import static java.lang.System.in;
@@ -69,8 +82,9 @@ public class Translation {
     public void fetchTranslation(EditorialFeedActivity activity){
 
 
-        new Hinditranslation().execute();
+        //new Hinditranslation().execute();
 
+        translate();
         editorialFeedActivity =activity;
         Log.d("tag", "fetchTranslation: After fetching translation");
 
@@ -180,6 +194,52 @@ public class Translation {
     }
 
 
+    public void translate(){
+
+// Tag used to cancel the request
+        String tag_string_req = "string_req";
+
+        final String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170221T102515Z.fc9649d041fb5960.9c4e8caa31a36d7eb789cb3fae48c0e4c2cafd46&text="+getWord().trim()+"&lang="+ LanguageManager.getLanguageCode(editorialFeedActivity)+"&[format=html]&[options=1]";
+
+
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            JSONArray jsonarray = response.getJSONArray("text");
+
+                            if (response.getInt("code") == 200) {
+
+                                wordTranslation = jsonarray.getString(0);
+
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }finally {
+                            completeFetching();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                // hide the progress dialog
+
+            }
+        });
+
+        jsonObjReq.setShouldCache(true);
+        // Adding request to request queue
+        VolleyManager.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
+    }
 
 
 

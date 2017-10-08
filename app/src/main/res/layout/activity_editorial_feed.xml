@@ -224,6 +224,15 @@
                     android:textColorLink="?attr/colorAccent" />
 
 
+                <ProgressBar
+                    android:id="@+id/editorialfeed_activity_progressbar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:background="@color/colorPrimary"
+                    android:visibility="visible" />
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -319,14 +328,7 @@
                 </LinearLayout>
 
 
-                <ProgressBar
-                    android:id="@+id/editorialfeed_activity_progressbar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="25dp"
-                    android:background="@color/colorPrimary"
-                    android:visibility="visible" />
+
 
                 <!-- subscription box-->
                 <android.support.v7.widget.CardView
@@ -522,7 +524,7 @@
 
 
     <!--layout of bottom sheet for showing word meaning and translation-->
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:id="@+id/editorial_activity_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -709,6 +711,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="SMART_BANNER"
+                android:visibility="gone"
                 ads:adUnitId="ca-app-pub-8455191357100024/2064940399">
             </com.google.android.gms.ads.AdView>
 
@@ -716,9 +719,9 @@
                 android:id="@+id/editorial_bottomSheet_add_button"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="?attr/backgroundCardColor"
+                android:background="?attr/colorPrimary"
                 android:text="ADD To vocabulary"
-                android:textColor="?attr/primaryTextColor"
+                android:textColor="?attr/primaryTextAccentColor"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:onClick="onAddToVocabularyClick"
@@ -729,15 +732,17 @@
 
 
 
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_menu_share"
+        android:src="@drawable/ic_action_share"
         app:fabSize="mini"
+        android:onClick="onShareButtonClick"
         app:layout_anchor="@id/editorial_activity_bottom_sheet"
-        app:layout_anchorGravity="end|top" />
+        app:layout_anchorGravity="end|top"
+        android:layout_marginBottom="64dp"
+        />
 </android.support.design.widget.CoordinatorLayout>

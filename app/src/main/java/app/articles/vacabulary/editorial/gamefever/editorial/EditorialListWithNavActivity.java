@@ -34,11 +34,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,6 +131,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     int sortCategoryIndex = -1;
 
     private RewardedVideoAd mAd;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -449,7 +452,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             //initializeAds();
             mInterstitialAd = new InterstitialAd(this);
-            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
+            mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
             initializeInterstitialAds();
         }
 
@@ -458,14 +461,62 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                sortCategoryIndex = -1;
-                sortSourceIndex = -1;
+                //sortCategoryIndex = -1;
+                //sortSourceIndex = -1;
                 fetchEditorialGeneralList();
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
 
 
+        spinner = (Spinner) findViewById(R.id.editoriallist_source_spinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("Spinner", "onItemSelected: " + position);
+
+                onSortBySourceSelected(position);
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d("Spinner", "onItemSelected: ");
+            }
+        });
+
+    }
+
+    private void onSortBySourceSelected(int position) {
+        if (position == 0 && sortSourceIndex == -1) {
+            Log.d("Spinner", "no item selected call for setting listener");
+            return;
+        } else {
+
+
+            if (position == 0) {
+                sortSourceIndex = -1;
+                sortCategoryIndex = -1;
+                fetchEditorialGeneralList();
+            } else {
+
+
+                if (position == 7) {
+                    sortSourceIndex = 8;
+                } else if (position == 8) {
+                    sortSourceIndex = 10;
+                } else {
+                    sortSourceIndex = position - 1;
+                }
+
+                sortCategoryIndex = -1;
+                //fetchEditorialSourceSortList();
+                fetchEditorialGeneralList();
+            }
+
+
+        }
     }
 
     @Override
@@ -739,6 +790,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                         @Override
                         public void onError(Ad ad, AdError error) {
                             // Ad error callback
+                            try {
+                                Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                        .putCustomAttribute("Placement", "List native").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
@@ -920,6 +977,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     sortCategoryIndex = -1;
                     sortSourceIndex = -1;
 
+                    spinner.setSelection(0);
                     fetchEditorialGeneralList();
                     try {
                         swipeRefreshLayout.setRefreshing(true);
@@ -953,10 +1011,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
 
-            case R.id.action_refresh:
+            /*case R.id.action_refresh:
                 // help action
                 onRefreashClick();
-                return true;
+                return true;*/
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -1070,7 +1128,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         });
 
-        if (!PushNotificationManager.getPushNotification(this)){
+        if (!PushNotificationManager.getPushNotification(this)) {
             Log.d("Test", "onPushNotification: ");
         }
 
@@ -1082,7 +1140,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         intent.setData(uri);
         startActivity(intent);
 */
-        Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -1145,7 +1203,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSortBySourceClick() {
-        final CharSequence sources[] = new CharSequence[]{"The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
+        //final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
+        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "Other"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -1153,10 +1212,19 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                sortSourceIndex = which;
-                sortCategoryIndex = -1;
-                fetchEditorialSourceSortList();
-                setToolBarSubTitle(sources[which].toString());
+               /* if (which == 0){
+                    sortSourceIndex = -1;
+                    sortCategoryIndex = -1;
+                    fetchEditorialGeneralList();
+                }else{
+                    sortSourceIndex = which-1;
+                    sortCategoryIndex = -1;
+                    fetchEditorialSourceSortList();
+                }
+*/
+                onSortBySourceSelected(which);
+
+                spinner.setSelection(which, true);
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", sources[which].toString()));
@@ -1173,6 +1241,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortSourceIndex = -1;
                 sortCategoryIndex = -1;
                 fetchEditorialGeneralList();
+
+
             }
         });
 
@@ -1204,7 +1274,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam","Gujarati"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam", "Gujarati"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1231,9 +1301,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "ur";
                 } else if (which == 7) {
                     languageCode = "ml";
-                }else if(which == 8){
+                } else if (which == 8) {
                     languageCode = "gu";
-                }else{
+                } else {
                     languageCode = "hi";
                 }
 
@@ -1552,7 +1622,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1597,5 +1667,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
     }
+
 
 }

@@ -119,7 +119,10 @@
             android:id="@+id/notesFeed_text_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
             android:autoLink="all"
             android:fontFamily="serif"
             android:lineSpacingMultiplier="1.2"
@@ -127,7 +130,20 @@
             android:textColor="?attr/primaryTextColor"
             android:textColorLink="@color/colorPrimary"
             android:textSize="18sp"
+            android:textIsSelectable="true"
             android:textStyle="normal" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/notesFeed_adContainer_linearLayout"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            android:layout_height="wrap_content">
+
+
+        </android.support.v7.widget.CardView>
 
         <ImageView
             android:layout_width="match_parent"

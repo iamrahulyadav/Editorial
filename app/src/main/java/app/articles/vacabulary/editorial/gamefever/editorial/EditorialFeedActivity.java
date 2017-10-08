@@ -475,14 +475,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void onWordTap(String mWord) {
 
-        speakOutWord(mWord);
+
         Translation translation = new Translation(mWord);
         translation.fetchTranslation(this);
 
         translateText.setText(mWord);
         selectedWord = mWord;
 
-
+        speakOutWord(mWord);
         fetchWordMeaning();
 
     }
@@ -629,7 +629,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         if (status == TextToSpeech.SUCCESS) {
 
             int result = tts.setLanguage(Locale.US);
-            tts.setPitch(0.8f);
+            tts.setPitch(0.9f);
+            tts.setSpeechRate(0.85f);
 
 
             if (result == TextToSpeech.LANG_MISSING_DATA
@@ -1082,8 +1083,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onError(Ad ad, AdError error) {
                 // Ad error callback
-
                 initializeNativeAds();
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

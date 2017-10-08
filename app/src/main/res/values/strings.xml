@@ -34,9 +34,16 @@
     <string name="title_activity_notes_feed">Notes</string>
 
     <string-array name="source_list">
+        <item>All</item>
         <item>The Hindu</item>
+        <item>Financial Express</item>
+        <item>Economic Times</item>
+        <item>Indian Express</item>
         <item>TOI</item>
-        <item>HT</item>
+        <item>Hindustan Times</item>
+        <item>Live Mint</item>
+        <item>Others</item>
+
 
     </string-array>
 

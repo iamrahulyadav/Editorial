@@ -20,9 +20,11 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <Spinner
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:entries="@array/source_list"
-                android:layout_height="wrap_content">
+                android:id="@+id/editoriallist_source_spinner"
+                >
 
             </Spinner>
 

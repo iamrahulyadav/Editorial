@@ -9,15 +9,27 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
+import com.facebook.ads.NativeAdViewAttributes;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
@@ -53,6 +65,8 @@ public class NotesFeedActivity extends AppCompatActivity {
 
         initializeActivity();
 
+
+
     }
 
     private void initializeActivity() {
@@ -69,27 +83,73 @@ public class NotesFeedActivity extends AppCompatActivity {
         }
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
-            NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.notesFeed_top_nativeAds);
-            adView.setVisibility(View.VISIBLE);
-
-            AdRequest request = new AdRequest.Builder().build();
-            adView.loadAd(request);
-
-            adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    super.onAdFailedToLoad(i);
-
-                    try {
-                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                                .putCustomAttribute("Placement", "notes feed native").putCustomAttribute("errorType", i));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            });
+           initializeNativeAds(true);
         }
+
+
+    }
+
+    private void initializeNativeAds() {
+        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.notesFeed_top_nativeAds);
+        adView.setVisibility(View.VISIBLE);
+
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "notes feed native").putCustomAttribute("errorType", i));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
+
+    private void initializeNativeAds(boolean isFacebook) {
+       final NativeAd nativeAd = new NativeAd(this, "113079036048193_120131468676283");
+
+
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                initializeNativeAds();
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+
+                NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                        .setAutoplay(true);
+
+                View adView = NativeAdView.render(NotesFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400,viewAttributes);
+                // Find the Ad Container
+                CardView adContainer = (CardView) findViewById(R.id.notesFeed_adContainer_linearLayout);
+
+                // Add the ad view to your activity layout
+                adContainer.addView(adView);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+
+        // Initiate a request to load an ad.
+        nativeAd.loadAd();
+
 
 
     }
