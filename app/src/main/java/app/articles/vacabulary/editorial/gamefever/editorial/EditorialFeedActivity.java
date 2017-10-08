@@ -607,7 +607,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onNotesSaveClick();
             }
 
-            if (isPushNotification || isDynamicLink) {
+            if (isPushNotification ) {
                 Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

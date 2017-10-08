@@ -209,11 +209,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void getSortCondition() {
 
-        Intent intent = getIntent();
+        try {
+            Intent intent = getIntent();
 
-        sortSourceIndex = intent.getIntExtra("sourceIndex", -1);
-        sortCategoryIndex = intent.getIntExtra("categoryIndex", -1);
-
+            sortSourceIndex = intent.getIntExtra("sourceIndex", -1);
+            sortCategoryIndex = intent.getIntExtra("categoryIndex", -1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -268,7 +271,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                         } else {
                             Log.d("editorial", "getInvitation: no deep link found.");
-                            fetchEditorialGeneralList();
+                            //fetchEditorialGeneralList();
                             isActivityInitialized = true;
 
                         }
@@ -287,12 +290,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     public void onFailure(@NonNull Exception e) {
                         Log.w("DeepLink", "getDynamicLink:onFailure", e);
                         Log.d("editorial", "getInvitation: no deep link found.");
-                        fetchEditorialGeneralList();
+                        //fetchEditorialGeneralList();
                         isActivityInitialized = true;
 
                     }
                 });
-
+        fetchEditorialGeneralList();
 
     }
 
