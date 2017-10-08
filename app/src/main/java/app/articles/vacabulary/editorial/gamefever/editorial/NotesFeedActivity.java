@@ -215,6 +215,7 @@ public class NotesFeedActivity extends AppCompatActivity {
         intent.putExtra("editorialID", shortNotesManager.getNoteArticleID());
         intent.putExtra("isPushNotification", true);
 
+
         startActivity(intent);
 
     }
