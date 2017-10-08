@@ -422,12 +422,7 @@ public class EditorialListActivity extends AppCompatActivity {
     private void onSettingClick() {
     }
 
-    private void onAboutClick() {
 
-        Intent i = new Intent(this ,AboutActivity.class);
-        startActivity(i);
-
-    }
 
     private void onRefreashClick() {
 

@@ -13,7 +13,6 @@
         android:name="utils.VolleyManager"
         android:hardwareAccelerated="true"
         android:theme="@style/FeedActivityThemeLight">
-        <activity android:name=".TestActivity" />
         <activity
             android:name=".EditorialFeedActivity"
             android:label="Editorial">
@@ -37,8 +36,6 @@
         </activity>
         <activity android:name=".EditorialListActivity" />
         <activity android:name=".VacabularyActivity" />
-        <activity android:name=".AboutActivity" />
-        <activity android:name=".SettingActivity" />
 
         <service android:name="utils.FireBasePushNotificationService">
             <intent-filter>

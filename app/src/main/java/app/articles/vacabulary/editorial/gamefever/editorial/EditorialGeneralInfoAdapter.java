@@ -81,12 +81,16 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
         LinearLayout linearLayout;
         CardView cardView;
 
+        TextView recommendedTextView;
+
         public NativeExpressAdViewHolder(View itemView) {
             super(itemView);
 
             linearLayout = (LinearLayout) itemView.findViewById(R.id.nativeExpress_container_linearLayout);
 
             cardView = (CardView) itemView.findViewById(R.id.nativeExpress_background_cardView);
+
+            recommendedTextView =(TextView)itemView.findViewById(R.id.nativeExpress_recommended_textView);
 
         }
     }
@@ -162,6 +166,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 NativeAd nativeAd = (NativeAd) editorialGeneralInfoList.get(position);
                 if (nativeAd.isAdLoaded()) {
                     adView.cardView.setVisibility(View.VISIBLE);
+                    adView.recommendedTextView.setVisibility(View.VISIBLE);
                     View view;
                     if (nightMode){
 
@@ -188,6 +193,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 } else {
 
                     adView.cardView.setVisibility(View.GONE);
+                    adView.recommendedTextView.setVisibility(View.GONE);
 
 
                 }
