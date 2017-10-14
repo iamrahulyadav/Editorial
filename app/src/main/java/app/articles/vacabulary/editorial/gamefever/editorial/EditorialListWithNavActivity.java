@@ -1518,6 +1518,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         } catch (Exception e) {
 
         }
+
     }
 
 
