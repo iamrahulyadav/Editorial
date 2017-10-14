@@ -116,6 +116,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public static int listLimit = 20;
     public static int EDITORIALCOUNTADS = 0;
 
+
     public String selectedSortWord = "";
     private boolean isNightMode = false;
 
