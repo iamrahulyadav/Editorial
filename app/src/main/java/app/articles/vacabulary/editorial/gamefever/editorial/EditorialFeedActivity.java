@@ -1303,10 +1303,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             .setButtonColor(Color.parseColor("#F44336"));*/
 
                      viewAttributes = new NativeAdViewAttributes()
-                            .setBackgroundColor(Color.parseColor("#28292e"))
-                            .setTitleTextColor(Color.WHITE)
+                            .setBackgroundColor(Color.LTGRAY)
                             .setButtonTextColor(Color.WHITE)
-                            .setDescriptionTextColor(Color.WHITE)
                             .setButtonColor(Color.parseColor("#F44336"));
 
                 }
@@ -1751,5 +1749,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         databaseHandler.addToDictionary(dictionary);
         Toast.makeText(EditorialFeedActivity.this, selectedWord+" Added To Vocabulary", Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void onInstallPIBClick(View view) {
+        try {
+            String link = "https://play.google.com/store/apps/details?id=app.crafty.studio.current.affairs.pib";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+
+        }
     }
 }

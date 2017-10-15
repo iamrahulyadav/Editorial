@@ -54,6 +54,7 @@ import com.crashlytics.android.answers.InviteEvent;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAdListener;
 import com.facebook.ads.NativeAd;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -125,6 +126,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     SwipeRefreshLayout swipeRefreshLayout;
 
     InterstitialAd mInterstitialAd;
+    com.facebook.ads.InterstitialAd facebookInterstitial;
+
+
     private int editorialcountAdMax = 2;
     boolean isActivityInitialized = false;
     private InterstitialAd mSubscriptionInterstitialAd;
@@ -461,7 +465,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             //initializeAds();
             mInterstitialAd = new InterstitialAd(this);
             mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
-            initializeInterstitialAds();
+
+            facebookInterstitial = new com.facebook.ads.InterstitialAd(this, "113079036048193_118000352222728");
+            initializeInterstitialAds(true);
         }
 
 
@@ -1662,29 +1668,84 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
     }
 
+    public void initializeInterstitialAds(boolean isFacebook){
+        facebookInterstitial.setAdListener(new InterstitialAdListener() {
+            @Override
+            public void onInterstitialDisplayed(Ad ad) {
+                // Interstitial displayed callback
+            }
+
+
+            @Override
+            public void onInterstitialDismissed(Ad ad) {
+                // Interstitial dismissed callback
+                facebookInterstitial.loadAd();
+            }
+
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+                Log.d("TAG", "onError: ");
+                initializeInterstitialAds();
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Show the ad when it's done loading.
+                //interstitialAd.show();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // For auto play video ads, it's recommended to load the ad
+        // at least 30 seconds before it is shown
+        facebookInterstitial.loadAd();
+
+    }
+
     public void showInterstitialAd() {
         //set editorialcount to 0
 
+
         if (AdsSubscriptionManager.checkShowAds(this)) {
-            if (EDITORIALCOUNTADS > editorialcountAdMax) {
+            if (EDITORIALCOUNTADS >= editorialcountAdMax) {
 
-                if (mInterstitialAd != null) {
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                        EDITORIALCOUNTADS = 0;
+                if (facebookInterstitial != null){
+                    if (facebookInterstitial.isAdLoaded()){
 
-                    } else {
-                        loadInterstitialAd();
+                        facebookInterstitial.show();
+                        EDITORIALCOUNTADS=0;
+                    }else if (mInterstitialAd != null){
+
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                            EDITORIALCOUNTADS = 0;
+
+                        } else {
+                            loadInterstitialAd();
+                        }
+
                     }
-                } else {
-                    loadInterstitialAd();
                 }
+
             } else {
                 EDITORIALCOUNTADS++;
             }
         }
 
     }
+
+
+
 
 
 }
