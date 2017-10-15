@@ -30,6 +30,7 @@ import java.util.List;
 
 import utils.AdsSubscriptionManager;
 import utils.ClickListener;
+import utils.NightModeManager;
 
 /**
  * Created by gamef on 23-02-2017.
@@ -47,7 +48,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
     private static boolean checkShowAds;
     private ClickListener clicklistener;
 
-    private boolean nightMode = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
+    private boolean nightMode = false;
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView heading, date, source, tag, subheading, likeText;
@@ -100,6 +101,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
         this.theme = themeActivity;
         this.context = context;
         checkShowAds = AdsSubscriptionManager.checkShowAds(context);
+        nightMode=NightModeManager.getNightMode(context);
     }
 
     public void setOnclickListener(ClickListener clicklistener) {

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 
 import utils.AdsSubscriptionManager;
 import utils.AuthenticationManager;
+import utils.NightModeManager;
 import utils.ShortNotesManager;
 
 
@@ -48,8 +49,7 @@ public class NotesFeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AppCompatDelegate.getDefaultNightMode()
-                == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (NightModeManager.getNightMode(this)){
             setTheme(R.style.FeedActivityThemeDark);
         }
 

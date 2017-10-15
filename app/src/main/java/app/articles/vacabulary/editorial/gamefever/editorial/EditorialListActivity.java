@@ -50,6 +50,7 @@ import java.util.List;
 
 import utils.AdsSubscriptionManager;
 import utils.AuthenticationManager;
+import utils.NightModeManager;
 import utils.ShortNotesManager;
 
 public class EditorialListActivity extends AppCompatActivity {
@@ -70,10 +71,8 @@ public class EditorialListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AppCompatDelegate.getDefaultNightMode()
-                == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (NightModeManager.getNightMode(this)){
             setTheme(R.style.FeedActivityThemeDark);
-
         }
         initializeActivity();
 

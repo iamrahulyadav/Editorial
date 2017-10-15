@@ -1,5 +1,6 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -130,6 +132,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     //sort variable
     int sortSourceIndex = -1;
     int sortCategoryIndex = -1;
+    long sortDateMillis= System.currentTimeMillis();
+    boolean sortByDate=false;
 
     private RewardedVideoAd mAd;
     Spinner spinner;
@@ -139,11 +143,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (NightModeManager.getNightMode(getApplicationContext())){
             setTheme(R.style.FeedActivityThemeDark);
             isNightMode = true;
         }
-
 
         initializeRemoteConfig();
 
@@ -326,8 +329,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (isSplashScreenVisible && !isRefreshing) {
             fetchEditorialGeneralList();
         }
-        if (AppCompatDelegate.getDefaultNightMode()
-                == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (NightModeManager.getNightMode(getApplicationContext())) {
 
             if (!isNightMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -440,7 +442,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         mAdapter.setOnclickListener(new ClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                onRecyclerViewItemClick(position);
+                if (position >0) {
+                    onRecyclerViewItemClick(position);
+                }
             }
         });
 
@@ -541,6 +545,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (position < 0) {
             recreate();
+            return;
         }
 
         if (position % 8 == 0) {
@@ -968,8 +973,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
-
     @Override
     public void onBackPressed() {
         if (!isSplashScreenVisible) {
@@ -1018,7 +1021,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             /*case R.id.action_refresh:
                 // help action
-                onRefreashClick();
+                onSortByDate();
                 return true;*/
 
             default:
@@ -1026,6 +1029,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         }
+    }
+
+    private void onSortByDate() {
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -1279,7 +1286,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam", "Gujarati"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam", "Gujarati","Punjabi"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1308,6 +1315,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "ml";
                 } else if (which == 8) {
                     languageCode = "gu";
+                }else if(which==9){
+                    languageCode="pa";
                 } else {
                     languageCode = "hi";
                 }
@@ -1494,14 +1503,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onNightMode() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         //NightModeManager.setNightMode(EditorialListWithNavActivity.this,true);
+        NightModeManager.setNightMode(this,true);
         recreate();
     }
 
     private void onDayMode() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         //NightModeManager.setNightMode(EditorialListWithNavActivity.this,false);
+        NightModeManager.setNightMode(this,false);
         recreate();
     }
 

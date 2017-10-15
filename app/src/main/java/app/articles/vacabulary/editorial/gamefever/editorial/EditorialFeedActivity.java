@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -54,6 +55,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdView;
+import com.facebook.ads.NativeAdViewAttributes;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -83,6 +85,7 @@ import utils.AdsSubscriptionManager;
 import utils.AppRater;
 import utils.AuthenticationManager;
 import utils.Like;
+import utils.NightModeManager;
 import utils.ShortNotesManager;
 
 public class EditorialFeedActivity extends AppCompatActivity implements
@@ -117,10 +120,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AppCompatDelegate.getDefaultNightMode()
-                == AppCompatDelegate.MODE_NIGHT_YES) {
+
+        if (NightModeManager.getNightMode(this)){
             setTheme(R.style.FeedActivityThemeDark);
         }
+
         setContentView(R.layout.activity_editorial_feed);
 
         try {
@@ -170,10 +174,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
 
-            initializeTopNativeAds();
+            initializeTopNativeAds(true);
             //initializeAds();
             initializeNativeAds(true);
-            initializeBottomSheetAd();
+            initializeBottomSheetAd(true);
             initializeSubscriptionAds();
             CardView cardView = (CardView) findViewById(R.id.editorialfeed_removeAd_cardView);
             cardView.setVisibility(View.VISIBLE);
@@ -189,7 +193,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
-
 
     private void checkRateUsOption() {
         SharedPreferences prefs = getSharedPreferences("RateUsNum", MODE_PRIVATE);
@@ -914,11 +917,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void switchTheme() {
-        if (AppCompatDelegate.getDefaultNightMode()
-                == AppCompatDelegate.MODE_NIGHT_YES) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if (NightModeManager.getNightMode(this)) {
+            NightModeManager.setNightMode(EditorialFeedActivity.this,false);
         } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            NightModeManager.setNightMode(EditorialFeedActivity.this,true);
         }
         recreate();
     }
@@ -979,7 +981,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         if (task.isSuccessful()) {
                             Uri shortLink = task.getResult().getShortLink();
                             if (pd.isShowing()) {
-                                pd.dismiss();
+                                try {
+                                    pd.dismiss();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                             openShareDialog(shortLink);
 
@@ -1100,8 +1106,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 CardView linearLayout = (CardView) findViewById(R.id.editorialfeed_facebook_cardView);
                 linearLayout.setVisibility(View.VISIBLE);
+                NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                        .setBackgroundColor(Color.parseColor("#28292e"))
+                        .setTitleTextColor(Color.WHITE)
+                        .setButtonTextColor(Color.WHITE)
+                        .setDescriptionTextColor(Color.WHITE)
+                        .setButtonColor(Color.parseColor("#F44336"));
 
-                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400);
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400,viewAttributes);
 
                 linearLayout.removeAllViews();
                 linearLayout.addView(adView);
@@ -1127,7 +1139,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void initializeBottomSheetAd() {
-        AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
+       AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
         mAdView.setVisibility(View.VISIBLE);
 
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -1146,6 +1158,77 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 }
             }
         });
+
+
+    }
+
+    public void initializeBottomSheetAd(boolean isFacebook){
+
+
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_121732315182865");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                initializeBottomSheetAd();
+
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Feed native meaning bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_bottomSheet_adcontainer);
+                linearLayout.setVisibility(View.VISIBLE);
+                NativeAdViewAttributes viewAttributes;
+                if ( NightModeManager.getNightMode(EditorialFeedActivity.this)){
+
+                     viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.parseColor("#28292e"))
+                            .setTitleTextColor(Color.WHITE)
+                            .setButtonTextColor(Color.WHITE)
+                            .setDescriptionTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                }else {
+                     viewAttributes = new NativeAdViewAttributes()
+                             .setBackgroundColor(Color.LTGRAY)
+
+                             .setButtonTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                }
+
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_100,viewAttributes);
+
+
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(adView);
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
     }
 
     private void initializeTopNativeAds() {
@@ -1173,6 +1256,83 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 }
             }
         });
+    }
+
+    public void initializeTopNativeAds(boolean isFacebook){
+
+
+
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_121737141849049");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                initializeTopNativeAds();
+
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Feed native top").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_top_adContainer);
+                linearLayout.setVisibility(View.VISIBLE);
+                NativeAdViewAttributes viewAttributes;
+                if ( NightModeManager.getNightMode(EditorialFeedActivity.this)){
+
+                    viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.parseColor("#28292e"))
+                            .setTitleTextColor(Color.WHITE)
+                            .setButtonTextColor(Color.WHITE)
+                            .setDescriptionTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                }else {
+                    /*viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.LTGRAY)
+
+                            .setButtonTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));*/
+
+                     viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.parseColor("#28292e"))
+                            .setTitleTextColor(Color.WHITE)
+                            .setButtonTextColor(Color.WHITE)
+                            .setDescriptionTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                }
+
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_120,viewAttributes);
+
+
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(adView);
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
     }
 
 
@@ -1584,12 +1744,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onAddToVocabularyClick(View view) {
         DatabaseHandler databaseHandler = new DatabaseHandler(EditorialFeedActivity.this);
         Dictionary dictionary = new Dictionary();
-        dictionary.setWord(selectedWord);
+        dictionary.setWord(translateText.getText().toString());
         //dictionary.setWord(translateText.getText().toString());
         WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
         dictionary.setWordMeaning(webView.getUrl());
         databaseHandler.addToDictionary(dictionary);
-        Toast.makeText(EditorialFeedActivity.this, "Word Added To Vocabulary", Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditorialFeedActivity.this, selectedWord+" Added To Vocabulary", Toast.LENGTH_SHORT).show();
 
     }
 }
