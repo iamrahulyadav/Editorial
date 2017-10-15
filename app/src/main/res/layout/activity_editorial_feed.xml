@@ -348,54 +348,6 @@
                 </LinearLayout>
 
 
-                <!-- subscription box-->
-                <android.support.v7.widget.CardView
-                    android:id="@+id/editorialfeed_removeAd_cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:visibility="gone"
-                    app:cardBackgroundColor="?attr/backgroundCardColor"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="5dp">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Want to remove ads from app for free ?"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad \n4. Yipee! you are now a pro member for 2 day. Enjoy Daily Editorial without ads" />
-
-                        <Button
-                            android:id="@+id/editorialfeed_removeAd_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:background="?attr/colorAccent"
-                            android:onClick="onRemoveAdClick"
-                            android:text="Remove Ads from app for Free !"
-                            android:textColor="?attr/primaryTextAccentColor"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
-
-
-                </android.support.v7.widget.CardView>
 
 
                 <com.google.android.gms.ads.NativeExpressAdView
@@ -532,6 +484,56 @@
                     </LinearLayout>
 
                 </android.support.v7.widget.CardView>
+
+                <!-- subscription box-->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/editorialfeed_removeAd_cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="?attr/backgroundCardColor"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Want to remove ads from app for free ?"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad \n4. Yipee! you are now a pro member for 2 day. Enjoy Daily Editorial without ads" />
+
+                        <Button
+                            android:id="@+id/editorialfeed_removeAd_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="?attr/colorAccent"
+                            android:onClick="onRemoveAdClick"
+                            android:text="Remove Ads from app for Free !"
+                            android:textColor="?attr/primaryTextAccentColor"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+
+                </android.support.v7.widget.CardView>
+
 
             </LinearLayout>
 

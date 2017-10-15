@@ -186,6 +186,7 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.editoriallist_activity_toolbar);
+        toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -438,13 +439,13 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
     public void initializeAds(){
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+      /*  MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
         mAdView.setVisibility(View.VISIBLE);
         AdRequest adRequest = new AdRequest.Builder().build();
 
         mAdView.loadAd(adRequest);
-
+*/
     }
 
 

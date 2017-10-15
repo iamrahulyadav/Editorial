@@ -534,6 +534,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
 
+
     public void initializeSplashScreen() {
 
         setContentView(R.layout.splashlayout);
@@ -874,7 +875,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void initializeAds() {
         // MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
-        final AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
+    /*    final AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
 
         mAdView.setVisibility(View.GONE);
 
@@ -902,7 +903,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 mAdView.setVisibility(View.VISIBLE);
             }
         });
-
+*/
     }
 
 

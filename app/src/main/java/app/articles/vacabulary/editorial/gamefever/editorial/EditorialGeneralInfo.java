@@ -14,6 +14,7 @@ public class EditorialGeneralInfo implements Serializable {
     private int editorialSourceIndex ,editorialLike ,editorialCategoryIndex;
     private long timeInMillis;
     private String editorialImageUrl;
+    boolean mustRead;
 
     public EditorialGeneralInfo() {
     }
@@ -130,6 +131,14 @@ public class EditorialGeneralInfo implements Serializable {
 
     public void setEditorialImageUrl(String editorialImageUrl) {
         this.editorialImageUrl = editorialImageUrl;
+    }
+
+    public boolean isMustRead() {
+        return mustRead;
+    }
+
+    public void setMustRead(boolean mustRead) {
+        this.mustRead = mustRead;
     }
 
     public static String resolveDate(long editorialTime) {

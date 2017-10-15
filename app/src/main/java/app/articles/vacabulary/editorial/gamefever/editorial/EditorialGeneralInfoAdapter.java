@@ -52,6 +52,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView heading, date, source, tag, subheading, likeText;
+        ImageView mustReadImageView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -61,6 +62,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             tag = (TextView) view.findViewById(R.id.editorial_list_layout_tag);
             subheading = (TextView) view.findViewById(R.id.editorial_list_layout_subheading);
             likeText = (TextView) view.findViewById(R.id.editorial_list_layout_like);
+            mustReadImageView =(ImageView)view.findViewById(R.id.editorial_list_layout_mustRead_imageView);
 
 
             view.setOnClickListener(this);
@@ -214,6 +216,12 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
                 myViewHolder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
                 myViewHolder.likeText.setText(EditorialGeneralInfo.getEditorialLike() + " ");
+
+                if (EditorialGeneralInfo.isMustRead()){
+                    myViewHolder.mustReadImageView.setVisibility(View.VISIBLE);
+                }else{
+                    myViewHolder.mustReadImageView.setVisibility(View.GONE);
+                }
         }
 
     }
