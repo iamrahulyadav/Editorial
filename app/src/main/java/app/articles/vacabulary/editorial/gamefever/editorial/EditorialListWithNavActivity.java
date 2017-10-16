@@ -797,7 +797,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
             if (editorialListArrayList.get(i) != null) {
-                if (editorialListArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
+                if (editorialListArrayList.get(i).getClass() != NativeAd.class) {
 
 
                     NativeAd nativeAd = new NativeAd(this, "113079036048193_119892505366846");
@@ -1708,7 +1708,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         // For auto play video ads, it's recommended to load the ad
         // at least 30 seconds before it is shown
-        facebookInterstitial.loadAd();
+
+        try {
+            facebookInterstitial.loadAd();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 

@@ -302,13 +302,16 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (editorialGeneralInfo == null) {
             editorialGeneralInfo = new EditorialGeneralInfo();
+
+            editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
+            editorialGeneralInfo.setEditorialDate(i.getExtras().getString("editorialDate"));
+            editorialGeneralInfo.setEditorialHeading(i.getExtras().getString("editorialHeading"));
+            editorialGeneralInfo.setEditorialSource(i.getExtras().getString("editorialSource"));
+            editorialGeneralInfo.setEditorialSubHeading(i.getExtras().getString("editorialSubheading"));
+            editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
         }
-        editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
-        editorialGeneralInfo.setEditorialDate(i.getExtras().getString("editorialDate"));
-        editorialGeneralInfo.setEditorialHeading(i.getExtras().getString("editorialHeading"));
-        editorialGeneralInfo.setEditorialSource(i.getExtras().getString("editorialSource"));
-        editorialGeneralInfo.setEditorialSubHeading(i.getExtras().getString("editorialSubheading"));
-        editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
+
+
 
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
@@ -456,7 +459,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
     }
-
 
     private ClickableSpan getClickableSpan(final String word) {
         return new ClickableSpan() {
@@ -746,7 +748,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Take appropriate action for each action item click
@@ -951,7 +952,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-
     private void onShareClick() {
 
         String appCode = getString(R.string.app_code);
@@ -1037,7 +1037,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
     }
-
 
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -1148,7 +1147,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
-
 
     public void initializeBottomSheetAd() {
         AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
@@ -1342,7 +1340,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         nativeAd.loadAd();
     }
 
-
     public void readFullArticle(View view) {
         if (muteVoice) {
             muteVoice = false;
@@ -1360,7 +1357,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
 
     }
-
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -1443,7 +1439,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-
     public void insertCommentBtnClick(View view) {
 
         EditText editText = (EditText) findViewById(R.id.editorialFeed_commentemail_edittext);
@@ -1479,14 +1474,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-
     public void hideBottomsheet(View view) {
         if (mBottomSheetBehavior != null) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         }
     }
-
 
     public void onLikeClick(View view) {
         Like like = new Like();

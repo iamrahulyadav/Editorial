@@ -208,9 +208,11 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             default:
 
                 MyViewHolder myViewHolder = (MyViewHolder) holder;
-                EditorialGeneralInfo EditorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoList.get(position);
-                myViewHolder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
 
+
+                EditorialGeneralInfo EditorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoList.get(position);
+
+                myViewHolder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
                 myViewHolder.date.setText(EditorialGeneralInfo.resolveDate(EditorialGeneralInfo.getTimeInMillis()));
                 myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
                 myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
