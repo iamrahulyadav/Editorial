@@ -1108,12 +1108,25 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onSignInOpenClick();
                 break;
 
+            case R.id.nav_pib_app:
+                onPIBAppClick();
+                break;
+
         }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onPIBAppClick() {
+        try {
+            String link = "https://play.google.com/store/apps/details?id=app.crafty.studio.current.affairs.pib";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+
+        }
     }
 
     private void onSignInOpenClick() {
