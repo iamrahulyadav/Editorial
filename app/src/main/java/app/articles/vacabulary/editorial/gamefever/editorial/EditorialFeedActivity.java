@@ -86,6 +86,7 @@ import utils.AppRater;
 import utils.AuthenticationManager;
 import utils.Like;
 import utils.NightModeManager;
+import utils.SettingManager;
 import utils.ShortNotesManager;
 
 public class EditorialFeedActivity extends AppCompatActivity implements
@@ -121,7 +122,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (NightModeManager.getNightMode(this)){
+        if (NightModeManager.getNightMode(this)) {
             setTheme(R.style.FeedActivityThemeDark);
         }
 
@@ -145,12 +146,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         translateText = (TextView) findViewById(R.id.editorial_feed_cardview_textview);
 
+        muteVoice = SettingManager.getMuteVoice(EditorialFeedActivity.this);
 
         View bottomSheet = findViewById(R.id.editorial_activity_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        Button button = (Button) findViewById(R.id.editorial_bottomsheet_audio_button);
+        if (muteVoice) {
+            button.setBackgroundResource(R.drawable.ic_action_audio_off);
+        }
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback()
+
+        {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
@@ -169,10 +177,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 
 
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        MobileAds.initialize(
+
+                getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         mAd = MobileAds.getRewardedVideoAdInstance(this);
 
-        if (AdsSubscriptionManager.checkShowAds(this)) {
+        if (AdsSubscriptionManager.checkShowAds(this))
+
+        {
 
             initializeTopNativeAds(true);
             //initializeAds();
@@ -611,7 +623,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onNotesSaveClick();
             }
 
-            if (isPushNotification ) {
+            if (isPushNotification) {
                 Intent intent = new Intent(EditorialFeedActivity.this, EditorialListWithNavActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -918,9 +930,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void switchTheme() {
         if (NightModeManager.getNightMode(this)) {
-            NightModeManager.setNightMode(EditorialFeedActivity.this,false);
+            NightModeManager.setNightMode(EditorialFeedActivity.this, false);
         } else {
-            NightModeManager.setNightMode(EditorialFeedActivity.this,true);
+            NightModeManager.setNightMode(EditorialFeedActivity.this, true);
         }
         recreate();
     }
@@ -983,7 +995,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             if (pd.isShowing()) {
                                 try {
                                     pd.dismiss();
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -1094,7 +1106,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1113,7 +1125,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         .setDescriptionTextColor(Color.WHITE)
                         .setButtonColor(Color.parseColor("#F44336"));
 
-                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400,viewAttributes);
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400, viewAttributes);
 
                 linearLayout.removeAllViews();
                 linearLayout.addView(adView);
@@ -1139,7 +1151,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void initializeBottomSheetAd() {
-       AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
+        AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
         mAdView.setVisibility(View.VISIBLE);
 
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -1162,7 +1174,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     }
 
-    public void initializeBottomSheetAd(boolean isFacebook){
+    public void initializeBottomSheetAd(boolean isFacebook) {
 
 
         final NativeAd nativeAd = new NativeAd(this, "113079036048193_121732315182865");
@@ -1176,7 +1188,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native meaning bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                            .putCustomAttribute("Placement", "Feed native meaning bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1189,26 +1201,25 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_bottomSheet_adcontainer);
                 linearLayout.setVisibility(View.VISIBLE);
                 NativeAdViewAttributes viewAttributes;
-                if ( NightModeManager.getNightMode(EditorialFeedActivity.this)){
+                if (NightModeManager.getNightMode(EditorialFeedActivity.this)) {
 
-                     viewAttributes = new NativeAdViewAttributes()
+                    viewAttributes = new NativeAdViewAttributes()
                             .setBackgroundColor(Color.parseColor("#28292e"))
                             .setTitleTextColor(Color.WHITE)
                             .setButtonTextColor(Color.WHITE)
                             .setDescriptionTextColor(Color.WHITE)
                             .setButtonColor(Color.parseColor("#F44336"));
 
-                }else {
-                     viewAttributes = new NativeAdViewAttributes()
-                             .setBackgroundColor(Color.LTGRAY)
+                } else {
+                    viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.LTGRAY)
 
-                             .setButtonTextColor(Color.WHITE)
+                            .setButtonTextColor(Color.WHITE)
                             .setButtonColor(Color.parseColor("#F44336"));
 
                 }
 
-                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_100,viewAttributes);
-
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_100, viewAttributes);
 
 
                 linearLayout.removeAllViews();
@@ -1258,8 +1269,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
     }
 
-    public void initializeTopNativeAds(boolean isFacebook){
-
+    public void initializeTopNativeAds(boolean isFacebook) {
 
 
         final NativeAd nativeAd = new NativeAd(this, "113079036048193_121737141849049");
@@ -1273,7 +1283,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native top").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                            .putCustomAttribute("Placement", "Feed native top").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1286,7 +1296,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_top_adContainer);
                 linearLayout.setVisibility(View.VISIBLE);
                 NativeAdViewAttributes viewAttributes;
-                if ( NightModeManager.getNightMode(EditorialFeedActivity.this)){
+                if (NightModeManager.getNightMode(EditorialFeedActivity.this)) {
 
                     viewAttributes = new NativeAdViewAttributes()
                             .setBackgroundColor(Color.parseColor("#28292e"))
@@ -1295,22 +1305,21 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             .setDescriptionTextColor(Color.WHITE)
                             .setButtonColor(Color.parseColor("#F44336"));
 
-                }else {
+                } else {
                     /*viewAttributes = new NativeAdViewAttributes()
                             .setBackgroundColor(Color.LTGRAY)
 
                             .setButtonTextColor(Color.WHITE)
                             .setButtonColor(Color.parseColor("#F44336"));*/
 
-                     viewAttributes = new NativeAdViewAttributes()
+                    viewAttributes = new NativeAdViewAttributes()
                             .setBackgroundColor(Color.LTGRAY)
                             .setButtonTextColor(Color.WHITE)
                             .setButtonColor(Color.parseColor("#F44336"));
 
                 }
 
-                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_120,viewAttributes);
-
+                View adView = NativeAdView.render(EditorialFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_120, viewAttributes);
 
 
                 linearLayout.removeAllViews();
@@ -1342,6 +1351,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             Toast.makeText(this, "Voice disabled", Toast.LENGTH_SHORT).show();
             muteVoice = true;
         }
+        SettingManager.setMuteVoice(EditorialFeedActivity.this, muteVoice);
+        Button button = (Button) findViewById(R.id.editorial_bottomsheet_audio_button);
+        if (muteVoice) {
+            button.setBackgroundResource(R.drawable.ic_action_audio_off);
+        }else{
+            button.setBackgroundResource(R.drawable.ic_action_audio);
+        }
+
     }
 
 
@@ -1747,7 +1764,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
         dictionary.setWordMeaning(webView.getUrl());
         databaseHandler.addToDictionary(dictionary);
-        Toast.makeText(EditorialFeedActivity.this, selectedWord+" Added To Vocabulary", Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditorialFeedActivity.this, selectedWord + " Added To Vocabulary", Toast.LENGTH_SHORT).show();
 
     }
 

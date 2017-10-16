@@ -638,6 +638,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
                     android:background="@drawable/ic_action_audio"
+                    android:id="@+id/editorial_bottomsheet_audio_button"
                     android:onClick="readFullArticle" />
 
                 <LinearLayout

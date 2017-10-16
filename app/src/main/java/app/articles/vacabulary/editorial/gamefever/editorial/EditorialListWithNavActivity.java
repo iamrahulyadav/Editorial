@@ -466,7 +466,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             mInterstitialAd = new InterstitialAd(this);
             mInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/2541985598");
 
-            facebookInterstitial = new com.facebook.ads.InterstitialAd(this, "113079036048193_118000352222728");
+            facebookInterstitial = new com.facebook.ads.InterstitialAd(this, "113079036048193_121778881844875");
             initializeInterstitialAds(true);
         }
 
