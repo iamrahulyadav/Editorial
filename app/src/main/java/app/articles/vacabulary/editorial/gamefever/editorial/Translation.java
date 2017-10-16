@@ -83,9 +83,9 @@ public class Translation {
 
 
         //new Hinditranslation().execute();
-
-        translate();
         editorialFeedActivity =activity;
+        translate();
+
         Log.d("tag", "fetchTranslation: After fetching translation");
 
     }
