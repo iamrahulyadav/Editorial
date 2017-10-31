@@ -448,6 +448,35 @@ public class DBHelperFirebase  {
 
     }
 
+    public void fetchDateSortEditorialList(long fromTimeInMillis , long toTimeInMillis, final OnEditorialListListener onEditorialListListener){
+
+        DatabaseReference myRef = database.getReference("EditorialGeneralInfo");
+        Query myref2 = myRef.orderByChild("timeInMillis").startAt(fromTimeInMillis).endAt(toTimeInMillis);
+
+        myref2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<EditorialGeneralInfo> editorialGeneralInfoArraylist = new ArrayList<EditorialGeneralInfo>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    EditorialGeneralInfo editorialGeneralInfo = ds.getValue(EditorialGeneralInfo.class);
+
+
+                    editorialGeneralInfoArraylist.add(editorialGeneralInfo);
+                }
+
+
+                onEditorialListListener.onEditorialList(editorialGeneralInfoArraylist, true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onEditorialListListener.onEditorialList(null, false);
+
+            }
+        });
+
+    }
 
     public void insertComment(String editorialID, Comment userComment) {
 
