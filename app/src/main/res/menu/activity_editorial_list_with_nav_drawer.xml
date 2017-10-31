@@ -13,6 +13,12 @@
                     android:id="@+id/nav_sort_bycategory"
                     android:title="By Category" />
 
+                <item
+                    android:id="@+id/nav_sort_byDate"
+                    android:title="By Date" />
+
+
+
             </group>
         </menu>
 

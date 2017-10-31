@@ -156,6 +156,9 @@ public class NotesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+
+
     }
 
     private void loadMoreNotes() {

@@ -95,7 +95,12 @@ import utils.LanguageManager;
 import utils.NightModeManager;
 import utils.PushNotificationManager;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EditorialListWithNavActivity extends AppCompatActivity
@@ -136,8 +141,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     //sort variable
     int sortSourceIndex = -1;
     int sortCategoryIndex = -1;
-    long sortDateMillis= System.currentTimeMillis();
-    boolean sortByDate=false;
+    long sortDateMillis = 1507660200000l;
+    boolean sortByDate = false;
 
     private RewardedVideoAd mAd;
     Spinner spinner;
@@ -147,7 +152,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
-        if (NightModeManager.getNightMode(getApplicationContext())){
+        if (NightModeManager.getNightMode(getApplicationContext())) {
             setTheme(R.style.FeedActivityThemeDark);
             isNightMode = true;
         }
@@ -222,7 +227,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             sortSourceIndex = intent.getIntExtra("sourceIndex", -1);
             sortCategoryIndex = intent.getIntExtra("categoryIndex", -1);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -446,7 +451,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         mAdapter.setOnclickListener(new ClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (position >0) {
+                if (position > 0) {
                     onRecyclerViewItemClick(position);
                 }
             }
@@ -512,6 +517,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             if (position == 0) {
                 sortSourceIndex = -1;
                 sortCategoryIndex = -1;
+                sortByDate =false;
+
                 fetchEditorialGeneralList();
             } else {
 
@@ -525,6 +532,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 }
 
                 sortCategoryIndex = -1;
+                sortByDate=false;
+
                 //fetchEditorialSourceSortList();
                 fetchEditorialGeneralList();
             }
@@ -538,7 +547,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onPostResume();
 
     }
-
 
 
     public void initializeSplashScreen() {
@@ -626,6 +634,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         } else if (sortCategoryIndex > -1) {
             dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, sortCategoryIndex, onEditorialListListener);
 
+        } else if (sortByDate) {
+            dbHelperFirebase.fetchDateSortEditorialList(sortDateMillis, (sortDateMillis + 86400000), onEditorialListListener);
         } else {
             dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, onEditorialListListener);
 
@@ -659,6 +669,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 } else if (sortCategoryIndex > -1) {
                     dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), sortCategoryIndex, onEditorialListListener);
 
+                } else if (sortByDate) {
+                    Toast.makeText(this, "No more Editorial available", Toast.LENGTH_SHORT).show();
                 } else {
                     dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), onEditorialListListener);
 
@@ -669,6 +681,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 } else if (sortCategoryIndex > -1) {
                     dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 2)).getEditorialID(), sortCategoryIndex, onEditorialListListener);
+
+                } else if (sortByDate) {
+                    Toast.makeText(this, "No more Editorial available", Toast.LENGTH_SHORT).show();
 
                 } else {
                     dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 2)).getEditorialID(), onEditorialListListener);
@@ -808,7 +823,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             // Ad error callback
                             try {
                                 Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                                        .putCustomAttribute("Placement", "List native").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source","Facebook"));
+                                        .putCustomAttribute("Placement", "List native").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -988,9 +1003,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             } else {
 
-                if (sortCategoryIndex > -1 || sortSourceIndex > -1) {
+                if (sortCategoryIndex > -1 || sortSourceIndex > -1 || sortByDate) {
                     sortCategoryIndex = -1;
                     sortSourceIndex = -1;
+                    sortByDate = false;
 
                     spinner.setSelection(0);
                     fetchEditorialGeneralList();
@@ -1096,6 +1112,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onSortByCategory();
                 break;
 
+            case R.id.nav_sort_byDate:
+                onSortByDateClick();
+                break;
+
             case R.id.nav_notes:
                 onNotesClick();
                 break;
@@ -1110,7 +1130,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             case R.id.nav_pib_app:
                 onPIBAppClick();
+                //onSortByDateClick();
                 break;
+
+
 
         }
 
@@ -1160,6 +1183,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         });
 
+
+
         if (!PushNotificationManager.getPushNotification(this)) {
             Log.d("Test", "onPushNotification: ");
         }
@@ -1172,7 +1197,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         intent.setData(uri);
         startActivity(intent);
 */
-       // Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -1187,6 +1212,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 sortCategoryIndex = which;
                 sortSourceIndex = -1;
+                sortByDate = false;
+
                 fetchEditorialCategorySortList();
                 setToolBarSubTitle(category[which].toString());
 
@@ -1205,6 +1232,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 sortCategoryIndex = -1;
                 sortSourceIndex = -1;
+                sortByDate = false;
                 fetchEditorialGeneralList();
 
             }
@@ -1272,6 +1300,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 sortSourceIndex = -1;
                 sortCategoryIndex = -1;
+                sortByDate = false;
+
                 fetchEditorialGeneralList();
 
 
@@ -1279,6 +1309,38 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
 
         builder.show();
+    }
+
+    private void onSortByDateClick(){
+         Calendar c = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Toast.makeText(EditorialListWithNavActivity.this, "Date selected +"+dayOfMonth+" - "+month, Toast.LENGTH_SHORT).show();
+
+                String str_date=dayOfMonth+"-"+(month+1)+"-"+year;
+                DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                try {
+                    Date date = (Date) formatter.parse(str_date);
+
+                    sortByDate =true;
+                    sortDateMillis=date.getTime();
+
+                    fetchEditorialGeneralList();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setMaxDate( System.currentTimeMillis());
+        datePickerDialog.getDatePicker().setMinDate(1501525800000l);
+        datePickerDialog.show();
+
     }
 
     private void fetchEditorialSourceSortList() {
@@ -1306,7 +1368,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onLanguageClick() {
 
-        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam", "Gujarati","Punjabi"};
+        String languages[] = new String[]{"Hindi", "Telugu", "Marathi", "Tamil", "Bengali", "Kannada", "Urdu", "Malayalam", "Gujarati", "Punjabi"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1335,8 +1397,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     languageCode = "ml";
                 } else if (which == 8) {
                     languageCode = "gu";
-                }else if(which==9){
-                    languageCode="pa";
+                } else if (which == 9) {
+                    languageCode = "pa";
                 } else {
                     languageCode = "hi";
                 }
@@ -1525,14 +1587,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onNightMode() {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         //NightModeManager.setNightMode(EditorialListWithNavActivity.this,true);
-        NightModeManager.setNightMode(this,true);
+        NightModeManager.setNightMode(this, true);
         recreate();
     }
 
     private void onDayMode() {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         //NightModeManager.setNightMode(EditorialListWithNavActivity.this,false);
-        NightModeManager.setNightMode(this,false);
+        NightModeManager.setNightMode(this, false);
         recreate();
     }
 
@@ -1659,7 +1721,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-               // Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(EditorialListWithNavActivity.this, "Ad failed - " + i, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1681,7 +1743,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
     }
 
-    public void initializeInterstitialAds(boolean isFacebook){
+    public void initializeInterstitialAds(boolean isFacebook) {
         facebookInterstitial.setAdListener(new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {
@@ -1724,7 +1786,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         try {
             facebookInterstitial.loadAd();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1737,12 +1799,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (AdsSubscriptionManager.checkShowAds(this)) {
             if (EDITORIALCOUNTADS >= editorialcountAdMax) {
 
-                if (facebookInterstitial != null){
-                    if (facebookInterstitial.isAdLoaded()){
+                if (facebookInterstitial != null) {
+                    if (facebookInterstitial.isAdLoaded()) {
 
                         facebookInterstitial.show();
-                        EDITORIALCOUNTADS=0;
-                    }else if (mInterstitialAd != null){
+                        EDITORIALCOUNTADS = 0;
+                    } else if (mInterstitialAd != null) {
 
                         if (mInterstitialAd.isLoaded()) {
                             mInterstitialAd.show();
@@ -1761,9 +1823,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
     }
-
-
-
 
 
 }

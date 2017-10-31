@@ -466,6 +466,8 @@ public class DBHelperFirebase  {
                 }
 
 
+                Collections.reverse(editorialGeneralInfoArraylist);
+
                 onEditorialListListener.onEditorialList(editorialGeneralInfoArraylist, true);
             }
 
