@@ -26,6 +26,10 @@
         android:title="Read Editorial (Voice)"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_textsize"
+        android:title="Text Size"
+        app:showAsAction="never" />
+
 
 
 

@@ -438,6 +438,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             definitionView.setMovementMethod(LinkMovementMethod.getInstance());
             definitionView.setText(definition, TextView.BufferType.SPANNABLE);
 
+            setTextSize(definitionView);
             Spannable spans = (Spannable) definitionView.getText();
             BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
             iterator.setText(definition);
@@ -791,9 +792,51 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onOpenNotesActivity();
                 return true;
 
+            case R.id.action_textsize:
+                onTextSizeClick();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void onTextSizeClick() {
+        final CharSequence sources[] = new CharSequence[]{"Small","Medium","Large"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose Text Size");
+        builder.setItems(sources, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+
+
+                int size = 18;
+
+                if (which==0){
+                    size =16;
+                }else if (which == 1){
+                    size=18;
+                }else if(which ==2){
+                    size=20;
+                }
+
+                setTextSize(definitionView , size);
+
+                SettingManager.setTextSize(EditorialFeedActivity.this,size);
+
+                try {
+                    //Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", sources[which].toString()));
+                } catch (Exception e) {
+
+                }
+
+            }
+        });
+
+        builder.show();
     }
 
     private void onTtsReaderClick(MenuItem item) {
@@ -1769,4 +1812,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         }
     }
+
+    public void setTextSize(TextView tv ){
+
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, SettingManager.getTextSize(this));
+    }
+
+    public void setTextSize(TextView tv, int size ){
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+    }
+
 }
