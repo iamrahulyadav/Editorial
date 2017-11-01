@@ -674,6 +674,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         } catch (Exception e) {
 
+
         }
     }
 
