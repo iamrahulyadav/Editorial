@@ -22,37 +22,37 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:orientation="horizontal"
-           android:layout_height="wrap_content">
-
-
-        <TextView
-            android:id="@+id/editorial_list_layout_source"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="source"
-            android:textAlignment="center"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp"
-            android:typeface="monospace"
-            android:textAllCaps="true"
-            />
+            android:orientation="horizontal">
 
-           <ImageView
-               android:layout_width="20dp"
-               android:layout_height="18dp"
-               android:layout_marginRight="8dp"
-               android:src="@drawable/star_icon"
-               android:visibility="gone"
-               android:id="@+id/editorial_list_layout_mustRead_imageView"
 
-               />
+            <TextView
+                android:id="@+id/editorial_list_layout_source"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:text="source"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:typeface="monospace" />
 
-       </LinearLayout>
+            <ImageView
+                android:id="@+id/editorial_list_layout_mustRead_imageView"
+                android:layout_width="20dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/star_icon"
+                android:visibility="gone"
+
+                />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/editorial_list_layout_heading"
@@ -62,12 +62,12 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="0dp"
+            android:fontFamily="serif"
             android:text="This is heading text for demo purpose and testing layout"
             android:textAlignment="center"
             android:textColor="?attr/primaryTextColor"
             android:textSize="20sp"
-            android:textStyle="bold"
-             />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/editorial_list_layout_subheading"
@@ -76,12 +76,11 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="8dp"
+            android:fontFamily="serif"
             android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
             android:textColor="?attr/secondaryTextColor"
             android:textSize="12sp"
-            android:textStyle="italic"
-            android:typeface="sans"
-            />
+            android:textStyle="italic" />
 
 
         <ImageView
@@ -104,23 +103,21 @@
             android:orientation="horizontal">
 
 
-
             <TextView
                 android:id="@+id/editorial_list_layout_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text=""
                 android:textAlignment="center"
                 android:textColor="?attr/secondaryTextColor"
-                android:textSize="12sp"
-                android:layout_gravity="center_vertical"
-                />
+                android:textSize="12sp" />
+
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginLeft="4dp"
-                android:src="@drawable/ic_action_like"
-                />
+                android:src="@drawable/ic_action_like" />
 
             <TextView
                 android:id="@+id/editorial_list_layout_date"

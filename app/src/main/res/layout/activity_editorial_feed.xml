@@ -49,20 +49,6 @@
                 android:orientation="vertical">
 
                 <!--heading layout-->
-
-
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/editorialfeed_activity_adView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:visibility="gone"
-                    app:adSize="LARGE_BANNER"
-                    app:adUnitId="@string/banner_ad_unit_id">
-
-                </com.google.android.gms.ads.AdView>
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,34 +137,31 @@
                 </LinearLayout>
 
 
-                <!--admob native ad-->
-
-
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    app:cardCornerRadius="4dp"
-                    android:layout_height="wrap_content">
+                    app:cardCornerRadius="4dp">
 
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:orientation="vertical"
                         android:id="@+id/editorialFeed_top_adContainer"
-                        android:layout_height="wrap_content">
-
-
-                    <com.google.android.gms.ads.NativeExpressAdView
-                        android:id="@+id/editorialFeed_top_nativeAds"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:descendantFocusability="blocksDescendants"
-                        android:visibility="gone"
-                        app:adSize="320x132"
-                        app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+                        android:orientation="vertical">
 
-                    </com.google.android.gms.ads.NativeExpressAdView>
+
+                        <com.google.android.gms.ads.NativeExpressAdView
+                            android:id="@+id/editorialFeed_top_nativeAds"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:descendantFocusability="blocksDescendants"
+                            android:visibility="gone"
+                            app:adSize="320x132"
+                            app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+
+                        </com.google.android.gms.ads.NativeExpressAdView>
 
                     </LinearLayout>
 
@@ -217,7 +200,7 @@
                     android:textColor="?attr/primaryTextColor"
                     android:textColorLink="@color/colorPrimary"
                     android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:textStyle="italic" />
 
 
                 <!--container for native ads-->
@@ -269,6 +252,7 @@
 
                 </ImageView>
 
+                <!--like, share  and comment-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -348,8 +332,6 @@
                 </LinearLayout>
 
 
-
-
                 <com.google.android.gms.ads.NativeExpressAdView
                     android:id="@+id/editorialfeed_native_adView"
                     android:layout_width="wrap_content"
@@ -363,7 +345,7 @@
                 </com.google.android.gms.ads.NativeExpressAdView>
 
 
-                <!--PIB INSTSTALL BOX-->
+                <!--APTITUDE INSTSTALL BOX-->
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -383,31 +365,30 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_margin="4dp"
+                            android:text="Introducing Aptitude app"
                             android:textAlignment="center"
-                            android:textSize="16sp"
                             android:textColor="?attr/primaryTextColor"
-                            android:text="New PIB News App" />
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
-                                android:src="@drawable/pib_logo"
-                                android:layout_marginTop="8dp"
                                 android:layout_marginLeft="8dp"
-                                android:onClick="onInstallPIBClick"
-                                />
+                                android:layout_marginTop="8dp"
+                                android:onClick="onInstallAptitudeClick"
+                                android:src="@mipmap/ic_aptitude_icon" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="Read all current affairs, General knowledge, Government of India Updates news from PIB News app" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:text="Aptitude app for preparation of Quantitative Aptitude for CAT, CSAT and other Civil Services exam." />
 
                         </LinearLayout>
 
@@ -416,7 +397,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
                             android:background="?attr/colorAccent"
-                            android:onClick="onInstallPIBClick"
+                            android:onClick="onInstallAptitudeClick"
                             android:text="Install Now"
                             android:textColor="?attr/primaryTextAccentColor"
                             android:visibility="visible" />
@@ -427,7 +408,6 @@
                 </android.support.v7.widget.CardView>
 
                 <!--Comment System layout-->
-
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
@@ -597,7 +577,67 @@
 
                 </android.support.v7.widget.CardView>
 
+                <!--PIB INSTSTALL BOX-->
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:visibility="visible"
+                    app:cardBackgroundColor="?attr/backgroundCardColor"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="New PIB News App"
+                            android:textAlignment="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="8dp"
+                                android:onClick="onInstallPIBClick"
+                                android:src="@drawable/pib_logo" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:text="Read all current affairs, General knowledge, Government of India Updates news from PIB News app" />
+
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="?attr/colorPrimary"
+                            android:onClick="onInstallPIBClick"
+                            android:text="Install Now"
+                            android:textColor="?attr/primaryTextAccentColor"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
@@ -616,35 +656,30 @@
         android:clipToPadding="true"
         android:orientation="vertical"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="44dp"
+        app:behavior_peekHeight="40dp"
         app:elevation="10dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
 
-        <LinearLayout
-            android:id="@+id/editorial_bottomsheet_synonyms_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="38dp"
                 android:layout_margin="2dp"
                 android:orientation="horizontal">
 
                 <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:id="@+id/editorial_bottomsheet_audio_button"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginLeft="15dp"
                     android:background="@drawable/ic_action_audio"
-                    android:id="@+id/editorial_bottomsheet_audio_button"
                     android:onClick="readFullArticle" />
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="3dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="0dp"
                     android:layout_weight="1"
                     android:onClick="onDictionaryClick"
                     android:orientation="vertical">
@@ -657,6 +692,8 @@
                         android:text="Tap on Word for meaning"
                         android:textAlignment="center"
                         android:textColor="?attr/primaryTextAccentColor"
+                        android:fontFamily="serif"
+                        android:textStyle="italic"
                         android:textSize="16sp" />
 
 
@@ -722,9 +759,14 @@
                 android:textStyle="bold"
                 android:visibility="visible" />
 
+       <!-- <LinearLayout
+            android:id="@+id/editorial_bottomsheet_synonyms_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         </LinearLayout>
-
+-->
 
     </LinearLayout>
 
@@ -739,4 +781,5 @@
         app:fabSize="mini"
         app:layout_anchor="@id/editorial_activity_bottom_sheet"
         app:layout_anchorGravity="end|top" />
+
 </android.support.design.widget.CoordinatorLayout>

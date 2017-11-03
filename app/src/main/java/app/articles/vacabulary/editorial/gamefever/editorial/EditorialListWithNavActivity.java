@@ -517,7 +517,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             if (position == 0) {
                 sortSourceIndex = -1;
                 sortCategoryIndex = -1;
-                sortByDate =false;
+                sortByDate = false;
 
                 fetchEditorialGeneralList();
             } else {
@@ -532,7 +532,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 }
 
                 sortCategoryIndex = -1;
-                sortByDate=false;
+                sortByDate = false;
 
                 //fetchEditorialSourceSortList();
                 fetchEditorialGeneralList();
@@ -1133,6 +1133,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 //onSortByDateClick();
                 break;
 
+            case R.id.nav_aptitude_app:
+                onInstallAptitudeClick();
+                break;
 
 
         }
@@ -1142,6 +1145,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void onInstallAptitudeClick() {
+        try {
+            String link = "https://play.google.com/store/apps/details?id=app.aptitude.quiz.craftystudio.aptitudequiz";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+
+        }
+    }
+
 
     private void onPIBAppClick() {
         try {
@@ -1182,7 +1195,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
             }
         });
-
 
 
         if (!PushNotificationManager.getPushNotification(this)) {
@@ -1311,33 +1323,33 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         builder.show();
     }
 
-    private void onSortByDateClick(){
-         Calendar c = Calendar.getInstance();
+    private void onSortByDateClick() {
+        Calendar c = Calendar.getInstance();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Toast.makeText(EditorialListWithNavActivity.this, "Date selected +"+dayOfMonth+" - "+month, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EditorialListWithNavActivity.this, "Date selected +" + dayOfMonth + " - " + month, Toast.LENGTH_SHORT).show();
 
-                String str_date=dayOfMonth+"-"+(month+1)+"-"+year;
+                String str_date = dayOfMonth + "-" + (month + 1) + "-" + year;
                 DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 try {
                     Date date = (Date) formatter.parse(str_date);
 
-                    sortByDate =true;
-                    sortDateMillis=date.getTime();
+                    sortByDate = true;
+                    sortDateMillis = date.getTime();
 
                     fetchEditorialGeneralList();
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
-        datePickerDialog.getDatePicker().setMaxDate( System.currentTimeMillis());
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         datePickerDialog.getDatePicker().setMinDate(1501525800000l);
         datePickerDialog.show();
 

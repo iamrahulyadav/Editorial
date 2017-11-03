@@ -97,11 +97,12 @@
         android:titleCondensed="true">
         <menu>
 
-            <!--  <item
-                  android:id="@+id/nav_tutorial"
-                  android:icon="@drawable/ic_action_information"
-                  android:title="How to Use" />
-  -->
+
+
+            <item
+                android:id="@+id/nav_aptitude_app"
+                android:title="Introducing Aptitude preparation app" />
+
 
             <item
                 android:id="@+id/nav_pib_app"

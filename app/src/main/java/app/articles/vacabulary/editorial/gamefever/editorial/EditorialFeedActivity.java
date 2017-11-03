@@ -1087,7 +1087,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         return true;
     }
 
-    public void initializeAds() {
+    /*public void initializeAds() {
         AdView mAdView = (AdView) findViewById(R.id.editorialfeed_activity_adView);
 
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -1109,7 +1109,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     }
-
+*/
     public void initializeNativeAds() {
         NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialfeed_native_adView);
         adView.setVisibility(View.VISIBLE);
@@ -1808,6 +1808,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void onInstallPIBClick(View view) {
         try {
             String link = "https://play.google.com/store/apps/details?id=app.crafty.studio.current.affairs.pib";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void onInstallAptitudeClick(View view) {
+        try {
+            String link = "https://play.google.com/store/apps/details?id=app.aptitude.quiz.craftystudio.aptitudequiz";
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } catch (Exception e) {
 
