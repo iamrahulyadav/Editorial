@@ -214,15 +214,17 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
 
                 myViewHolder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
                 myViewHolder.date.setText(EditorialGeneralInfo.resolveDate(EditorialGeneralInfo.getTimeInMillis()));
-                myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
+
                 myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
                 myViewHolder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
                 myViewHolder.likeText.setText(EditorialGeneralInfo.getEditorialLike() + " ");
 
                 if (EditorialGeneralInfo.isMustRead()){
                     myViewHolder.mustReadImageView.setVisibility(View.VISIBLE);
+                    myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource() +" [IMP]");
                 }else{
                     myViewHolder.mustReadImageView.setVisibility(View.GONE);
+                    myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
                 }
         }
 

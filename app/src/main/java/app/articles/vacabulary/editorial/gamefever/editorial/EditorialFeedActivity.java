@@ -302,16 +302,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (editorialGeneralInfo == null) {
             editorialGeneralInfo = new EditorialGeneralInfo();
-
-            editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
-            editorialGeneralInfo.setEditorialDate(i.getExtras().getString("editorialDate"));
-            editorialGeneralInfo.setEditorialHeading(i.getExtras().getString("editorialHeading"));
-            editorialGeneralInfo.setEditorialSource(i.getExtras().getString("editorialSource"));
-            editorialGeneralInfo.setEditorialSubHeading(i.getExtras().getString("editorialSubheading"));
-            editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
+            try {
+                editorialGeneralInfo.setEditorialID(i.getExtras().getString("editorialID"));
+                editorialGeneralInfo.setEditorialDate(i.getExtras().getString("editorialDate"));
+                editorialGeneralInfo.setEditorialHeading(i.getExtras().getString("editorialHeading"));
+                editorialGeneralInfo.setEditorialSource(i.getExtras().getString("editorialSource"));
+                editorialGeneralInfo.setEditorialSubHeading(i.getExtras().getString("editorialSubheading"));
+                editorialGeneralInfo.setEditorialTag(i.getExtras().getString("editorialTag"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                finish();
+            }
         }
-
-
 
 
         boolean isBookMarked = i.getBooleanExtra("isBookMarked", false);
@@ -803,7 +805,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onTextSizeClick() {
-        final CharSequence sources[] = new CharSequence[]{"Small","Medium","Large"};
+        final CharSequence sources[] = new CharSequence[]{"Small", "Medium", "Large"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose Text Size");
@@ -816,17 +818,17 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 int size = 18;
 
-                if (which==0){
-                    size =16;
-                }else if (which == 1){
-                    size=18;
-                }else if(which ==2){
-                    size=20;
+                if (which == 0) {
+                    size = 16;
+                } else if (which == 1) {
+                    size = 18;
+                } else if (which == 2) {
+                    size = 20;
                 }
 
-                setTextSize(definitionView , size);
+                setTextSize(definitionView, size);
 
-                SettingManager.setTextSize(EditorialFeedActivity.this,size);
+                SettingManager.setTextSize(EditorialFeedActivity.this, size);
 
                 try {
                     //Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", sources[which].toString()));
@@ -1396,7 +1398,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         Button button = (Button) findViewById(R.id.editorial_bottomsheet_audio_button);
         if (muteVoice) {
             button.setBackgroundResource(R.drawable.ic_action_audio_off);
-        }else{
+        } else {
             button.setBackgroundResource(R.drawable.ic_action_audio);
         }
 
@@ -1823,12 +1825,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         }
     }
 
-    public void setTextSize(TextView tv ){
+    public void setTextSize(TextView tv) {
 
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, SettingManager.getTextSize(this));
     }
 
-    public void setTextSize(TextView tv, int size ){
+    public void setTextSize(TextView tv, int size) {
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
     }
 
