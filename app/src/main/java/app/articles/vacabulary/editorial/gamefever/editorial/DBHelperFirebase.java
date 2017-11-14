@@ -540,6 +540,7 @@ public class DBHelperFirebase  {
     }
 
 
+
     public void fetchShortNotesList(String userUID, int limitTo , final OnShortNoteListListener onShortNoteListListener){
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID);
