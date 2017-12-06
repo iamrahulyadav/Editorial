@@ -8,643 +8,634 @@
     tools:context="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity">
 
 
-    <LinearLayout
+    <!--Tollbar layout-->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/editorialfeed_activity_appbarlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="44dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
 
-        <!--Tollbar layout-->
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/editorialfeed_activity_appbarlayout"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/editorialfeed_activity_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/editorialFeed_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:orientation="vertical">
 
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/editorialfeed_activity_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-
-        </android.support.design.widget.AppBarLayout>
-
-
-        <!--removed translation card from here in Bottomsheetimprovment branch -->
-
-        <ScrollView
-            android:id="@+id/editorialFeed_scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            >
-
+            <!--heading layout-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <!--heading layout-->
+                <TextView
+                    android:id="@+id/editorial_heading_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:fontFamily="serif"
+                    android:text="Heading text"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical"
-                    android:visibility="visible">
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
 
                     <TextView
-                        android:id="@+id/editorial_heading_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:fontFamily="serif"
-                        android:text="Heading text"
-                        android:textAlignment="center"
-                        android:textAllCaps="true"
-                        android:textColor="?attr/primaryTextColor"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:id="@+id/editorial_source_textview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:onClick="onSourceTextClick"
-                            android:text="Source Name"
-                            android:textColor="?attr/primaryTextColor"
-                            android:textSize="14sp"
-                            android:textStyle="normal" />
-
-
-                        <TextView
-                            android:id="@+id/editorial_tag_textview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:layout_weight="1"
-                            android:onClick="onCategoryTextClick"
-                            android:text="Tag"
-                            android:textAlignment="textEnd"
-                            android:textAllCaps="true"
-                            android:textColor="?attr/colorPrimary"
-                            android:textSize="12sp"
-
-                            />
-
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/editorial_date_textview"
+                        android:id="@+id/editorial_source_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginTop="4dp"
                         android:layout_weight="1"
-                        android:text="Date"
-                        android:textAlignment="center"
-                        android:textColor="?attr/secondaryTextColor"
+                        android:onClick="onSourceTextClick"
+                        android:text="Source Name"
+                        android:textColor="?attr/primaryTextColor"
                         android:textSize="14sp"
                         android:textStyle="normal" />
 
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?attr/secondaryTextColor">
+                    <TextView
+                        android:id="@+id/editorial_tag_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:onClick="onCategoryTextClick"
+                        android:text="Tag"
+                        android:textAlignment="textEnd"
+                        android:textAllCaps="true"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
 
-                    </ImageView>
+                        />
+
 
                 </LinearLayout>
 
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="4dp">
-
-
-                    <LinearLayout
-                        android:id="@+id/editorialFeed_top_adContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-
-                        <com.google.android.gms.ads.NativeExpressAdView
-                            android:id="@+id/editorialFeed_top_nativeAds"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:descendantFocusability="blocksDescendants"
-                            android:visibility="gone"
-                            app:adSize="320x132"
-                            app:adUnitId="ca-app-pub-8455191357100024/9929021950">
-
-                        </com.google.android.gms.ads.NativeExpressAdView>
-
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-
                 <TextView
-                    android:id="@+id/editorial_text_textview"
-                    android:layout_width="match_parent"
+                    android:id="@+id/editorial_date_textview"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:layout_marginTop="4dp"
-                    android:autoLink="all"
-                    android:fontFamily="serif"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text=""
-                    android:textColor="?attr/primaryTextColor"
-                    android:textColorLink="@color/colorPrimary"
-                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:text="Date"
+                    android:textAlignment="center"
+                    android:textColor="?attr/secondaryTextColor"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
-                <TextView
-                    android:id="@+id/editorialfeed_notesText_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="4dp"
-                    android:autoLink="all"
-                    android:fontFamily="serif"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text=""
-                    android:textColor="?attr/primaryTextColor"
-                    android:textColorLink="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="italic" />
-
-
-                <!--container for native ads-->
-                <android.support.v7.widget.CardView
-                    android:id="@+id/editorialfeed_facebook_cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="4dp">
-
-                </android.support.v7.widget.CardView>
-
-                <TextView
-                    android:id="@+id/editorialfeed_sourceLink_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="0dp"
-                    android:autoLink="all"
-                    android:textColor="?attr/secondaryTextColor"
-                    android:textColorLink="?attr/colorAccent" />
-
-
-                <ProgressBar
-                    android:id="@+id/editorialfeed_activity_progressbar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="25dp"
-                    android:background="@color/colorPrimary"
-                    android:visibility="visible" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?attr/secondaryTextColor"
-
-                    >
-
+                    android:background="?attr/secondaryTextColor">
 
                 </ImageView>
 
-                <!--like, share  and comment-->
+            </LinearLayout>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="4dp">
+
+
                 <LinearLayout
+                    android:id="@+id/editorialFeed_top_adContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
 
-                    <LinearLayout
-                        android:id="@+id/editorialfeed_like_linearLayout"
+                    <com.google.android.gms.ads.NativeExpressAdView
+                        android:id="@+id/editorialFeed_top_nativeAds"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:descendantFocusability="blocksDescendants"
+                        android:visibility="gone"
+                        app:adSize="320x132"
+                        app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+
+                    </com.google.android.gms.ads.NativeExpressAdView>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/editorial_text_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
+                android:autoLink="all"
+                android:fontFamily="serif"
+                android:lineSpacingMultiplier="1.2"
+                android:text=""
+                android:textColor="?attr/primaryTextColor"
+                android:textColorLink="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/editorialfeed_notesText_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
+                android:autoLink="all"
+                android:fontFamily="serif"
+                android:lineSpacingMultiplier="1.2"
+                android:text=""
+                android:textColor="?attr/primaryTextColor"
+                android:textColorLink="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="italic" />
+
+
+            <!--container for native ads-->
+            <android.support.v7.widget.CardView
+                android:id="@+id/editorialfeed_facebook_cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:visibility="gone"
+                app:cardCornerRadius="4dp">
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/editorialfeed_sourceLink_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="0dp"
+                android:autoLink="all"
+                android:textColor="?attr/secondaryTextColor"
+                android:textColorLink="?attr/colorAccent" />
+
+
+            <ProgressBar
+                android:id="@+id/editorialfeed_activity_progressbar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:background="@color/colorPrimary"
+                android:visibility="visible" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/secondaryTextColor"
+
+                >
+
+
+            </ImageView>
+
+            <!--like, share  and comment-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:id="@+id/editorialfeed_like_linearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/mybutton"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/mybutton"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
+                        android:src="@drawable/ic_action_like" />
 
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_action_like" />
-
-                        <TextView
-                            android:id="@+id/editorialfeed_like_textView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:text="Like"
-                            android:textColor="?attr/primaryTextColor"
-                            android:textSize="14dp" />
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/editorialfeed_comment_linearLayout"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/editorialfeed_like_textView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="4dp"
                         android:layout_weight="1"
-                        android:background="@drawable/mybutton"
-                        android:orientation="horizontal"
-                        android:padding="14dp">
-
-
-                        <TextView
-                            android:id="@+id/editorialfeed_comment_textView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:text="Discussion"
-                            android:textColor="?attr/primaryTextColor"
-                            android:textSize="14dp" />
-
-
-                    </LinearLayout>
-
-
-                    <Button
-                        android:id="@+id/editorialFeed_share_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/mybutton"
-                        android:text="share"
-                        android:textColor="?attr/primaryTextColor" />
+                        android:text="Like"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="14dp" />
 
 
                 </LinearLayout>
 
 
-                <com.google.android.gms.ads.NativeExpressAdView
-                    android:id="@+id/editorialfeed_native_adView"
+                <LinearLayout
+                    android:id="@+id/editorialfeed_comment_linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:descendantFocusability="blocksDescendants"
-                    android:visibility="gone"
-                    app:adSize="320x300"
-                    app:adUnitId="ca-app-pub-8455191357100024/9880085376">
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/mybutton"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
 
-                </com.google.android.gms.ads.NativeExpressAdView>
+
+                    <TextView
+                        android:id="@+id/editorialfeed_comment_textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="Discussion"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="14dp" />
 
 
-                <!--APTITUDE INSTSTALL BOX-->
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/editorialFeed_share_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:visibility="visible"
-                    app:cardBackgroundColor="?attr/backgroundCardColor"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="5dp">
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/mybutton"
+                    android:text="share"
+                    android:textColor="?attr/primaryTextColor" />
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:text="Introducing Aptitude app"
-                            android:textAlignment="center"
-                            android:textColor="?attr/primaryTextColor"
-                            android:textSize="16sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="56dp"
-                                android:layout_height="56dp"
-                                android:layout_marginLeft="8dp"
-                                android:layout_marginTop="8dp"
-                                android:onClick="onInstallAptitudeClick"
-                                android:src="@mipmap/ic_aptitude_icon" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="8dp"
-                                android:text="Aptitude app for preparation of Quantitative Aptitude for CAT, CSAT and other Civil Services exam." />
-
-                        </LinearLayout>
-
-                        <Button
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:background="?attr/colorAccent"
-                            android:onClick="onInstallAptitudeClick"
-                            android:text="Install Now"
-                            android:textColor="?attr/primaryTextAccentColor"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
-
-
-                </android.support.v7.widget.CardView>
-
-                <!--Comment System layout-->
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_marginBottom="40dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    app:cardBackgroundColor="?attr/backgroundCardColor"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="5dp">
-
-
-                    <LinearLayout
-                        android:id="@+id/editorialFeed_commentsystem_linearLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="12dp"
-                            android:text="Discussion"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="20sp" />
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            app:cardBackgroundColor="@color/colorPrimary"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="2dp">
-
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="12dp"
-                            android:layout_marginRight="12dp"
-                            android:layout_marginTop="15dp"
-                            android:onClick="insertCommentBtnClick"
-                            app:cardCornerRadius="4dp"
-                            app:cardElevation="4dp"
-
-                            >
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_margin="2dp"
-                                android:orientation="vertical">
-
-
-                                <EditText
-                                    android:id="@+id/editorialFeed_commenttext_edittext"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="2dp"
-                                    android:hint="Whats your view ?"
-                                    android:inputType="textMultiLine"
-                                    android:maxLines="5"
-                                    android:minLines="2"
-                                    android:textColor="@color/heading_color"
-                                    android:textColorHint="@color/heading_color"
-                                    android:textSize="15sp" />
-
-                                <EditText
-                                    android:id="@+id/editorialFeed_commentemail_edittext"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="2dp"
-                                    android:hint="Your Email"
-                                    android:inputType="textEmailAddress"
-                                    android:requiresFadingEdge="vertical"
-                                    android:textColor="@color/heading_color"
-                                    android:textColorHint="@color/heading_color"
-                                    android:textSize="15sp" />
-
-                                <android.support.v7.widget.CardView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:layout_marginBottom="5dp"
-                                    app:cardBackgroundColor="@color/light_black"
-                                    app:cardCornerRadius="0dp"
-                                    app:cardElevation="0dp"></android.support.v7.widget.CardView>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_margin="4dp"
-                                    android:text="Post View"
-                                    android:textAlignment="center"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/heading_color"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                            </LinearLayout>
-
-                        </android.support.v7.widget.CardView>
-
-
-                        <ListView
-                            android:id="@+id/editorialFeed_comments_listView"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:isScrollContainer="false"
-                            android:nestedScrollingEnabled="true">
-
-                        </ListView>
-
-
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-                <!-- subscription box-->
-                <android.support.v7.widget.CardView
-                    android:id="@+id/editorialfeed_removeAd_cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:visibility="gone"
-                    app:cardBackgroundColor="?attr/backgroundCardColor"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="5dp">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Want to remove ads from app for free ?"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad and click on it \n4. Yipee! you are now a pro member for 2 day. Enjoy Daily Editorial without ads" />
-
-                        <Button
-                            android:id="@+id/editorialfeed_removeAd_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:background="?attr/colorAccent"
-                            android:onClick="onRemoveAdClick"
-                            android:text="Remove Ads from app for Free !"
-                            android:textColor="?attr/primaryTextAccentColor"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
-
-
-                </android.support.v7.widget.CardView>
-
-                <!--PIB INSTSTALL BOX-->
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:visibility="visible"
-                    app:cardBackgroundColor="?attr/backgroundCardColor"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="5dp">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="New PIB News App"
-                            android:textAlignment="center"
-                            android:textColor="?attr/primaryTextColor"
-                            android:textSize="16sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="56dp"
-                                android:layout_height="56dp"
-                                android:layout_marginLeft="8dp"
-                                android:layout_marginTop="8dp"
-                                android:onClick="onInstallPIBClick"
-                                android:src="@drawable/pib_logo" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="8dp"
-                                android:text="Read all current affairs, General knowledge, Government of India Updates news from PIB News app" />
-
-                        </LinearLayout>
-
-                        <Button
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:background="?attr/colorPrimary"
-                            android:onClick="onInstallPIBClick"
-                            android:text="Install Now"
-                            android:textColor="?attr/primaryTextAccentColor"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
-
-
-                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
-        </ScrollView>
+
+            <com.google.android.gms.ads.NativeExpressAdView
+                android:id="@+id/editorialfeed_native_adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:descendantFocusability="blocksDescendants"
+                android:visibility="gone"
+                app:adSize="320x300"
+                app:adUnitId="ca-app-pub-8455191357100024/9880085376">
+
+            </com.google.android.gms.ads.NativeExpressAdView>
 
 
-    </LinearLayout>
+            <!--APTITUDE INSTSTALL BOX-->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:visibility="visible"
+                app:cardBackgroundColor="?attr/backgroundCardColor"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="5dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="Introducing Aptitude app"
+                        android:textAlignment="center"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:onClick="onInstallAptitudeClick"
+                            android:src="@mipmap/ic_aptitude_icon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="Aptitude app for preparation of Quantitative Aptitude for CAT, CSAT and other Civil Services exam." />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:background="?attr/colorAccent"
+                        android:onClick="onInstallAptitudeClick"
+                        android:text="Install Now"
+                        android:textColor="?attr/primaryTextAccentColor"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <!--Comment System layout-->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="40dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                app:cardBackgroundColor="?attr/backgroundCardColor"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="5dp">
+
+
+                <LinearLayout
+                    android:id="@+id/editorialFeed_commentsystem_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:text="Discussion"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:cardBackgroundColor="@color/colorPrimary"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="2dp">
+
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="15dp"
+                        android:onClick="insertCommentBtnClick"
+                        app:cardCornerRadius="4dp"
+                        app:cardElevation="4dp"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="2dp"
+                            android:orientation="vertical">
+
+
+                            <EditText
+                                android:id="@+id/editorialFeed_commenttext_edittext"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:hint="Whats your view ?"
+                                android:inputType="textMultiLine"
+                                android:maxLines="5"
+                                android:minLines="2"
+                                android:textColor="@color/heading_color"
+                                android:textColorHint="@color/heading_color"
+                                android:textSize="15sp" />
+
+                            <EditText
+                                android:id="@+id/editorialFeed_commentemail_edittext"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:hint="Your Email"
+                                android:inputType="textEmailAddress"
+                                android:requiresFadingEdge="vertical"
+                                android:textColor="@color/heading_color"
+                                android:textColorHint="@color/heading_color"
+                                android:textSize="15sp" />
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="5dp"
+                                app:cardBackgroundColor="@color/light_black"
+                                app:cardCornerRadius="0dp"
+                                app:cardElevation="0dp"></android.support.v7.widget.CardView>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="4dp"
+                                android:text="Post View"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:textColor="@color/heading_color"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+
+                    <ListView
+                        android:id="@+id/editorialFeed_comments_listView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:isScrollContainer="false"
+                        android:nestedScrollingEnabled="true">
+
+                    </ListView>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- subscription box-->
+            <android.support.v7.widget.CardView
+                android:id="@+id/editorialfeed_removeAd_cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="?attr/backgroundCardColor"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="5dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Want to remove ads from app for free ?"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="1. Click on the button bellow \n2. A full screen Video ad will be displayed \n3. Watch the full video ad and click on it \n4. Yipee! you are now a pro member for 2 day. Enjoy Daily Editorial without ads" />
+
+                    <Button
+                        android:id="@+id/editorialfeed_removeAd_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:background="?attr/colorAccent"
+                        android:onClick="onRemoveAdClick"
+                        android:text="Remove Ads from app for Free !"
+                        android:textColor="?attr/primaryTextAccentColor"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <!--PIB INSTSTALL BOX-->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:visibility="visible"
+                app:cardBackgroundColor="?attr/backgroundCardColor"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="5dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="New PIB News App"
+                        android:textAlignment="center"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:onClick="onInstallPIBClick"
+                            android:src="@drawable/pib_logo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="Read all current affairs, General knowledge, Government of India Updates news from PIB News app" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:background="?attr/colorPrimary"
+                        android:onClick="onInstallPIBClick"
+                        android:text="Install Now"
+                        android:textColor="?attr/primaryTextAccentColor"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
 
 
     <!--layout of bottom sheet for showing word meaning and translation-->
@@ -662,111 +653,105 @@
 
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_margin="2dp"
-                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/editorial_bottomsheet_audio_button"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginLeft="15dp"
-                    android:background="@drawable/ic_action_audio"
-                    android:onClick="readFullArticle" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_margin="0dp"
-                    android:layout_weight="1"
-                    android:onClick="onDictionaryClick"
-                    android:orientation="vertical">
-
-
-                    <TextView
-                        android:id="@+id/editorial_feed_cardview_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tap on Word for meaning"
-                        android:textAlignment="center"
-                        android:textColor="?attr/primaryTextAccentColor"
-                        android:fontFamily="serif"
-                        android:textStyle="italic"
-                        android:textSize="16sp" />
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Swipe up for full meaning "
-                        android:textAlignment="center"
-                        android:textColor="?attr/secondaryTextAccentColor"
-                        android:textSize="12sp" />
-
-
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <WebView
-                    android:id="@+id/editorial_bottomSheet_webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </WebView>
-
-
-            </android.support.v4.widget.NestedScrollView>
-
+            <Button
+                android:id="@+id/editorial_bottomsheet_audio_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/ic_action_audio"
+                android:onClick="readFullArticle" />
 
             <LinearLayout
-                android:id="@+id/editorialFeed_bottomSheet_adcontainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:onClick="onDictionaryClick"
                 android:orientation="vertical">
 
 
-                <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/editorialFeed_bottomSheet_bannerAdview"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/editorial_feed_cardview_textview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:visibility="gone"
-                    ads:adSize="SMART_BANNER"
-                    ads:adUnitId="ca-app-pub-8455191357100024/2064940399">
+                    android:fontFamily="serif"
+                    android:text="Tap on Word for meaning"
+                    android:textAlignment="center"
+                    android:textColor="?attr/primaryTextAccentColor"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
 
-                </com.google.android.gms.ads.AdView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Swipe up for full meaning "
+                    android:textAlignment="center"
+                    android:textColor="?attr/secondaryTextAccentColor"
+                    android:textSize="12sp" />
+
 
             </LinearLayout>
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/editorial_bottomSheet_add_button"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="?attr/colorPrimary"
-                android:onClick="onAddToVocabularyClick"
-                android:text="ADD To vocabulary"
-                android:textColor="?attr/primaryTextAccentColor"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:visibility="visible" />
 
-       <!-- <LinearLayout
-            android:id="@+id/editorial_bottomsheet_synonyms_container"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <WebView
+                android:id="@+id/editorial_bottomSheet_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </WebView>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/editorialFeed_bottomSheet_adcontainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/editorialFeed_bottomSheet_bannerAdview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="ca-app-pub-8455191357100024/2064940399">
+
+            </com.google.android.gms.ads.AdView>
+
         </LinearLayout>
--->
+
+        <Button
+            android:id="@+id/editorial_bottomSheet_add_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="?attr/colorPrimary"
+            android:onClick="onAddToVocabularyClick"
+            android:text="ADD To vocabulary"
+            android:textColor="?attr/primaryTextAccentColor"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+
 
     </LinearLayout>
 

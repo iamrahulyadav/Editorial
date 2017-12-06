@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -423,7 +425,10 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         try {
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentId(editorialGeneralInfo.getEditorialID())
+                    .putContentType(editorialGeneralInfo.getEditorialSource())
+                    .putCustomAttribute("Category",editorialGeneralInfo.getEditorialCategory())
                     .putContentName(editorialGeneralInfo.getEditorialHeading()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -441,7 +446,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             definitionView.setText(definition, TextView.BufferType.SPANNABLE);
 
             setTextSize(definitionView);
-            Spannable spans = (Spannable) definitionView.getText();
+            SpannableString spans = (SpannableString) definitionView.getText();
             BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
             iterator.setText(definition);
             int start = iterator.first();
@@ -477,6 +482,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
                 onWordTap(mWord);
+
 
             }
 
@@ -898,7 +904,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     }
 
                     if (isSuccessful) {
-                        Toast.makeText(EditorialFeedActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(EditorialFeedActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
+
+                        Snackbar snackbar = Snackbar
+                                .make(translateText, "Note saved", Snackbar.LENGTH_LONG);
+                        snackbar.setAction("View", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                onOpenNotesActivity();
+                            }
+                        });
+
+                        snackbar.show();
                     }
                 }
             });
@@ -911,7 +928,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onAddPointClick() {
-        Toast.makeText(this, "add point notes", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "add point notes", Toast.LENGTH_SHORT).show();
 
         TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
         String selectedString = "";

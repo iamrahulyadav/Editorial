@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -66,6 +67,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -74,6 +76,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import io.fabric.sdk.android.Fabric;
 import utils.AdsSubscriptionManager;
 import utils.ClickListener;
+import utils.DatabaseHandlerRead;
 import utils.LanguageManager;
 import utils.NightModeManager;
 import utils.PushNotificationManager;
@@ -129,6 +132,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private RewardedVideoAd mAd;
     Spinner spinner;
+    private boolean isLoadingMoreArticle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +150,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         if (!isNetworkAvailable()) {
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+
+            //Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
 
 
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditorialListWithNavActivity.this);
@@ -156,13 +161,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             alertDialog.setTitle("No Internet connection");
 
             // Setting Dialog Message
-            alertDialog.setMessage("Do you want to open Bookmarks for offline reading");
+            alertDialog.setMessage("App is running in offline mode");
 
             // Setting Icon to Dialog
             alertDialog.setIcon(R.drawable.ic_action_information);
 
             // Setting Positive "Yes" Button
-            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
 
                     onBookMark();
@@ -172,18 +177,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             });
 
 
-            // Setting Negative "NO" Button
-            alertDialog.setNegativeButton("Not much", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // Write your code here to invoke NO event
-
-                    dialog.cancel();
-                }
-            });
-
             // Showing Alert Message
             alertDialog.show();
-
 
         }
 
@@ -395,13 +390,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.editoriallist_recyclerview);
 
 
-       /* String actvityTheme =getActivityTheme();
-        if (actvityTheme.contentEquals("Night")){
-            View view = findViewById(R.id.activity_editorial_list);
-            view.setBackgroundColor(ContextCompat.getColor(this,R.color.editorialList_background_night));
-
-        }
-*/
         mAdapter = new EditorialGeneralInfoAdapter(editorialListArrayList, "day", this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -410,24 +398,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         recyclerView.setAdapter(mAdapter);
 
-
-        /*recyclerView.addOnItemTouchListener(
-                new RecyclerTouchListener(this, recyclerView, new RecyclerTouchListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // do whatever
-
-                        onRecyclerViewItemClick(position);
-
-
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                })
-        );*/
 
         mAdapter.setOnclickListener(new ClickListener() {
             @Override
@@ -563,6 +533,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         startActivity(i);
 
+        try {
+            new DatabaseHandlerRead(this).addReadNews(editorialgenralInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         showInterstitialAd();
 
     }
@@ -624,7 +600,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-
     public void loadMoreClick(View view) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         //dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
@@ -675,7 +650,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-        sortEditorList(selectedSortWord);
+        //sortEditorList(selectedSortWord);
 
     }
 
@@ -711,6 +686,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         isRefreshing = false;
 
         addNativeExpressAds();
+        addReadStatus();
 
         if (isFirst) {
             recyclerView.smoothScrollToPosition(1);
@@ -731,65 +707,28 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
+    private void addReadStatus() {
+        try {
+            DatabaseHandlerRead databaseHandlerRead = new DatabaseHandlerRead(this);
+            EditorialGeneralInfo editorialGeneralInfo;
+            for (Object editorialGeneralInfoObject : editorialListArrayList) {
+                if (editorialGeneralInfoObject.getClass() == EditorialGeneralInfo.class) {
+                    editorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoObject;
+                    editorialGeneralInfo.setReadStatus(databaseHandlerRead.getNewsReadStatus(editorialGeneralInfo.getEditorialID()));
+                }
+            }
+
+            Log.d("DEBUG", "addReadStatus: " + editorialListArrayList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void addNativeExpressAds() {
 
         boolean checkShowAds = AdsSubscriptionManager.checkShowAds(this);
 
-        //main function where ads is merged in editorial list as an object
-
-      /*  for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
-            if (editorialListArrayList.get(i).getClass() != NativeExpressAdView.class) {
-                final NativeExpressAdView adView = new NativeExpressAdView(this);
-
-                adView.setAdUnitId("ca-app-pub-8455191357100024/8254824112");
-                adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-
-                adView.setAdSize(new AdSize(320, 132));
-                if (checkShowAds) {
-                    adView.loadAd(new AdRequest.Builder().build());
-                }
-                editorialListArrayList.add(i, adView);
-
-            }
-        }*/
-
-/*
-
-        for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
-            if (editorialListArrayList.get(i) != null) {
-                if (editorialListArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
-
-                    final int finalI = i;
-                    AdLoader adLoader = new AdLoader.Builder(EditorialListWithNavActivity.this, "ca-app-pub-3940256099942544/2247696110")
-                            .forAppInstallAd(new NativeAppInstallAd.OnAppInstallAdLoadedListener() {
-                                @Override
-                                public void onAppInstallAdLoaded(NativeAppInstallAd appInstallAd) {
-                                    // Show the app install ad.
-
-                                    editorialListArrayList.set(finalI, appInstallAd);
-                                    mAdapter.notifyDataSetChanged();
-                                }
-                            })
-                            .withAdListener(new AdListener() {
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    // Handle the failure by logging, altering the UI, and so on.
-                                    Log.d("ADMOB", "onAdFailedToLoad: " + errorCode);
-                                }
-                            })
-                            .build();
-
-                    adLoader.loadAd(new AdRequest.Builder().build());
-
-
-                    editorialListArrayList.add(finalI, null);
-
-                }
-            }
-        }
-
-        Log.d("list", "addNativeExpressAds: " + editorialListArrayList);
-*/
 
         for (int i = 0; i < (editorialListArrayList.size()); i += 8) {
             if (editorialListArrayList.get(i) != null) {
@@ -1656,7 +1595,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
 
-    private void onEconomicTimesClick() {
+   /* private void onEconomicTimesClick() {
         selectedSortWord = "Economic Times";
         sortEditorList(selectedSortWord);
 
@@ -1678,7 +1617,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         selectedSortWord = "";
         sortEditorList(selectedSortWord);
     }
-
+*/
 
     public void setToolBarSubTitle(String subTitle) {
         try {

@@ -26,11 +26,20 @@ import utils.ShortNotesManager;
  */
 
 public class DBHelperFirebase  {
+    static boolean calledAlready = false;
     FirebaseDatabase database;
 
    
 
     public DBHelperFirebase() {
+
+        if (!calledAlready)
+        {
+            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            calledAlready = true;
+        }
+
+
         database = FirebaseDatabase.getInstance();
 
         //database.setPersistenceEnabled(true);
@@ -618,7 +627,7 @@ public class DBHelperFirebase  {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID);
 
         Query query = database.orderByKey().limitToLast(limitTo).endAt(lastID);
-
+        
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
