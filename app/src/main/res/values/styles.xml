@@ -45,6 +45,8 @@
         <item name="primaryTextAccentColor">#fdfafafa</item>
         <item name="secondaryTextAccentColor">#e7e7e7</item>
 
+        <item name="readMaskColor">#6effffff</item>
+
     </style>
 
     <!-- Dark base activity theme -->
@@ -57,6 +59,8 @@
 
         <item name="primaryTextAccentColor">#F4F4F6</item>
         <item name="secondaryTextAccentColor">#96F4F4F6</item>
+
+        <item name="readMaskColor">#6e000000</item>
     </style>
 
 

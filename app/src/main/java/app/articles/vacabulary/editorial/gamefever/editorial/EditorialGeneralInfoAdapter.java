@@ -52,7 +52,8 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView heading, date, source, tag, subheading, likeText;
-        ImageView mustReadImageView;
+        ImageView mustReadImageView, readMaskImageView;
+        CardView backGroundCard;
 
         public MyViewHolder(View view) {
             super(view);
@@ -64,7 +65,9 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             likeText = (TextView) view.findViewById(R.id.editorial_list_layout_like);
             mustReadImageView =(ImageView)view.findViewById(R.id.editorial_list_layout_mustRead_imageView);
 
+            backGroundCard=(CardView)view.findViewById(R.id.editorial_list_layout_background_card);
 
+            readMaskImageView= (ImageView)view.findViewById(R.id.editorial_list_layout_isReadMask_imageView);
             view.setOnClickListener(this);
 
 
@@ -153,19 +156,6 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             case AD_VIEW_TYPE:
                 NativeExpressAdViewHolder adView = (NativeExpressAdViewHolder) holder;
 
-                /*NativeExpressAdView adView = (NativeExpressAdView) editorialGeneralInfoList.get(position);
-                ViewGroup adCardView = (ViewGroup) nativeExpressAdViewHolder.itemView;
-                adCardView.removeAllViews();
-
-                if (adView.getParent() != null) {
-                    ((ViewGroup) adView.getParent()).removeView(adView);
-                }
-
-                if (checkShowAds) {
-                    adCardView.addView(adView);
-                }
-                */
-
 
                 NativeAd nativeAd = (NativeAd) editorialGeneralInfoList.get(position);
                 if (nativeAd.isAdLoaded()) {
@@ -210,22 +200,32 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
                 MyViewHolder myViewHolder = (MyViewHolder) holder;
 
 
-                EditorialGeneralInfo EditorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoList.get(position);
+                EditorialGeneralInfo editorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoList.get(position);
 
-                myViewHolder.heading.setText(EditorialGeneralInfo.getEditorialHeading());
-                myViewHolder.date.setText(EditorialGeneralInfo.resolveDate(EditorialGeneralInfo.getTimeInMillis()));
+                myViewHolder.heading.setText(editorialGeneralInfo.getEditorialHeading());
+                myViewHolder.date.setText(EditorialGeneralInfo.resolveDate(editorialGeneralInfo.getTimeInMillis()));
 
-                myViewHolder.tag.setText(EditorialGeneralInfo.getEditorialTag());
-                myViewHolder.subheading.setText(EditorialGeneralInfo.getEditorialSubHeading());
-                myViewHolder.likeText.setText(EditorialGeneralInfo.getEditorialLike() + " ");
+                myViewHolder.tag.setText(editorialGeneralInfo.getEditorialTag());
+                myViewHolder.subheading.setText(editorialGeneralInfo.getEditorialSubHeading());
+                myViewHolder.likeText.setText(editorialGeneralInfo.getEditorialLike() + " ");
 
-                if (EditorialGeneralInfo.isMustRead()){
+                if (editorialGeneralInfo.isMustRead()){
                     myViewHolder.mustReadImageView.setVisibility(View.VISIBLE);
-                    myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource() +" [IMP]");
+                    myViewHolder.source.setText(editorialGeneralInfo.getEditorialSource() +" [IMP]");
                 }else{
                     myViewHolder.mustReadImageView.setVisibility(View.GONE);
-                    myViewHolder.source.setText(EditorialGeneralInfo.getEditorialSource());
+                    myViewHolder.source.setText(editorialGeneralInfo.getEditorialSource());
                 }
+
+                if (editorialGeneralInfo.isReadStatus()){
+                    myViewHolder.backGroundCard.setCardElevation(0);
+                    myViewHolder.readMaskImageView.setVisibility(View.VISIBLE);
+                }else{
+                    myViewHolder.backGroundCard.setCardElevation(16);
+                    myViewHolder.readMaskImageView.setVisibility(View.GONE);
+                }
+
+
         }
 
     }

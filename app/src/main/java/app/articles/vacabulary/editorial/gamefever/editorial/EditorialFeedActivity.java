@@ -22,6 +22,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -86,6 +89,8 @@ import java.util.Locale;
 import utils.AdsSubscriptionManager;
 import utils.AppRater;
 import utils.AuthenticationManager;
+import utils.ClickListener;
+import utils.CommentAdapter;
 import utils.Like;
 import utils.NightModeManager;
 import utils.SettingManager;
@@ -103,7 +108,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private BottomSheetBehavior mBottomSheetBehavior;
     public String selectedWord = "null";
 
-    CommentsListViewAdapter mCommentAdapter;
+    CommentAdapter mCommentAdapter;
     ArrayList<Comment> commentList = new ArrayList<>();
 
     boolean isPushNotification = false;
@@ -119,6 +124,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private RewardedVideoAd mAd;
     WebView webView;
+
+    ArrayList<Object> suggestedEditorialArrayList;
+    EditorialGeneralInfoAdapter editorialGeneralInfoAdapter;
+    boolean checkShowAds= true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,9 +194,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         mAd = MobileAds.getRewardedVideoAdInstance(this);
 
-        if (AdsSubscriptionManager.checkShowAds(this))
+        checkShowAds= AdsSubscriptionManager.checkShowAds(this);
 
-        {
+        if (checkShowAds) {
 
             initializeTopNativeAds(true);
             //initializeAds();
@@ -204,80 +214,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
         initializeWebView();
-
-
-    }
-
-    private void checkRateUsOption() {
-        SharedPreferences prefs = getSharedPreferences("RateUsNum", MODE_PRIVATE);
-        int ratenum = prefs.getInt("ratenum", 0);
-
-        if (ratenum < 5) {
-            ratenum++;
-
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putInt("ratenum", ratenum);
-            edit.apply();
-
-
-        } else {
-
-            boolean rateeus = prefs.getBoolean("rateus", false);
-            if (rateeus) {
-
-
-                return;
-            } else {
-
-
-                //show rate Pop Up
-
-
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditorialFeedActivity.this);
-
-
-                // Setting Dialog Title
-                alertDialog.setTitle("Rate us");
-
-                // Setting Dialog Message
-                alertDialog.setMessage("Do you like this app");
-
-                // Setting Icon to Dialog
-                alertDialog.setIcon(R.drawable.ic_menu_share);
-
-                // Setting Positive "Yes" Button
-                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        // Toast.makeText(EditorialFeedActivity.this, "ThankYou", Toast.LENGTH_SHORT).show();
-
-                        // Write your code here to invoke YES event
-
-                        dialog.cancel();
-                    }
-                });
-
-
-                // Setting Negative "NO" Button
-                alertDialog.setNegativeButton("Not much", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to invoke NO event
-
-                        sendSuggestionEmail();
-
-                        dialog.cancel();
-                    }
-                });
-
-                // Showing Alert Message
-                alertDialog.show();
-
-                SharedPreferences.Editor edit = prefs.edit();
-                edit.putBoolean("rateus", true);
-                edit.commit();
-
-            }
-        }
 
 
     }
@@ -426,7 +362,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentId(editorialGeneralInfo.getEditorialID())
                     .putContentType(editorialGeneralInfo.getEditorialSource())
-                    .putCustomAttribute("Category",editorialGeneralInfo.getEditorialCategory())
+                    .putCustomAttribute("Category", editorialGeneralInfo.getEditorialCategory())
                     .putContentName(editorialGeneralInfo.getEditorialHeading()));
 
         } catch (Exception e) {
@@ -696,6 +632,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             initializeSourceLink();
             initializeCommentList();
 
+            initializeSuggestedEditorial();
             intializeShareAndLike();
 
             //calling rate now dialog
@@ -713,6 +650,103 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+    private void initializeSuggestedEditorial() {
+
+        ArrayList<Object> editorialGeneralInfoArrayList = EditorialListWithNavActivity.editorialListArrayList;
+
+         suggestedEditorialArrayList = new ArrayList<>();
+
+        EditorialGeneralInfo currentEditorial = currentEditorialFullInfo.getEditorialGeneralInfo();
+
+        for (int i = 0; i < editorialGeneralInfoArrayList.size() && suggestedEditorialArrayList.size() < 4; i++) {
+
+            if (editorialGeneralInfoArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
+
+                EditorialGeneralInfo editorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoArrayList.get(i);
+
+
+                if ((editorialGeneralInfo.isMustRead() ||
+                        editorialGeneralInfo.getEditorialCategoryIndex() == currentEditorial.getEditorialCategoryIndex() ||
+                        editorialGeneralInfo.getEditorialSourceIndex() == currentEditorial.getEditorialSourceIndex() ||
+                        editorialGeneralInfo.getEditorialLike() >= 3) &&
+                        !editorialGeneralInfo.getEditorialID().equalsIgnoreCase(currentEditorial.getEditorialID() )&&
+                        !editorialGeneralInfo.isReadStatus()
+                        ) {
+                    suggestedEditorialArrayList.add(editorialGeneralInfo);
+
+                }
+
+            }
+
+        }
+
+        Log.d("DEBUG", "initializeSuggestedEditorial: " + suggestedEditorialArrayList);
+
+        addNativeExpressAds();
+
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.editorialFeed_suggestion_recyclerView);
+        editorialGeneralInfoAdapter = new EditorialGeneralInfoAdapter(suggestedEditorialArrayList, "", this);
+
+        editorialGeneralInfoAdapter.setOnclickListener(new ClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(EditorialFeedActivity.this, "Editorial opening - "+position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        DividerItemDecorator dividerItemDecorator = new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST);
+
+        recyclerView.setAdapter(editorialGeneralInfoAdapter);
+
+
+    }
+
+    private void addNativeExpressAds() {
+        NativeAd nativeAd = new NativeAd(this, "113079036048193_119892505366846");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "List native").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+                editorialGeneralInfoAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        if (checkShowAds) {
+            nativeAd.loadAd();
+        }
+
+        suggestedEditorialArrayList.add(0, nativeAd);
 
     }
 
@@ -928,7 +962,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onAddPointClick() {
-       // Toast.makeText(this, "add point notes", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "add point notes", Toast.LENGTH_SHORT).show();
 
         TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
         String selectedString = "";
@@ -1435,9 +1469,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_commentsystem_linearLayout);
         linearLayout.setVisibility(View.VISIBLE);
 
-        ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
-
-
         TextView textView = (TextView) findViewById(R.id.editorialfeed_comment_textView);
         textView.setText(commentList.size() + " Discussion");
 
@@ -1458,54 +1489,30 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         }
 
-        mCommentAdapter = new CommentsListViewAdapter(this, commentList);
-        commentListView.setAdapter(mCommentAdapter);
-
 
         //resizeCommentListView();
 
 
-    }
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.editorialFeed_comments_recyclerView);
+        mCommentAdapter = new CommentAdapter(commentList, this);
 
-    private void resizeCommentListView() {
-        ListView commentListView = (ListView) findViewById(R.id.editorialFeed_comments_listView);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, getResources().getDisplayMetrics());
-
-        switch (mCommentAdapter.getCount()) {
-
-            case 1:
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
-                        getResources()
-                                .getDisplayMetrics());
-                break;
-
-            case 2:
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150,
-                        getResources()
-                                .getDisplayMetrics());
-                break;
-            case 3:
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200,
-                        getResources()
-                                .getDisplayMetrics());
-                break;
+        DividerItemDecorator dividerItemDecorator = new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST);
+        recyclerView.addItemDecoration(dividerItemDecorator);
 
 
-        }
+        recyclerView.setAdapter(mCommentAdapter);
 
-        ViewGroup.LayoutParams layoutParams = commentListView.getLayoutParams();
-
-        layoutParams.height = height;
-
-        commentListView.setLayoutParams(layoutParams);
 
     }
 
     public void insertCommentBtnClick(View view) {
 
-        EditText editText = (EditText) findViewById(R.id.editorialFeed_commentemail_edittext);
-        String emailString = editText.getText().toString();
+        //EditText editText = (EditText) findViewById(R.id.editorialFeed_commentemail_edittext);
+        String emailString = "abcd@gmail.com";
         EditText editText2 = (EditText) findViewById(R.id.editorialFeed_commenttext_edittext);
         String commentString = editText2.getText().toString();
 
@@ -1521,13 +1528,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             dbHelperFirebase.insertComment(currentEditorialFullInfo.getEditorialGeneralInfo()
                     .getEditorialID(), commentToPost);
 
-            editText.setText("");
+
             editText2.setText("");
             Toast.makeText(this, "Posting", Toast.LENGTH_SHORT).show();
 
-            mCommentAdapter.add(commentToPost);
+            commentList.add(commentToPost);
             mCommentAdapter.notifyDataSetChanged();
-            resizeCommentListView();
 
 
         } else {
@@ -1850,5 +1856,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void setTextSize(TextView tv, int size) {
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
     }
+
 
 }
