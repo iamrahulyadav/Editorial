@@ -663,7 +663,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             AppRater.app_launched(EditorialFeedActivity.this);
 
         } catch (NullPointerException nl) {
-            editorialFullInfo.getEditorialExtraInfo().setEditorialText("No editorial found");
+           // editorialFullInfo.getEditorialExtraInfo().setEditorialText("No editorial found");
             init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
             currentEditorialFullInfo = editorialFullInfo;
             findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);

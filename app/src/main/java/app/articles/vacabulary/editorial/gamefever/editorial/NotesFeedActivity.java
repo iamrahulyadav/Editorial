@@ -350,7 +350,7 @@ public class NotesFeedActivity extends AppCompatActivity {
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                 shortNotesManager.getShortNoteHeading()
                 +"\n\n"+shortNotesText
-                +"\n\n ❤️ Notes made with Daily Editorial 🗞 \n Article link - "
+                +"\n\n️ Notes made with Daily Editorial 🗞 \n Article link - "
                 +shortLink
                 );
         startActivity(Intent.createChooser(sharingIntent, "Share Notes via"));
