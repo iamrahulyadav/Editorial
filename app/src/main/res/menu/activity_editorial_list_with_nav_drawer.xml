@@ -101,12 +101,12 @@
 
             <item
                 android:id="@+id/nav_aptitude_app"
-                android:title="Introducing Aptitude preparation app" />
+                android:title="Aptitude preparation app" />
 
 
             <item
                 android:id="@+id/nav_pib_app"
-                android:title="Checkout new PIB News app" />
+                android:title="PIB News app" />
 
             <item
                 android:id="@+id/nav_share"

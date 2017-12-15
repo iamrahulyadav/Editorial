@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -129,18 +129,20 @@
             android:text=""
             android:textColor="?attr/primaryTextColor"
             android:textColorLink="@color/colorPrimary"
-            android:textSize="18sp"
             android:textIsSelectable="true"
+            android:textSize="18sp"
             android:textStyle="normal" />
 
+
+
         <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:orientation="vertical"
             android:id="@+id/notesFeed_adContainer_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:orientation="vertical"
             app:cardCornerRadius="4dp"
-            app:cardElevation="4dp"
-            android:layout_height="wrap_content">
+            app:cardElevation="4dp">
 
 
         </android.support.v7.widget.CardView>
@@ -158,7 +160,9 @@
 
         </ImageView>
 
+
+
     </LinearLayout>
 
 
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

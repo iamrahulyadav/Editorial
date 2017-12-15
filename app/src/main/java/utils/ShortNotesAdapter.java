@@ -127,7 +127,8 @@ public class ShortNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 myViewHolder.date.setText(EditorialGeneralInfo.resolveDate(shortNotesManager.getShortNoteEditTimeInMillis()));
                 myViewHolder.source.setText(shortNotesManager.getNoteArticleSource());
-                myViewHolder.tag.setText("");
+                myViewHolder.tag.setText(shortNotesManager.getNotesCategory());
+
 
                 for (String notes :shortNotesManager.getShortNotePointList().values()){
                     myViewHolder.subheading.setText(notes);

@@ -149,6 +149,19 @@ public class EditorialGeneralInfo implements Serializable {
         this.readStatus = readStatus;
     }
 
+    public void rectifySubHeading(){
+        try {
+            int nextLineIndex = editorialSubHeading.indexOf("\n");
+            if (nextLineIndex < 0 || nextLineIndex > 150) {
+                return;
+            } else {
+                editorialSubHeading = editorialSubHeading.substring(0, nextLineIndex)+"...";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static String resolveDate(long editorialTime) {
 
         Calendar calendar = Calendar.getInstance();

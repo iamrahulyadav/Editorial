@@ -3,6 +3,7 @@ package utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -39,7 +40,6 @@ public class DatabaseHandlerRead extends SQLiteOpenHelper {
     private static final String KEY_IS_LIKED = "editoriallike";
 
 
-
     public DatabaseHandlerRead(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -55,9 +55,6 @@ public class DatabaseHandlerRead extends SQLiteOpenHelper {
                 + KEY_CATEGORY + " INTEGER,"
                 + KEY_IS_LIKED + " BOOLEAN"
                 + ")";
-
-
-
 
 
         db.execSQL(CREATEREAD_FEED);
@@ -79,7 +76,7 @@ public class DatabaseHandlerRead extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_PUSHID, editorialGeneralInfo.getEditorialID());
-        values.put(KEY_LINK, editorialGeneralInfo.getEditorialSourceLink()+"");
+        values.put(KEY_LINK, editorialGeneralInfo.getEditorialSourceLink() + "");
         values.put(KEY_HEADING, editorialGeneralInfo.getEditorialHeading());
         values.put(KEY_DATE, editorialGeneralInfo.getEditorialDate());
         values.put(KEY_CATEGORY, editorialGeneralInfo.getEditorialCategoryIndex());
@@ -88,10 +85,10 @@ public class DatabaseHandlerRead extends SQLiteOpenHelper {
 
 
 
-        // Inserting Row
-        long i=db.insert(TABLE_READ_FEEDS, null, values);
-        Log.d("DEBUG", "addReadNews: "+i);
-       // db.close(); // Closing database connection
+            // Inserting Row
+        db.insert(TABLE_READ_FEEDS, null, values);
+
+        // db.close(); // Closing database connection
     }
 
 

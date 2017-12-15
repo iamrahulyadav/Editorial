@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
@@ -84,6 +85,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import utils.AdsSubscriptionManager;
@@ -91,6 +93,7 @@ import utils.AppRater;
 import utils.AuthenticationManager;
 import utils.ClickListener;
 import utils.CommentAdapter;
+import utils.DatabaseHandlerRead;
 import utils.Like;
 import utils.NightModeManager;
 import utils.SettingManager;
@@ -127,8 +130,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     ArrayList<Object> suggestedEditorialArrayList;
     EditorialGeneralInfoAdapter editorialGeneralInfoAdapter;
-    boolean checkShowAds= true;
+    boolean checkShowAds = true;
 
+    int voiceReaderChunk = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +156,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         }
 
-        tts = new TextToSpeech(this, this);
         Intent i = getIntent();
         intialiseViewAndFetch(i);
 
@@ -194,7 +197,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         mAd = MobileAds.getRewardedVideoAdInstance(this);
 
-        checkShowAds= AdsSubscriptionManager.checkShowAds(this);
+        checkShowAds = AdsSubscriptionManager.checkShowAds(this);
 
         if (checkShowAds) {
 
@@ -538,6 +541,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             mAd.resume(this);
         }
         super.onResume();
+        tts = new TextToSpeech(this, this);
+
     }
 
     @Override
@@ -591,9 +596,23 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         if (status == TextToSpeech.SUCCESS) {
 
-            int result = tts.setLanguage(Locale.US);
-            tts.setPitch(0.9f);
-            tts.setSpeechRate(0.85f);
+            Locale locale = new Locale("en", "IN");
+            int availability = tts.isLanguageAvailable(locale);
+            int result = 0;
+            switch (availability) {
+                case TextToSpeech.LANG_COUNTRY_AVAILABLE:
+                case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE: {
+                    result = tts.setLanguage(locale);
+                    break;
+                }
+                case TextToSpeech.LANG_NOT_SUPPORTED:
+                case TextToSpeech.LANG_MISSING_DATA:
+                case TextToSpeech.LANG_AVAILABLE: {
+                    result = tts.setLanguage(Locale.US);
+                    tts.setPitch(0.9f);
+                    tts.setSpeechRate(0.85f);
+                }
+            }
 
 
             if (result == TextToSpeech.LANG_MISSING_DATA
@@ -614,11 +633,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         try {
             if (!muteVoice) {
+                if (Build.VERSION.SDK_INT > 18) {
+                }
+
                 tts.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+
+
             }
         } catch (Exception e) {
-
-
+            e.printStackTrace();
         }
     }
 
@@ -655,13 +678,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     private void initializeSuggestedEditorial() {
 
-        ArrayList<Object> editorialGeneralInfoArrayList = EditorialListWithNavActivity.editorialListArrayList;
+        final ArrayList<Object> editorialGeneralInfoArrayList = EditorialListWithNavActivity.editorialListArrayList;
 
-         suggestedEditorialArrayList = new ArrayList<>();
+        suggestedEditorialArrayList = new ArrayList<>();
 
         EditorialGeneralInfo currentEditorial = currentEditorialFullInfo.getEditorialGeneralInfo();
 
-        for (int i = 0; i < editorialGeneralInfoArrayList.size() && suggestedEditorialArrayList.size() < 4; i++) {
+        for (int i = 0; i < editorialGeneralInfoArrayList.size() && suggestedEditorialArrayList.size() < 3; i++) {
 
             if (editorialGeneralInfoArrayList.get(i).getClass() == EditorialGeneralInfo.class) {
 
@@ -672,7 +695,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         editorialGeneralInfo.getEditorialCategoryIndex() == currentEditorial.getEditorialCategoryIndex() ||
                         editorialGeneralInfo.getEditorialSourceIndex() == currentEditorial.getEditorialSourceIndex() ||
                         editorialGeneralInfo.getEditorialLike() >= 3) &&
-                        !editorialGeneralInfo.getEditorialID().equalsIgnoreCase(currentEditorial.getEditorialID() )&&
+                        !editorialGeneralInfo.getEditorialID().equalsIgnoreCase(currentEditorial.getEditorialID()) &&
                         !editorialGeneralInfo.isReadStatus()
                         ) {
                     suggestedEditorialArrayList.add(editorialGeneralInfo);
@@ -694,7 +717,32 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         editorialGeneralInfoAdapter.setOnclickListener(new ClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(EditorialFeedActivity.this, "Editorial opening - "+position, Toast.LENGTH_SHORT).show();
+                if (position < 0) {
+                    recreate();
+                    return;
+                }
+
+                if (position % 8 == 0) {
+                    return;
+                }
+
+                EditorialGeneralInfo editorialGeneralInfo = (EditorialGeneralInfo) suggestedEditorialArrayList.get(position);
+
+                Intent i = new Intent(EditorialFeedActivity.this, EditorialFeedActivity.class);
+                i.putExtra("editorial", editorialGeneralInfo);
+
+                try {
+                    editorialGeneralInfo.setReadStatus(true);
+
+
+                    new DatabaseHandlerRead(EditorialFeedActivity.this).addReadNews(editorialGeneralInfo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                startActivity(i);
+                finish();
+
             }
         });
 
@@ -702,7 +750,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        DividerItemDecorator dividerItemDecorator = new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST);
 
         recyclerView.setAdapter(editorialGeneralInfoAdapter);
 
@@ -759,6 +806,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 onLikeClick(v);
+               // v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+                linearLayout.setSelected(true);
                 linearLayout.setEnabled(false);
             }
         });
@@ -845,7 +895,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onTextSizeClick() {
-        final CharSequence sources[] = new CharSequence[]{"Small", "Medium", "Large"};
+        final CharSequence sources[] = new CharSequence[]{"Small", "Medium", "Large","Extra Large"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose Text Size");
@@ -864,17 +914,15 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     size = 18;
                 } else if (which == 2) {
                     size = 20;
+                }else if (which == 3){
+                    size = 22;
                 }
 
                 setTextSize(definitionView, size);
 
                 SettingManager.setTextSize(EditorialFeedActivity.this, size);
 
-                try {
-                    //Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", sources[which].toString()));
-                } catch (Exception e) {
 
-                }
 
             }
         });
@@ -890,7 +938,52 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         } else {
             item.setTitle("Stop Reader");
-            speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            if (currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length() < 3999) {
+                speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            } else {
+                voiceReaderChunk=0;
+                voiceReaderChunkManager();
+            }
+        }
+
+    }
+
+    private void voiceReaderChunkManager() {
+
+        if (currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length()> (voiceReaderChunk)) {
+
+            String chunk = currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().substring(voiceReaderChunk, Math.min(voiceReaderChunk + 3999,currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length()));
+
+            voiceReaderChunk = voiceReaderChunk + 3999;
+
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onStart(String utteranceId) {
+                    Log.d("TTS", "onDone: " + utteranceId);
+                }
+
+                @Override
+                public void onDone(String utteranceId) {
+
+                    Log.d("TTS", "onDone: " + utteranceId);
+                    voiceReaderChunkManager();
+
+                }
+
+                @Override
+                public void onError(String utteranceId) {
+                    Log.d("TTS", "onDone: " + utteranceId);
+                }
+            });
+
+            try {
+                if (Build.VERSION.SDK_INT > 21) {
+                    tts.speak(chunk, TextToSpeech.QUEUE_FLUSH, null, "1");
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
         }
 
     }
@@ -941,7 +1034,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                         //Toast.makeText(EditorialFeedActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
 
                         Snackbar snackbar = Snackbar
-                                .make(translateText, "Note saved", Snackbar.LENGTH_LONG);
+                                .make(translateText, "Note saved successfully 👍", Snackbar.LENGTH_LONG);
                         snackbar.setAction("View", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1004,6 +1097,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             final TextView definitionView = (TextView) findViewById(R.id.editorialfeed_notesText_textview);
             definitionView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             definitionView.setTextIsSelectable(true);
+            setTextSize(definitionView);
             notesMode = true;
             // item.setTitle("Exit notes mode");
             Toast.makeText(this, "Entered notes mode", Toast.LENGTH_SHORT).show();
@@ -1018,6 +1112,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             shortNotesManager.setShortNoteHeading(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading());
             shortNotesManager.setNoteArticleSource(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSource());
             shortNotesManager.setShortNoteEditTimeInMillis(currentEditorialFullInfo.getEditorialGeneralInfo().getTimeInMillis());
+
+            shortNotesManager.setNotesCategory(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialCategory());
 
             ActivityCompat.invalidateOptionsMenu(this);
 
@@ -1038,7 +1134,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private void onBookmark() {
         DatabaseHandlerBookMark databaseHandlerBookMark = new DatabaseHandlerBookMark(this);
         databaseHandlerBookMark.addToBookMark(currentEditorialFullInfo.getEditorialGeneralInfo(), currentEditorialFullInfo.getEditorialExtraInfo());
-        Toast.makeText(this, "Editorial Bookmarked", Toast.LENGTH_SHORT).show();
+
+
+        Snackbar snackbar = Snackbar
+                .make(translateText, "Editorial Bookmarked successfully 👍", Snackbar.LENGTH_LONG);
+        snackbar.setAction("View", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditorialFeedActivity.this, EditorialListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        snackbar.show();
 
         try {
             Answers.getInstance().logCustom(new CustomEvent("Bookmark").putCustomAttribute("Editorial title", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
@@ -1558,7 +1666,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         new DBHelperFirebase().uploadLike(like, new DBHelperFirebase.OnLikeListener() {
             @Override
             public void onLikeUpload(boolean isSuccessful) {
-                Toast.makeText(EditorialFeedActivity.this, "Thank you for liking the editorial ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EditorialFeedActivity.this, "Thank you for liking the editorial ", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -1571,6 +1680,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     .putContentName("Like")
                     .putContentId(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialID())
                     .putContentType(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading())
+                    .putContentName(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSource())
                     .putRating(1)
             );
         } catch (Exception e) {
@@ -1826,8 +1936,18 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         WebView webView = (WebView) findViewById(R.id.editorial_bottomSheet_webview);
         dictionary.setWordMeaning(webView.getUrl());
         databaseHandler.addToDictionary(dictionary);
-        Toast.makeText(EditorialFeedActivity.this, selectedWord + " Added To Vocabulary", Toast.LENGTH_SHORT).show();
 
+        Snackbar snackbar = Snackbar
+                .make(translateText, "Word saved successfully 👍", Snackbar.LENGTH_LONG);
+        snackbar.setAction("View", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditorialFeedActivity.this, VacabularyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        snackbar.show();
     }
 
     public void onInstallPIBClick(View view) {
@@ -1858,4 +1978,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
 
+    public void onTakeNotesButtonClick(View view) {
+        onTakeNotesClick();
+    }
 }

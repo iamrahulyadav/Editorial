@@ -466,7 +466,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 if (position == 7) {
                     sortSourceIndex = 8;
-                } else if (position == 8) {
+                } else if(position ==8){
+                    sortSourceIndex = 9;
+                }
+                else if (position == 9) {
                     sortSourceIndex = 10;
                 } else {
                     sortSourceIndex = position - 1;
@@ -674,6 +677,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         int insertPosition = editorialListArrayList.size();
         for (EditorialGeneralInfo editorialGeneralInfo : editorialGeneralInfoArraylist) {
             editorialListArrayList.add(insertPosition, editorialGeneralInfo);
+            editorialGeneralInfo.rectifySubHeading();
         }
 
         isRefreshing = false;
@@ -1189,7 +1193,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSortBySourceClick() {
         //final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
-        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "Other"};
+        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint","The Tribune","Other"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -1387,66 +1391,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     public void initializeSubscriptionAds() {
-        /*mSubscriptionInterstitialAd = new InterstitialAd(this);
-        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
-        mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-        mSubscriptionInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-                if (AdsSubscriptionManager.checkShowAds(EditorialListWithNavActivity.this)) {
-                    Toast.makeText(EditorialListWithNavActivity.this, "You need to click on the ad to get Pro features (with no ads) \n Try again", Toast.LENGTH_LONG).show();
-
-                } else {
-                    Toast.makeText(EditorialListWithNavActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_LONG).show();
-
-                }
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Subscription ad").putCustomAttribute("Error code", i));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-                Toast.makeText(EditorialListWithNavActivity.this, "Now Click on the ads to get pro features", Toast.LENGTH_LONG).show();
-
-            }
-
-            @Override
-            public void onAdClicked() {
-                super.onAdClicked();
-                Toast.makeText(EditorialListWithNavActivity.this, "Ad clicked", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-
-                AdsSubscriptionManager.setSubscriptionTime(EditorialListWithNavActivity.this,3);
-
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed", "1"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-*/
 
         mAd = MobileAds.getRewardedVideoAdInstance(this);
         mAd.loadAd("ca-app-pub-8455191357100024/4421294382", new AdRequest.Builder().build());
@@ -1586,31 +1530,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
     }
-
-
-   /* private void onEconomicTimesClick() {
-        selectedSortWord = "Economic Times";
-        sortEditorList(selectedSortWord);
-
-
-    }
-
-    private void onfinancialExpClick() {
-        selectedSortWord = "Financial Express";
-        sortEditorList(selectedSortWord);
-
-    }
-
-    private void onTheHinduClick() {
-        selectedSortWord = "The Hindu";
-        sortEditorList(selectedSortWord);
-    }
-
-    private void onAllClick() {
-        selectedSortWord = "";
-        sortEditorList(selectedSortWord);
-    }
-*/
 
     public void setToolBarSubTitle(String subTitle) {
         try {

@@ -5,17 +5,15 @@
     android:id="@+id/editorial_list_layout_background_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginTop="4dp"
+
+    android:layout_marginBottom="6dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="false"
     android:focusable="true"
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/backgroundCardColor"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="6dp">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,38 +57,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_marginTop="0dp"
-            android:fontFamily="serif"
             android:text="This is heading text for demo purpose and testing layout"
-            android:textAlignment="center"
             android:textColor="?attr/primaryTextColor"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/editorial_list_layout_subheading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="serif"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="4dp"
             android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
             android:textColor="?attr/secondaryTextColor"
-            android:textSize="12sp"
-            android:textStyle="italic" />
+            android:textSize="12sp" />
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_marginTop="4dp"
-            android:background="?attr/colorPrimary"
-            >
+            android:background="?attr/secondaryTextColor">
 
         </ImageView>
 
@@ -98,8 +91,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
             android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
@@ -150,8 +143,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="?attr/colorPrimaryDark"
-            >
+            android:background="?attr/colorPrimaryDark">
 
         </ImageView>
 

@@ -20,7 +20,7 @@ import java.util.Map;
  */
 
 public class ShortNotesManager implements Serializable{
-    private String shortNoteHeading ,noteArticleID ,noteArticleSource, noteArticleDate;
+    private String shortNoteHeading ,noteArticleID ,noteArticleSource, noteArticleDate, notesCategory;
     private long shortNoteEditTimeInMillis;
 
     HashMap<String ,String> shortNotePointList;
@@ -79,6 +79,16 @@ public class ShortNotesManager implements Serializable{
     public void setShortNotePointList(HashMap<String, String> shortNotePointList) {
         this.shortNotePointList = shortNotePointList;
     }
+
+    public String getNotesCategory() {
+        return notesCategory;
+    }
+
+    public void setNotesCategory(String notesCategory) {
+        this.notesCategory = notesCategory;
+    }
+
+
 
     public void uploadShortNote(String userUID){
          DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID+"/"+getNoteArticleID());
