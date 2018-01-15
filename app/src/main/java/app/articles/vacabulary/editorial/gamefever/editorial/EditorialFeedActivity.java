@@ -651,7 +651,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
             currentEditorialFullInfo.setEditorialExtraInfo(editorialFullInfo.getEditorialExtraInfo());
-            findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
+
             initializeSourceLink();
             initializeCommentList();
 
@@ -662,17 +662,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             AppRater.app_launched(EditorialFeedActivity.this);
 
-        } catch (NullPointerException nl) {
-           // editorialFullInfo.getEditorialExtraInfo().setEditorialText("No editorial found");
-            init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
-            currentEditorialFullInfo = editorialFullInfo;
-            findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
-            initializeCommentList();
-            nl.printStackTrace();
-        } catch (Exception e) {
+        }catch (Exception e) {
+            e.printStackTrace();
             Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
         }
-
+        findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
 
     }
 
@@ -806,7 +800,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 onLikeClick(v);
-               // v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                // v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 linearLayout.setSelected(true);
                 linearLayout.setEnabled(false);
@@ -895,7 +889,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onTextSizeClick() {
-        final CharSequence sources[] = new CharSequence[]{"Small", "Medium", "Large","Extra Large"};
+        final CharSequence sources[] = new CharSequence[]{"Small", "Medium", "Large", "Extra Large"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose Text Size");
@@ -914,14 +908,13 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     size = 18;
                 } else if (which == 2) {
                     size = 20;
-                }else if (which == 3){
+                } else if (which == 3) {
                     size = 22;
                 }
 
                 setTextSize(definitionView, size);
 
                 SettingManager.setTextSize(EditorialFeedActivity.this, size);
-
 
 
             }
@@ -931,28 +924,31 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void onTtsReaderClick(MenuItem item) {
+        try {
+            if (tts.isSpeaking()) {
+                speakOutWord("");
+                item.setTitle("Read Editorial (Voice)");
 
-        if (tts.isSpeaking()) {
-            speakOutWord("");
-            item.setTitle("Read Editorial (Voice)");
-
-        } else {
-            item.setTitle("Stop Reader");
-            if (currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length() < 3999) {
-                speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
             } else {
-                voiceReaderChunk=0;
-                voiceReaderChunkManager();
+                item.setTitle("Stop Reader");
+                if (currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length() < 3999) {
+                    speakOutWord(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+                } else {
+                    voiceReaderChunk = 0;
+                    voiceReaderChunkManager();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
     private void voiceReaderChunkManager() {
 
-        if (currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length()> (voiceReaderChunk)) {
+        if (currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length() > (voiceReaderChunk)) {
 
-            String chunk = currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().substring(voiceReaderChunk, Math.min(voiceReaderChunk + 3999,currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length()));
+            String chunk = currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().substring(voiceReaderChunk, Math.min(voiceReaderChunk + 3999, currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText().length()));
 
             voiceReaderChunk = voiceReaderChunk + 3999;
 
