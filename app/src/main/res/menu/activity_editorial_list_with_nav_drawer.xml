@@ -4,7 +4,7 @@
     <item
         android:id="@+id/nav_purchase"
         android:icon="@drawable/ic_action_removeads"
-        android:title="Go Ads Free for RS. 29/month" />
+        android:title="Go Ads Free @ RS.29" />
 
 
     <item android:title="Search">
