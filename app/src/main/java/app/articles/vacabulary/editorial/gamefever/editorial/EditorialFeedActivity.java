@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -52,6 +53,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.SkuDetails;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
@@ -87,6 +91,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.TreeMap;
 
 import utils.AdsSubscriptionManager;
 import utils.AppRater;
@@ -120,7 +125,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     private InterstitialAd mSubscriptionInterstitialAd;
 
 
-    private ShortNotesManager shortNotesManager = new ShortNotesManager(new HashMap<String, String>());
+    private ShortNotesManager shortNotesManager = new ShortNotesManager(new TreeMap<String, String>());
     private boolean saveShortNotes;
 
     boolean muteVoice = false;
@@ -133,6 +138,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     boolean checkShowAds = true;
 
     int voiceReaderChunk = 0;
+
+    BillingProcessor bp;
+    final String SUBSCRIPTION_ID = "ad_free_subscription";
+    boolean bpStatus = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -662,7 +672,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             AppRater.app_launched(EditorialFeedActivity.this);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Something Went wrong", Toast.LENGTH_SHORT).show();
         }
@@ -1807,27 +1817,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void onRemoveAdClick(View view) {
 
-
-/*
-        if (mSubscriptionInterstitialAd != null) {
-            if (mSubscriptionInterstitialAd.isLoaded()) {
-                mSubscriptionInterstitialAd.show();
-
-                Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "successful"));
-
-            } else if (mSubscriptionInterstitialAd.isLoading()) {
-                Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try in few minutes", Toast.LENGTH_SHORT).show();
-
-            } else {
-                Log.d("TAG", "The interstitial wasn't loaded yet.");
-                Toast.makeText(EditorialFeedActivity.this, "Ads didn't loaded yet ,Try again later", Toast.LENGTH_SHORT).show();
-                Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user shown ad", "not loaded"));
-                mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-        }
-*/
-        if (mAd != null) {
+       /* if (mAd != null) {
             if (mAd.isLoaded()) {
                 mAd.show();
             } else {
@@ -1835,7 +1825,87 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
                 initializeSubscriptionAds();
             }
+        }*/
+
+       bpStatus=false;
+
+        try {
+            bp = new BillingProcessor(this,
+                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4lE0nDHaciyEpkXJ2dceN9EPLiuP7hSSOIjzzOF40am/QD4Hwd4CxZg+tco/f7G6GIFW1aJgRiHOCm+crhWUJk854MmWNs3JC1hxe15vH7h0C9s4d6Iw7fTJn4GN5a5tPrQESLd/OFPixFXS7gwePWUCnYl85Uge8tqwPtf2rcotqs3bScxYQQMmCb1fNxXOgB/kULJr9hy9FIzxYdKnSrUMib3rKQTEPKFqyLZgYGOfUwvvclJ7baouZfWemW0nwWKvIxMCsBGdEBI0aCb0on+J8A+pN3f+in5HM8F3eBAHF/MTVkOVoS1EGvIJgjj5exlZJePN+NJI3WtKVFiaPQIDAQAB",
+                    new BillingProcessor.IBillingHandler() {
+                        @Override
+                        public void onProductPurchased(@NonNull String productId, @Nullable TransactionDetails details) {
+                            //Toast.makeText(EditorialListWithNavActivity.this, "product purchased - " + productId, Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(EditorialFeedActivity.this);
+                            builder.setTitle("Thank you for Subscription");
+                            builder.setMessage("We appreciate your contribution by going ads free.\n\nAds will be removed when you open the app next time.");
+                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            builder.show();
+
+                            AdsSubscriptionManager.setSubscription(EditorialFeedActivity.this, true);
+
+
+                        }
+
+                        @Override
+                        public void onPurchaseHistoryRestored() {
+
+                        }
+
+                        @Override
+                        public void onBillingError(int errorCode, @Nullable Throwable error) {
+
+                        }
+
+                        @Override
+                        public void onBillingInitialized() {
+
+                            if (bpStatus) {
+                                if (bp != null) {
+                                    bp.subscribe(EditorialFeedActivity.this, SUBSCRIPTION_ID);
+                                }
+                            } else {
+                                bpStatus = true;
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Go Ads Free");
+            builder.setMessage("We are not a money making app. Ads are integrated to help app development and maintenance of apps.\n\nPlease make a small contribution and go ads free");
+            builder.setPositiveButton("Go Ads Free", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (bpStatus) {
+                        if (bp != null) {
+                            bp.subscribe(EditorialFeedActivity.this, SUBSCRIPTION_ID);
+                        }
+                    } else {
+                        bpStatus = true;
+                    }
+                }
+            });
+            builder.setNegativeButton("Maybe Later", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            builder.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 

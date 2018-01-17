@@ -530,7 +530,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:cardBackgroundColor="?attr/backgroundCardColor"
                 app:cardCornerRadius="0dp"
                 app:cardElevation="5dp">
@@ -630,7 +630,7 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/colorAccent"
                     android:onClick="onRemoveAdClick"
-                    android:text="Remove Ads from app for Free !"
+                    android:text="Go Ads Free"
                     android:textColor="?attr/primaryTextAccentColor"
                     android:visibility="visible" />
 
@@ -660,7 +660,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
-                        android:text="New PIB News App"
+                        android:text="PIB Reader App"
                         android:textAlignment="center"
                         android:textColor="?attr/primaryTextColor"
                         android:textSize="16sp" />
@@ -682,7 +682,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
-                            android:text="Read all current affairs, General knowledge, Government of India Updates news from PIB News app" />
+                            android:text="PIB Reader app provides easy and fast access to PIB news, AIR Radio, DD NEWS and RSTV all in a single app." />
 
                     </LinearLayout>
 

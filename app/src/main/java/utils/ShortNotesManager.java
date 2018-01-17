@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by bunny on 15/09/17.
@@ -23,12 +24,12 @@ public class ShortNotesManager implements Serializable{
     private String shortNoteHeading ,noteArticleID ,noteArticleSource, noteArticleDate, notesCategory;
     private long shortNoteEditTimeInMillis;
 
-    HashMap<String ,String> shortNotePointList;
+    TreeMap<String ,String> shortNotePointList;
 
     public ShortNotesManager() {
     }
 
-    public ShortNotesManager(HashMap<String ,String> shortNotePointList) {
+    public ShortNotesManager(TreeMap<String ,String> shortNotePointList) {
         this.shortNotePointList =shortNotePointList;
     }
 
@@ -72,12 +73,12 @@ public class ShortNotesManager implements Serializable{
         this.shortNoteEditTimeInMillis = shortNoteEditTimeInMillis;
     }
 
-    public HashMap<String, String> getShortNotePointList() {
+    public TreeMap<String, String> getShortNotePointList() {
         return shortNotePointList;
     }
 
     public void setShortNotePointList(HashMap<String, String> shortNotePointList) {
-        this.shortNotePointList = shortNotePointList;
+        this.shortNotePointList = new TreeMap(shortNotePointList);
     }
 
     public String getNotesCategory() {

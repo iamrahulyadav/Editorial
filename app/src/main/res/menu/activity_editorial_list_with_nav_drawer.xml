@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/nav_purchase"
+        android:icon="@drawable/ic_action_removeads"
+        android:title="Go Ads Free for RS. 29/month" />
+
+
     <item android:title="Search">
         <menu>
             <group android:checkableBehavior="single">
@@ -24,10 +30,6 @@
 
     </item>
 
-    <item
-        android:id="@+id/nav_removeads"
-        android:icon="@drawable/ic_action_removeads"
-        android:title="Remove Ads for free" />
 
     <item android:title="Options"
         android:titleCondensed="">
@@ -92,6 +94,10 @@
 
     </item>
 
+    <item
+        android:id="@+id/nav_removeads"
+        android:icon="@drawable/ic_action_removeads"
+        android:title="Remove Ads for free" />
 
     <item android:title="Help and Support"
         android:titleCondensed="true">
@@ -123,16 +129,11 @@
                 android:icon="@android:drawable/ic_dialog_email"
                 android:title="Suggestion" />
 
-            <item
-                android:id="@+id/nav_purchase"
-                android:icon="@android:drawable/ic_dialog_email"
-                android:title="in app purchase" />
-
-
-
-
 
         </menu>
     </item>
+
+
+
 
 </menu>

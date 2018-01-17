@@ -35,9 +35,11 @@ import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.PurchaseState;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
@@ -130,6 +132,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     Spinner spinner;
 
     BillingProcessor bp;
+    final String SUBSCRIPTION_ID = "ad_free_subscription";
 
 
     @Override
@@ -199,37 +202,65 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void initializeInAppBilling() {
-        bp = new BillingProcessor(this,
-                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4lE0nDHaciyEpkXJ2dceN9EPLiuP7hSSOIjzzOF40am/QD4Hwd4CxZg+tco/f7G6GIFW1aJgRiHOCm+crhWUJk854MmWNs3JC1hxe15vH7h0C9s4d6Iw7fTJn4GN5a5tPrQESLd/OFPixFXS7gwePWUCnYl85Uge8tqwPtf2rcotqs3bScxYQQMmCb1fNxXOgB/kULJr9hy9FIzxYdKnSrUMib3rKQTEPKFqyLZgYGOfUwvvclJ7baouZfWemW0nwWKvIxMCsBGdEBI0aCb0on+J8A+pN3f+in5HM8F3eBAHF/MTVkOVoS1EGvIJgjj5exlZJePN+NJI3WtKVFiaPQIDAQAB",
-                new BillingProcessor.IBillingHandler() {
-                    @Override
-                    public void onProductPurchased(@NonNull String productId, @Nullable TransactionDetails details) {
-                        Toast.makeText(EditorialListWithNavActivity.this, "product purchased - "+productId, Toast.LENGTH_SHORT).show();
-                    }
 
-                    @Override
-                    public void onPurchaseHistoryRestored() {
+        try {
+            bp = new BillingProcessor(this,
+                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4lE0nDHaciyEpkXJ2dceN9EPLiuP7hSSOIjzzOF40am/QD4Hwd4CxZg+tco/f7G6GIFW1aJgRiHOCm+crhWUJk854MmWNs3JC1hxe15vH7h0C9s4d6Iw7fTJn4GN5a5tPrQESLd/OFPixFXS7gwePWUCnYl85Uge8tqwPtf2rcotqs3bScxYQQMmCb1fNxXOgB/kULJr9hy9FIzxYdKnSrUMib3rKQTEPKFqyLZgYGOfUwvvclJ7baouZfWemW0nwWKvIxMCsBGdEBI0aCb0on+J8A+pN3f+in5HM8F3eBAHF/MTVkOVoS1EGvIJgjj5exlZJePN+NJI3WtKVFiaPQIDAQAB",
+                    new BillingProcessor.IBillingHandler() {
+                        @Override
+                        public void onProductPurchased(@NonNull String productId, @Nullable TransactionDetails details) {
+                            //Toast.makeText(EditorialListWithNavActivity.this, "product purchased - " + productId, Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(EditorialListWithNavActivity.this);
+                            builder.setTitle("Thank you for Subscription");
+                            builder.setMessage("We appreciate your contribution by going ads free.\n\nAds will be removed when you open the app next time.");
+                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    }
+                                }
+                            });
+                            builder.show();
 
-                    @Override
-                    public void onBillingError(int errorCode, @Nullable Throwable error) {
-
-                    }
-
-                    @Override
-                    public void onBillingInitialized() {
-
-                        Toast.makeText(EditorialListWithNavActivity.this, "billing initilized", Toast.LENGTH_SHORT).show();
-
-                        SkuDetails skuDetails= bp.getSubscriptionListingDetails("monthly_subscription");
-                        Toast.makeText(EditorialListWithNavActivity.this, "billing "+skuDetails.productId+" - "+skuDetails.isSubscription, Toast.LENGTH_SHORT).show();
-
-                        AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this,skuDetails.isSubscription);
+                            AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, true);
 
 
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onPurchaseHistoryRestored() {
+
+                        }
+
+                        @Override
+                        public void onBillingError(int errorCode, @Nullable Throwable error) {
+
+                        }
+
+                        @Override
+                        public void onBillingInitialized() {
+                            bp.loadOwnedPurchasesFromGoogle();
+
+                            try {
+                                TransactionDetails transactionDetails = bp.getSubscriptionTransactionDetails(SUBSCRIPTION_ID);
+
+                                if (transactionDetails==null){
+                                    return;
+                                }
+
+                                if (transactionDetails.purchaseInfo.purchaseData.purchaseState == PurchaseState.PurchasedSuccessfully) {
+                                    AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, true);
+                                } else {
+                                    AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, false);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -414,10 +445,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             // getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             //toolbar.setTitle(getString(R.string.app_name));
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -428,6 +456,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        try {
+            if (AdsSubscriptionManager.getSubscription(this)) {
+                View header = navigationView.getHeaderView(0);
+                TextView statusTextView = (TextView) header.findViewById(R.id.nav_header_status);
+                statusTextView.setText("Subscribed (Ads Free) RS. 29/Month");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -503,6 +541,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 Log.d("Spinner", "onItemSelected: ");
             }
         });
+
 
     }
 
@@ -739,7 +778,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         addReadStatus();
 
-        if (isFirst){
+        if (isFirst) {
             prioritizeArrayList(editorialListArrayList);
         }
 
@@ -769,14 +808,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void prioritizeArrayList(ArrayList<Object> editorialGeneralInfoArraylist) {
 
-        int replaceNumber=0;
-        for (int i=0; i<editorialGeneralInfoArraylist.size()-1;i++){
+        int replaceNumber = 0;
+        for (int i = 0; i < editorialGeneralInfoArraylist.size() - 1; i++) {
 
-            EditorialGeneralInfo editorialGeneralInfo = (EditorialGeneralInfo)editorialGeneralInfoArraylist.get(i);
+            EditorialGeneralInfo editorialGeneralInfo = (EditorialGeneralInfo) editorialGeneralInfoArraylist.get(i);
 
-            if (editorialGeneralInfo.isMustRead() && !editorialGeneralInfo.isReadStatus()){
+            if (editorialGeneralInfo.isMustRead() && !editorialGeneralInfo.isReadStatus()) {
                 editorialGeneralInfoArraylist.remove(i);
-                editorialGeneralInfoArraylist.add(replaceNumber,editorialGeneralInfo);
+                editorialGeneralInfoArraylist.add(replaceNumber, editorialGeneralInfo);
                 replaceNumber++;
             }
 
@@ -1149,8 +1188,30 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onPurchaseClick() {
         /*Intent intent = new Intent(this, SubscriptionActivity.class);
         startActivity(intent);*/
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Go Ads Free");
+            builder.setMessage("We are not a money making app. Ads are integrated to help app development and maintenance of apps.\n\nPlease make a small contribution and go ads free");
+            builder.setPositiveButton("Go Ads Free", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (bp != null) {
+                        bp.subscribe(EditorialListWithNavActivity.this, SUBSCRIPTION_ID);
+                    }
+                }
+            });
+            builder.setNegativeButton("Maybe Later", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-        bp.subscribe(this, "monthly_subscription");
+                }
+            });
+
+            builder.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void onInstallAptitudeClick() {
