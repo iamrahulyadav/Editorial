@@ -46,8 +46,8 @@
         <item>Others</item>
 
 
-
     </string-array>
+    <string name="title_activity_subscription">SubscriptionActivity</string>
 
 
 </resources>

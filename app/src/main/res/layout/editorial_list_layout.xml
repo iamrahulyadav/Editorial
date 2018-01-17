@@ -39,18 +39,21 @@
                 android:textSize="12sp"
                 android:typeface="monospace" />
 
+
             <ImageView
                 android:id="@+id/editorial_list_layout_mustRead_imageView"
                 android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/star_icon"
-                android:visibility="gone"
+                android:layout_height="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="4dp"
+                android:visibility="visible"
+                android:src="@drawable/star_icon">
 
-                />
+            </ImageView>
 
         </LinearLayout>
+
+
 
         <TextView
             android:id="@+id/editorial_list_layout_heading"
@@ -75,6 +78,8 @@
             android:text="This is sub heading text for list view this text is shown by android textview is it looking goog or not"
             android:textColor="?attr/secondaryTextColor"
             android:textSize="12sp" />
+
+
 
 
         <ImageView

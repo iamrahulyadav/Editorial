@@ -29,9 +29,28 @@ public class AdsSubscriptionManager {
         editor.apply();
     }
 
+    public static void setSubscription(Context mContext ,boolean isSubscribed ) {
+        SharedPreferences prefs = mContext.getSharedPreferences("adsmanager", 0);
+
+
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Increment launch counter
+
+        editor.putBoolean("issubscribed", isSubscribed);
+
+
+
+        editor.apply();
+    }
+
     public static boolean checkShowAds(Context mContext ) {
         SharedPreferences prefs = mContext.getSharedPreferences("adsmanager", 0);
 
+        boolean isSubscribed = prefs.getBoolean("issubscribed", false) ;
+        if (isSubscribed){
+            return false;
+        }
 
         long subscriptionTime = prefs.getLong("subscriptionTime", 0) ;
         int subscriptionDays = prefs.getInt("subscriptionDays",3);

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
@@ -35,6 +37,9 @@ import android.widget.Spinner;
 
 import android.widget.Toast;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.SkuDetails;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -124,6 +129,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private RewardedVideoAd mAd;
     Spinner spinner;
 
+    BillingProcessor bp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +187,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         openDynamicLink();
 
+        initializeInAppBilling();
+
 
         if (PushNotificationManager.getPushNotification(this)) {
             FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
@@ -187,6 +197,49 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         initializeSubscriptionAds();
 
     }
+
+    private void initializeInAppBilling() {
+        bp = new BillingProcessor(this,
+                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4lE0nDHaciyEpkXJ2dceN9EPLiuP7hSSOIjzzOF40am/QD4Hwd4CxZg+tco/f7G6GIFW1aJgRiHOCm+crhWUJk854MmWNs3JC1hxe15vH7h0C9s4d6Iw7fTJn4GN5a5tPrQESLd/OFPixFXS7gwePWUCnYl85Uge8tqwPtf2rcotqs3bScxYQQMmCb1fNxXOgB/kULJr9hy9FIzxYdKnSrUMib3rKQTEPKFqyLZgYGOfUwvvclJ7baouZfWemW0nwWKvIxMCsBGdEBI0aCb0on+J8A+pN3f+in5HM8F3eBAHF/MTVkOVoS1EGvIJgjj5exlZJePN+NJI3WtKVFiaPQIDAQAB",
+                new BillingProcessor.IBillingHandler() {
+                    @Override
+                    public void onProductPurchased(@NonNull String productId, @Nullable TransactionDetails details) {
+                        Toast.makeText(EditorialListWithNavActivity.this, "product purchased - "+productId, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPurchaseHistoryRestored() {
+
+                    }
+
+                    @Override
+                    public void onBillingError(int errorCode, @Nullable Throwable error) {
+
+                    }
+
+                    @Override
+                    public void onBillingInitialized() {
+
+                        Toast.makeText(EditorialListWithNavActivity.this, "billing initilized", Toast.LENGTH_SHORT).show();
+
+                        SkuDetails skuDetails= bp.getSubscriptionListingDetails("monthly_subscription");
+                        Toast.makeText(EditorialListWithNavActivity.this, "billing "+skuDetails.productId+" - "+skuDetails.isSubscription, Toast.LENGTH_SHORT).show();
+
+                        AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this,skuDetails.isSubscription);
+
+
+                    }
+                });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!bp.handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 
     private void getSortCondition() {
 
@@ -334,6 +387,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         if (mAd != null) {
             mAd.destroy(this);
         }
+
+        if (bp != null) {
+            bp.release();
+        }
         super.onDestroy();
     }
 
@@ -400,7 +457,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
 
 
-        addMoreButton =  findViewById(R.id.editoriallist_activity_add_button);
+        addMoreButton = findViewById(R.id.editoriallist_activity_add_button);
         addMoreButton.setVisibility(View.INVISIBLE);
 
         progressBar = (ProgressBar) findViewById(R.id.editoriallist_activity_progressbar);
@@ -466,10 +523,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 if (position == 7) {
                     sortSourceIndex = 8;
-                } else if(position ==8){
+                } else if (position == 8) {
                     sortSourceIndex = 9;
-                }
-                else if (position == 9) {
+                } else if (position == 9) {
                     sortSourceIndex = 10;
                 } else {
                     sortSourceIndex = position - 1;
@@ -672,6 +728,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             editorialGeneralInfoArraylist.remove(editorialGeneralInfoArraylist.size() - 1);
         } else {
             editorialListArrayList.clear();
+
         }
 
         int insertPosition = editorialListArrayList.size();
@@ -680,10 +737,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             editorialGeneralInfo.rectifySubHeading();
         }
 
+        addReadStatus();
+
+        if (isFirst){
+            prioritizeArrayList(editorialListArrayList);
+        }
+
         isRefreshing = false;
 
         addNativeExpressAds();
-        addReadStatus();
+
 
         if (isFirst) {
             recyclerView.smoothScrollToPosition(1);
@@ -700,6 +763,23 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
+        }
+
+    }
+
+    private void prioritizeArrayList(ArrayList<Object> editorialGeneralInfoArraylist) {
+
+        int replaceNumber=0;
+        for (int i=0; i<editorialGeneralInfoArraylist.size()-1;i++){
+
+            EditorialGeneralInfo editorialGeneralInfo = (EditorialGeneralInfo)editorialGeneralInfoArraylist.get(i);
+
+            if (editorialGeneralInfo.isMustRead() && !editorialGeneralInfo.isReadStatus()){
+                editorialGeneralInfoArraylist.remove(i);
+                editorialGeneralInfoArraylist.add(replaceNumber,editorialGeneralInfo);
+                replaceNumber++;
+            }
+
         }
 
     }
@@ -1054,6 +1134,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onInstallAptitudeClick();
                 break;
 
+            case R.id.nav_purchase:
+                onPurchaseClick();
+                break;
 
         }
 
@@ -1061,6 +1144,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onPurchaseClick() {
+        /*Intent intent = new Intent(this, SubscriptionActivity.class);
+        startActivity(intent);*/
+
+        bp.subscribe(this, "monthly_subscription");
     }
 
     public void onInstallAptitudeClick() {
@@ -1193,7 +1283,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSortBySourceClick() {
         //final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
-        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint","The Tribune","Other"};
+        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "The Tribune", "Other"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");

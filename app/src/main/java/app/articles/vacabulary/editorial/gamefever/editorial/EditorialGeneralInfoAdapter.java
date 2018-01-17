@@ -52,7 +52,8 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView heading, date, source, tag, subheading, likeText;
-        ImageView mustReadImageView, readMaskImageView;
+        View mustReadImageView;
+        ImageView  readMaskImageView;
         CardView backGroundCard;
 
         public MyViewHolder(View view) {
@@ -63,7 +64,7 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             tag = (TextView) view.findViewById(R.id.editorial_list_layout_tag);
             subheading = (TextView) view.findViewById(R.id.editorial_list_layout_subheading);
             likeText = (TextView) view.findViewById(R.id.editorial_list_layout_like);
-            mustReadImageView =(ImageView)view.findViewById(R.id.editorial_list_layout_mustRead_imageView);
+            mustReadImageView =view.findViewById(R.id.editorial_list_layout_mustRead_imageView);
 
             backGroundCard=(CardView)view.findViewById(R.id.editorial_list_layout_background_card);
 

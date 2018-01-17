@@ -6,14 +6,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
-
     <application
+        android:name="utils.VolleyManager"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="utils.VolleyManager"
-        android:hardwareAccelerated="true"
         android:theme="@style/FeedActivityThemeLight">
         <activity
             android:name=".EditorialFeedActivity"
@@ -25,9 +24,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <action android:name="android.intent.action.PROCESS_TEXT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
                 <data
                     android:host="app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity"
                     android:scheme="http" />
@@ -74,6 +74,10 @@
         <activity
             android:name=".NotesFeedActivity"
             android:label="@string/title_activity_notes_feed"
+            android:theme="@style/FeedActivityThemeLight" />
+        <activity
+            android:name=".SubscriptionActivity"
+            android:label="@string/title_activity_subscription"
             android:theme="@style/FeedActivityThemeLight"></activity>
     </application>
 
