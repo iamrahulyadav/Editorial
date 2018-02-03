@@ -103,6 +103,9 @@
         android:titleCondensed="true">
         <menu>
 
+            <item
+                android:id="@+id/nav_computer"
+                android:title="Learn Basic Computer" />
 
 
             <item
@@ -113,6 +116,7 @@
             <item
                 android:id="@+id/nav_pib_app"
                 android:title="PIB News app" />
+
 
             <item
                 android:id="@+id/nav_share"

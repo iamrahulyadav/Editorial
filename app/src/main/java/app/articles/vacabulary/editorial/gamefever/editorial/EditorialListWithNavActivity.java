@@ -46,6 +46,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.InterstitialAdListener;
@@ -223,6 +224,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                             AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, true);
 
+                            Answers.getInstance().logPurchase(new PurchaseEvent().putItemType("Subscription").putSuccess(true));
 
                         }
 
@@ -243,16 +245,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             try {
                                 TransactionDetails transactionDetails = bp.getSubscriptionTransactionDetails(SUBSCRIPTION_ID);
 
-                                if (transactionDetails==null){
+                                if (transactionDetails == null) {
+                                    AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, false);
                                     return;
                                 }
 
                                 if (transactionDetails.purchaseInfo.purchaseData.purchaseState == PurchaseState.PurchasedSuccessfully) {
                                     AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, true);
+                                    Answers.getInstance().logCustom(new CustomEvent("Subscribed user enter"));
                                 } else {
                                     AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, false);
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
@@ -1176,6 +1180,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             case R.id.nav_purchase:
                 onPurchaseClick();
                 break;
+            case R.id.nav_computer:
+                onComputerClick();
+                break;
+
 
         }
 
@@ -1185,9 +1193,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         return true;
     }
 
+    private void onComputerClick() {
+        try {
+            String link = "https://play.google.com/store/apps/details?id=app.computer.basic.quiz.craftystudio.computerbasic";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void onPurchaseClick() {
-        /*Intent intent = new Intent(this, SubscriptionActivity.class);
-        startActivity(intent);*/
+
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Go Ads Free");
@@ -1197,12 +1213,16 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int which) {
                     if (bp != null) {
                         bp.subscribe(EditorialListWithNavActivity.this, SUBSCRIPTION_ID);
+
+                        Answers.getInstance().logCustom(new CustomEvent("Subscription Flow").putCustomAttribute("Selection", "yes"));
+
                     }
                 }
             });
             builder.setNegativeButton("Maybe Later", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Answers.getInstance().logCustom(new CustomEvent("Subscription Flow").putCustomAttribute("Selection", "No"));
 
                 }
             });
@@ -1219,7 +1239,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             String link = "https://play.google.com/store/apps/details?id=app.aptitude.quiz.craftystudio.aptitudequiz";
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -1271,13 +1291,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         builder.show();
 
-       /* Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
-*/
-        // Toast.makeText(this, "Turn push off notification from settings", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -1452,7 +1465,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose source");
+        builder.setTitle("Choose Language");
         builder.setItems(languages, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

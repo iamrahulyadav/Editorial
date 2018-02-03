@@ -13,6 +13,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         >
 
@@ -84,7 +85,6 @@
                     android:text="Load More"
                     android:textAlignment="center"
                     android:textSize="20sp"
-
                     android:onClick="loadMoreClick"
                     android:layout_margin="16dp"
 

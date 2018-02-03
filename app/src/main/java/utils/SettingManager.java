@@ -53,4 +53,46 @@ public class SettingManager {
 
     }
 
+
+    public static void setVoiceReaderSpeed(Context mContext , float speed) {
+        SharedPreferences prefs = mContext.getSharedPreferences("settings", 0);
+
+
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Increment launch counter
+
+        editor.putFloat("voiceReaderSpeed", speed);
+
+
+
+        editor.apply();
+    }
+
+    public static float getVoiceReaderSpeed(Context mContext ) {
+        SharedPreferences prefs = mContext.getSharedPreferences("settings", 0);
+
+        return prefs.getFloat("voiceReaderSpeed", 1);
+
+    }
+
+    public static void setLiteReaderMode(Context mContext , boolean liteReaderMode) {
+        SharedPreferences prefs = mContext.getSharedPreferences("settings", 0);
+
+
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Increment launch counter
+        editor.putBoolean("liteMode", liteReaderMode);
+
+        editor.apply();
+    }
+
+    public static boolean getLiteReaderMode(Context mContext ) {
+        SharedPreferences prefs = mContext.getSharedPreferences("settings", 0);
+
+        return prefs.getBoolean("liteMode", false);
+
+    }
+
 }

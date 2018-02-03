@@ -75,10 +75,6 @@
             android:name=".NotesFeedActivity"
             android:label="@string/title_activity_notes_feed"
             android:theme="@style/FeedActivityThemeLight" />
-        <activity
-            android:name=".SubscriptionActivity"
-            android:label="@string/title_activity_subscription"
-            android:theme="@style/FeedActivityThemeLight"></activity>
     </application>
 
 </manifest>

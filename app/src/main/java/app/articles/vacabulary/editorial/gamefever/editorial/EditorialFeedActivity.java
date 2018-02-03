@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
@@ -60,6 +61,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.InviteEvent;
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.RatingEvent;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -142,6 +144,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     BillingProcessor bp;
     final String SUBSCRIPTION_ID = "ad_free_subscription";
     boolean bpStatus = false;
+
+    TextView descriptionTextView;
 
 
     @Override
@@ -371,6 +375,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv = (TextView) findViewById(R.id.editorial_tag_textview);
         tv.setText(editorialGeneralInfo.getEditorialTag());
 
+        descriptionTextView = (TextView) findViewById(R.id.editorial_text_textview);
+
         try {
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentId(editorialGeneralInfo.getEditorialID())
@@ -389,7 +395,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         try {
 
             String definition = textToShow;
-            TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+            TextView definitionView = descriptionTextView;
             definitionView.setTextIsSelectable(false);
             definitionView.setMovementMethod(LinkMovementMethod.getInstance());
             definitionView.setText(definition, TextView.BufferType.SPANNABLE);
@@ -613,6 +619,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 case TextToSpeech.LANG_COUNTRY_AVAILABLE:
                 case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE: {
                     result = tts.setLanguage(locale);
+                    tts.setPitch(0.9f);
+                    tts.setSpeechRate(SettingManager.getVoiceReaderSpeed(this));
                     break;
                 }
                 case TextToSpeech.LANG_NOT_SUPPORTED:
@@ -620,7 +628,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 case TextToSpeech.LANG_AVAILABLE: {
                     result = tts.setLanguage(Locale.US);
                     tts.setPitch(0.9f);
-                    tts.setSpeechRate(0.85f);
+                    tts.setSpeechRate(SettingManager.getVoiceReaderSpeed(this));
                 }
             }
 
@@ -659,9 +667,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
         try {
 
-            init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
             currentEditorialFullInfo.setEditorialExtraInfo(editorialFullInfo.getEditorialExtraInfo());
-
+            if (SettingManager.getLiteReaderMode(this)) {
+                initializeLiteReaderMode();
+            } else {
+                init(editorialFullInfo.getEditorialExtraInfo().getEditorialText());
+            }
             initializeSourceLink();
             initializeCommentList();
 
@@ -679,6 +690,44 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         findViewById(R.id.editorialfeed_activity_progressbar).setVisibility(View.GONE);
 
     }
+
+    private void initializeLiteReaderMode() {
+
+        descriptionTextView.setText(currentEditorialFullInfo.getEditorialExtraInfo().getEditorialText());
+        descriptionTextView.setTextIsSelectable(true);
+        translateText.setText("Long press on Word for Meaning");
+        descriptionTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                getSelectedWord(1000);
+                return false;
+            }
+        });
+
+    }
+
+    public void getSelectedWord(long timeDelay) {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String string = descriptionTextView.getText().toString();
+                if (descriptionTextView.hasSelection()) {
+                    selectedWord = string.substring(descriptionTextView.getSelectionStart(), descriptionTextView.getSelectionEnd()).trim();
+                }
+
+                onWordTap(selectedWord);
+
+                descriptionTextView.clearFocus();
+
+
+
+            }
+        }, timeDelay);
+
+    }
+
 
     private void initializeSuggestedEditorial() {
 
@@ -1254,29 +1303,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         return true;
     }
 
-    /*public void initializeAds() {
-        AdView mAdView = (AdView) findViewById(R.id.editorialfeed_activity_adView);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        mAdView.loadAd(adRequest);
-
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "feed top banner"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
-    }
-*/
     public void initializeNativeAds() {
         NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialfeed_native_adView);
         adView.setVisibility(View.VISIBLE);
@@ -1827,7 +1854,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             }
         }*/
 
-       bpStatus=false;
+        bpStatus = false;
 
         try {
             bp = new BillingProcessor(this,
@@ -1848,6 +1875,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             builder.show();
 
                             AdsSubscriptionManager.setSubscription(EditorialFeedActivity.this, true);
+                            Answers.getInstance().logPurchase(new PurchaseEvent().putItemType("Subscription").putSuccess(true));
 
 
                         }
@@ -1888,6 +1916,8 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                     if (bpStatus) {
                         if (bp != null) {
                             bp.subscribe(EditorialFeedActivity.this, SUBSCRIPTION_ID);
+                            Answers.getInstance().logCustom(new CustomEvent("Subscription Flow").putCustomAttribute("Selection", "yes"));
+
                         }
                     } else {
                         bpStatus = true;
@@ -1897,6 +1927,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             builder.setNegativeButton("Maybe Later", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Answers.getInstance().logCustom(new CustomEvent("Subscription Flow").putCustomAttribute("Selection", "no"));
 
                 }
             });

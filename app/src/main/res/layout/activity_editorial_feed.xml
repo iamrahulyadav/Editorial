@@ -630,7 +630,7 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/colorAccent"
                     android:onClick="onRemoveAdClick"
-                    android:text="Go Ads Free"
+                    android:text="Go Ads Free @ Rs. 29"
                     android:textColor="?attr/primaryTextAccentColor"
                     android:visibility="visible" />
 
