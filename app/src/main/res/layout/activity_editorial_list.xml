@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_editorial_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,105 +13,237 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        >
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- <android.support.v7.widget.Toolbar
+             android:id="@+id/editoriallist_activity_toolbar"
+             android:layout_width="match_parent"
+             android:layout_height="?attr/actionBarSize"
+             android:background="?attr/colorPrimary"
+             app:layout_scrollFlags="scroll|enterAlways"
+             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+
+             />-->
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/editoriallist_activity_toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            />
+            <Spinner
+                android:id="@+id/editoriallist_source_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:entries="@array/source_list">
 
+            </Spinner>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
 
-<android.support.v4.widget.SwipeRefreshLayout
-    android:layout_width="match_parent"
-    android:id="@+id/editoriallist_swiperefreshlayout"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    >
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/editoriallist_swiperefreshlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        android:layout_alignParentTop="true">
-
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/editoriallist_recyclerview"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:nestedScrollingEnabled="false">
+                android:orientation="vertical">
 
-            </android.support.v7.widget.RecyclerView>
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:scrollbars="none"
+                    android:id="@+id/editorialList_option_horizontalView"
+                    android:layout_height="48dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginRight="4dp"
+                            android:onClick="onDailyVocabularyClick"
+                            app:cardBackgroundColor="@color/colorAccent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_gravity="center"
+                                android:textColor="?attr/primaryTextAccentColor"
+                                android:text="Daily Vocabulary" />
+
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginRight="4dp"
+                            android:onClick="onGoAdsFreeClick"
+                            app:cardBackgroundColor="@color/colorAccent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_gravity="center"
+                                android:textColor="?attr/primaryTextAccentColor"
+                                android:text="Go Ads Free" />
+
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginRight="4dp"
+                            android:onClick="onNotesClick"
+                            app:cardBackgroundColor="@color/colorAccent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_gravity="center"
+                                android:textColor="?attr/primaryTextAccentColor"
+                                android:text="Notes" />
+
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginRight="4dp"
+                            android:onClick="onBookmarksClick"
+                            app:cardBackgroundColor="@color/colorAccent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_gravity="center"
+                                android:textColor="?attr/primaryTextAccentColor"
+                                android:text="BookMarks" />
+
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginRight="4dp"
+                            android:onClick="onSearchOldClick"
+                            app:cardBackgroundColor="@color/colorAccent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_gravity="center"
+                                android:textColor="?attr/primaryTextAccentColor"
+                                android:text="Search old Editorial" />
+
+                        </android.support.v7.widget.CardView>
 
 
-            <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:id="@+id/editoriallist_activity_progressbar" />
+                    </LinearLayout>
+
+                </HorizontalScrollView>
 
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/editoriallist_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editoriallist_activity_add_button"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                app:cardCornerRadius="2dp"
-                >
-                <TextView
+                </android.support.v7.widget.RecyclerView>
+
+
+                <ProgressBar
+                    android:id="@+id/editoriallist_activity_progressbar"
+                    style="?android:attr/progressBarStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Load More"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/editoriallist_activity_add_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="16dp"
                     android:onClick="loadMoreClick"
-                    android:layout_margin="16dp"
+                    app:cardCornerRadius="2dp">
 
-                    />
-            </android.support.v7.widget.CardView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="Load More"
+                        android:textAlignment="center"
+                        android:textSize="20sp"
+
+                        />
+                </android.support.v7.widget.CardView>
 
 
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
 
 
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-
-</android.support.v4.widget.SwipeRefreshLayout>
-
- <!--   <com.google.android.gms.ads.AdView
-        android:id="@+id/editorialList_activity_adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        app:adSize="BANNER"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal"
-        app:adUnitId="@string/editorialList_banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
--->
+    <!--   <com.google.android.gms.ads.AdView
+           android:id="@+id/editorialList_activity_adView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerHorizontal="true"
+           android:layout_alignParentBottom="true"
+           app:adSize="BANNER"
+           android:visibility="gone"
+           android:layout_gravity="center_horizontal"
+           app:adUnitId="@string/editorialList_banner_ad_unit_id">
+       </com.google.android.gms.ads.AdView>
+   -->
 </LinearLayout>

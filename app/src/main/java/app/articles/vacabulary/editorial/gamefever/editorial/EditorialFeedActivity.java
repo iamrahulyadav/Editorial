@@ -219,11 +219,19 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             //initializeAds();
             initializeNativeAds(true);
             initializeBottomSheetAd(true);
-            initializeSubscriptionAds();
+            //initializeSubscriptionAds();
             CardView cardView = (CardView) findViewById(R.id.editorialfeed_removeAd_cardView);
             cardView.setVisibility(View.VISIBLE);
         }
 
+        try {
+            if (AdsSubscriptionManager.getSubscription(this)) {
+                CardView cardView = (CardView) findViewById(R.id.editorialfeed_pibBox_cardView);
+                cardView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //setThemeinactivity();
 
@@ -376,6 +384,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         tv.setText(editorialGeneralInfo.getEditorialTag());
 
         descriptionTextView = (TextView) findViewById(R.id.editorial_text_textview);
+        setTextSize(descriptionTextView);
 
         try {
             Answers.getInstance().logContentView(new ContentViewEvent()
@@ -720,7 +729,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                 onWordTap(selectedWord);
 
                 descriptionTextView.clearFocus();
-
 
 
             }
@@ -1727,60 +1735,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     public void initializeSubscriptionAds() {
-     /*   mSubscriptionInterstitialAd = new InterstitialAd(this);
-        mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-8455191357100024/6262441391");
-        //test ad unit
-        //mSubscriptionInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-        mSubscriptionInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                mSubscriptionInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-
-                Button button = (Button) EditorialFeedActivity.this.findViewById(R.id.editorialfeed_removeAd_button);
-                if (AdsSubscriptionManager.checkShowAds(EditorialFeedActivity.this)) {
-                    Toast.makeText(EditorialFeedActivity.this, "You need to click on the ad to get Pro features (with no ads) \n Try again", Toast.LENGTH_LONG).show();
-                    button.setText("Try again? Click on the ads");
-                } else {
-                    Toast.makeText(EditorialFeedActivity.this, "Thank you for subscribing. \nAll the ads will be removed from next session.", Toast.LENGTH_LONG).show();
-                    button.setText("Thank you for subscription");
-                }
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Subscription ad feed").putCustomAttribute("Error code", i));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-
-                AdsSubscriptionManager.setSubscriptionTime(EditorialFeedActivity.this);
-
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Subscription").putCustomAttribute("user subscribed from feed", currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialHeading()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-*/
 
         mAd.loadAd("ca-app-pub-8455191357100024/4421294382", new AdRequest.Builder().build());
         mAd.setImmersiveMode(true);

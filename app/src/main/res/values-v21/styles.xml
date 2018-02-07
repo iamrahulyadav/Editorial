@@ -15,7 +15,7 @@
 
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#ff1b7dce</item>
+        <item name="colorAccent">#F44336</item>
         <item name="primaryTextColor">#1e1e21</item>
         <item name="secondaryTextColor">#c8636363</item>
         <item name="backgroundCardColor">#FFFF</item>

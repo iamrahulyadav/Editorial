@@ -2,6 +2,7 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +48,7 @@ public class SignInActivity extends AppCompatActivity {
 
     GoogleApiClient mGoogleApiClient;
 
-    TextView textSizeTextView, languageTextView, readerSpeedTextView, liteReaderModeTextView;
+    TextView textSizeTextView, languageTextView, readerSpeedTextView, liteReaderModeTextView, textFontTextView;
     Switch notificationSwitch, nightModeSwitch;
 
     @Override
@@ -105,6 +106,7 @@ public class SignInActivity extends AppCompatActivity {
         notificationSwitch = (Switch) findViewById(R.id.setting_notification_switch);
         nightModeSwitch = (Switch) findViewById(R.id.setting_nightMode_switch);
         liteReaderModeTextView= (TextView)findViewById(R.id.setting_liteReaderMode_textView);
+        //textFontTextView = (TextView)findViewById(R.id.setting_textFont_textView);
 
 
         initializeActivity();
@@ -209,6 +211,14 @@ public class SignInActivity extends AppCompatActivity {
             readerSpeedTextView.setText("Default");
         }else {
             readerSpeedTextView.setText("Fast");
+        }
+
+        /*Lite mode*/
+        boolean isLiteMode= SettingManager.getLiteReaderMode(this);
+        if (isLiteMode){
+            liteReaderModeTextView.setText("Lite Mode (Better performance and scrolling)");
+        }else{
+            liteReaderModeTextView.setText("Default (Try Lite mode if you are facing scrolling problem)");
         }
 
     }
@@ -469,5 +479,34 @@ public class SignInActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    public void onTextFontClick(View view) {
+
+
+
+            final CharSequence sources[] = new CharSequence[]{"Default", "Cursive"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose Text Size");
+            builder.setItems(sources, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+
+                    if (which == 0) {
+                        textFontTextView.setText("Default");
+                    } else if (which == 1) {
+                        textFontTextView.setText("Cursive");
+                    }
+
+
+                }
+            });
+
+            builder.show();
+
+
+
     }
 }

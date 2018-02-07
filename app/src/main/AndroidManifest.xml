@@ -75,6 +75,10 @@
             android:name=".NotesFeedActivity"
             android:label="@string/title_activity_notes_feed"
             android:theme="@style/FeedActivityThemeLight" />
+        <activity
+            android:name=".DailyVocabularyActivity"
+            android:label="@string/title_activity_daily_vocabulary"
+            android:theme="@style/FeedActivityThemeLight"></activity>
     </application>
 
 </manifest>

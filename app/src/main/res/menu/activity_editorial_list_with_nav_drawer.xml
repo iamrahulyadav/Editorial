@@ -4,7 +4,7 @@
     <item
         android:id="@+id/nav_purchase"
         android:icon="@drawable/ic_action_removeads"
-        android:title="Go Ads Free @ RS.29" />
+        android:title="Go Ads Free @ RS.30" />
 
 
     <item android:title="Search">
@@ -24,16 +24,22 @@
                     android:title="By Date" />
 
 
-
             </group>
         </menu>
 
     </item>
 
 
-    <item android:title="Options"
+    <item
+        android:title="Options"
         android:titleCondensed="">
         <menu>
+
+            <item
+                android:id="@+id/nav_daily_vacabulary"
+                android:icon="@drawable/ic_action_vocabulary"
+                android:title="Daily Vocabulary" />
+
             <item
                 android:id="@+id/nav_notes"
                 android:icon="@drawable/ic_action_notes"
@@ -52,12 +58,16 @@
             <item
                 android:id="@+id/nav_sign_in"
                 android:icon="@drawable/ic_action_sign_in"
-                android:title="Sign In (Required for notes)" />
+                android:title="Setting (Sign in)" />
 
 
         </menu>
     </item>
 
+    <item
+        android:id="@+id/nav_removeads"
+        android:icon="@drawable/ic_action_removeads"
+        android:title="Remove Ads for free" />
 
     <item android:title="Setting">
         <menu>
@@ -94,28 +104,23 @@
 
     </item>
 
-    <item
-        android:id="@+id/nav_removeads"
-        android:icon="@drawable/ic_action_removeads"
-        android:title="Remove Ads for free" />
 
-    <item android:title="Help and Support"
+    <item
+        android:title="Help and Support"
         android:titleCondensed="true">
         <menu>
 
             <item
-                android:id="@+id/nav_computer"
-                android:title="Learn Basic Computer" />
-
+                android:id="@+id/nav_pib_app"
+                android:title="🗞 PIB News app" />
 
             <item
                 android:id="@+id/nav_aptitude_app"
-                android:title="Aptitude preparation app" />
-
+                android:title="📊 Aptitude preparation app" />
 
             <item
-                android:id="@+id/nav_pib_app"
-                android:title="PIB News app" />
+                android:id="@+id/nav_computer"
+                android:title="🖥 Learn Basic Computer" />
 
 
             <item
@@ -136,8 +141,6 @@
 
         </menu>
     </item>
-
-
 
 
 </menu>

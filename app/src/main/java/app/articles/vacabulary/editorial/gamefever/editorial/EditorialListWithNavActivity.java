@@ -595,6 +595,48 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public void initializeSplashScreen() {
 
         setContentView(R.layout.splashlayout);
+        TextView quoteTextView = findViewById(R.id.splashScreen_quote_textView);
+
+        int random = (int) (Math.random() * 11 + 1);
+        String quote = "To acquire knowledge, one must study; but to acquire wisdom, one must observe.";
+
+        switch (random) {
+            case 1:
+                quote = "It always seems impossible until it’s done.";
+                break;
+            case 2:
+                quote = "Start where you are. Use what you have. Do what you can.";
+                break;
+            case 3:
+                quote = "The secret of success is to do the common things uncommonly well.";
+                break;
+            case 4:
+                quote = "Strive for progress, not perfection.";
+                break;
+            case 5:
+                quote = "Don’t wish it were easier; wish you were better.";
+                break;
+            case 6:
+                quote = "I don’t regret the things I’ve done. I regret the things I didn’t do when I had the chance.";
+                break;
+            case 7:
+                quote = "Push yourself, because no one else is going to do it for you.";
+                break;
+            case 8:
+                quote = "You don’t always get what you wish for; you get what you work for.";
+                break;
+            case 9:
+                quote = "It’s not about how bad you want it. It’s about how hard you’re willing to work for it.";
+                break;
+            case 10:
+                quote = "If it’s important to you, you’ll find a way. If not, you’ll find an excuse..";
+                break;
+            default:
+                quote = "To acquire knowledge, one must study; but to acquire wisdom, one must observe.";
+        }
+
+        quoteTextView.setText("\"" + quote + "\"");
+
 
     }
 
@@ -1094,9 +1136,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
     }
 
-    private void onSortByDate() {
-
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -1184,6 +1223,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onComputerClick();
                 break;
 
+            case R.id.nav_daily_vacabulary:
+                onDailyVocabularyClick(recyclerView);
+                break;
 
         }
 
@@ -1295,7 +1337,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     }
 
     private void onSortByCategory() {
-        final CharSequence category[] = new CharSequence[]{"Agriculture", "Business", "Economy", "Education", "Finance", "Forign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other", "Environment", "Social"};
+        final CharSequence category[] = new CharSequence[]{"Agriculture", "Bilateral Ties", "Economy", "Education", "Finance", "foreign Affair", "Health", "History", "India", "International", "Interview", "Judicial", "Policy", "Politics", "Sci-Tech", "Sports", "Other", "Environment", "National Issues"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -1357,7 +1399,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSortBySourceClick() {
         //final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
-        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "The Tribune", "Other"};
+        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "The Tribune", "Other", "PIB Summary" , "Down To Earth", "Economic And Political Weekly"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -1830,6 +1872,28 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    public void onDailyVocabularyClick(View view) {
+        Intent intent = new Intent(this, DailyVocabularyActivity.class);
+        startActivity(intent);
+    }
+
+    public void onGoAdsFreeClick(View view) {
+        onPurchaseClick();
+    }
+
+    public void onNotesClick(View view) {
+        onNotesClick();
+    }
+
+    public void onBookmarksClick(View view) {
+        onBookMark();
+    }
+
+
+    public void onSearchOldClick(View view) {
+        onSortByDateClick();
     }
 
 

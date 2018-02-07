@@ -14,12 +14,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import utils.Like;
 import utils.ShortNotesManager;
+import utils.Vocabulary;
 
 /**
  * Created by gamef on 23-02-2017.
@@ -657,6 +662,87 @@ public class DBHelperFirebase  {
 
     }
 
+
+    public void fetchDailyVocabularyList(int limit, final VocabularyListener vocabularyListener){
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        CollectionReference vocabReference = firestore.collection("Vocabulary");
+
+        vocabReference.orderBy("timeInMillis", com.google.firebase.firestore.Query.Direction.DESCENDING).limit(limit).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<Vocabulary> vocabularyArrayList=new ArrayList<>();
+
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Vocabulary vocabulary = document.toObject(Vocabulary.class);
+                        vocabularyArrayList.add(vocabulary);
+                    }
+                    vocabularyListener.onVocabularyList(vocabularyArrayList,true);
+
+                } else {
+                    vocabularyListener.onVocabularyList(null,false);
+                }
+            }
+        });
+
+    }
+
+    public void fetchDailyVocabularyList(int limit, long lastTimeInMillis, final VocabularyListener vocabularyListener){
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        CollectionReference vocabReference = firestore.collection("Vocabulary");
+
+        vocabReference.orderBy("timeInMillis", com.google.firebase.firestore.Query.Direction.DESCENDING).whereLessThan("timeInMillis", lastTimeInMillis).limit(limit).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<Vocabulary> vocabularyArrayList=new ArrayList<>();
+
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Vocabulary vocabulary = document.toObject(Vocabulary.class);
+                        vocabularyArrayList.add(vocabulary);
+                    }
+                    vocabularyListener.onVocabularyList(vocabularyArrayList,true);
+
+                } else {
+                    vocabularyListener.onVocabularyList(null,false);
+                }
+            }
+        });
+
+    }
+
+    public void fetchDailyVocabularyList( long startTimeInMillis, long endTimeInMillis, final VocabularyListener vocabularyListener){
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        CollectionReference vocabReference = firestore.collection("Vocabulary");
+
+        vocabReference.orderBy("timeInMillis", com.google.firebase.firestore.Query.Direction.DESCENDING).whereGreaterThanOrEqualTo("timeInMillis",startTimeInMillis).whereLessThanOrEqualTo("timeInMillis", endTimeInMillis).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<Vocabulary> vocabularyArrayList=new ArrayList<>();
+
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Vocabulary vocabulary = document.toObject(Vocabulary.class);
+                        vocabularyArrayList.add(vocabulary);
+                    }
+                    vocabularyListener.onVocabularyList(vocabularyArrayList,true);
+
+                } else {
+                    vocabularyListener.onVocabularyList(null,false);
+                }
+            }
+        });
+
+    }
+
+
+    public interface VocabularyListener {
+        void onVocabularyList(ArrayList<Vocabulary> vocabularyArrayList,boolean isSuccesful);
+
+    }
 
     public interface OnCommentListener {
         public void onCommentInserted(Comment comment);

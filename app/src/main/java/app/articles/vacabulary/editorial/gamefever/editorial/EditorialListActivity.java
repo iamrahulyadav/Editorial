@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.facebook.ads.Ad;
@@ -185,9 +186,12 @@ public class EditorialListActivity extends AppCompatActivity {
 
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.editoriallist_activity_toolbar);
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
+
+        Spinner spinner = (Spinner) findViewById(R.id.editoriallist_source_spinner);
+        spinner.setVisibility(View.GONE);
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -197,6 +201,10 @@ public class EditorialListActivity extends AppCompatActivity {
             //getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setSubtitle("BookMarks");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            View view = findViewById(R.id.editorialList_option_horizontalView);
+            view.setVisibility(View.GONE);
+
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -460,5 +468,20 @@ public class EditorialListActivity extends AppCompatActivity {
         }
 
 
+    public void onDailyVocabularyClick(View view) {
+    }
 
+    public void onGoAdsFreeClick(View view) {
+    }
+
+    public void onNotesClick(View view) {
+
+    }
+
+    public void onBookmarksClick(View view) {
+
+    }
+
+    public void onSearchOldClick(View view) {
+    }
 }
