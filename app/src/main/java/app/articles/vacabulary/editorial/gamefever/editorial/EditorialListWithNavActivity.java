@@ -1227,12 +1227,25 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onDailyVocabularyClick(recyclerView);
                 break;
 
+            case R.id.nav_english_grammer:
+                onEnglishGrammer();
+                break;
+
         }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onEnglishGrammer() {
+        try {
+            String link = "https://play.google.com/store/apps/details?id=app.english.grammar.craftystudio.englishgrammar";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void onComputerClick() {

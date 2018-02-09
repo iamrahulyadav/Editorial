@@ -115,6 +115,10 @@
                 android:title="🗞 PIB News app" />
 
             <item
+            android:id="@+id/nav_english_grammer"
+            android:title="English Grammer" />
+
+            <item
                 android:id="@+id/nav_aptitude_app"
                 android:title="📊 Aptitude preparation app" />
 
