@@ -4,7 +4,7 @@
     <item
         android:id="@+id/nav_purchase"
         android:icon="@drawable/ic_action_removeads"
-        android:title="Go Ads Free @ RS.30" />
+        android:title="Go Ads Free @ Rs.30" />
 
 
     <item android:title="Search">
@@ -38,7 +38,7 @@
             <item
                 android:id="@+id/nav_daily_vacabulary"
                 android:icon="@drawable/ic_action_vocabulary"
-                android:title="Daily Vocabulary" />
+                android:title="Daily Vocabulary (New!)" />
 
             <item
                 android:id="@+id/nav_notes"
@@ -53,12 +53,12 @@
             <item
                 android:id="@+id/nav_vacabulary"
                 android:icon="@drawable/ic_action_vocabulary"
-                android:title="vocabulary" />
+                android:title="Vocabulary (saved words)" />
 
             <item
                 android:id="@+id/nav_sign_in"
                 android:icon="@drawable/ic_action_sign_in"
-                android:title="Setting (Sign in)" />
+                android:title="Settings (Sign in)" />
 
 
         </menu>
@@ -96,7 +96,7 @@
                 <item
                     android:id="@+id/nav_pushNotification"
                     android:icon="@android:drawable/ic_menu_more"
-                    android:title="Turn off Push notifiacation" />
+                    android:title="Turn off Notification" />
 
             </group>
 

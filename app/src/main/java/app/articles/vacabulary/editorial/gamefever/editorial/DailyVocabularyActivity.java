@@ -22,6 +22,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -77,6 +81,9 @@ public class DailyVocabularyActivity extends AppCompatActivity implements
                     for (Vocabulary vocab : vocabularyArrayList) {
                         mVocabularyList.add(vocab);
                     }
+
+                    addNativeAds();
+
                     mPagerAdapter.notifyDataSetChanged();
 
                     hideLoadingDialog();
@@ -101,6 +108,49 @@ public class DailyVocabularyActivity extends AppCompatActivity implements
         }
 
 
+    }
+
+    private void addNativeAds() {
+        for (int i=0;i<mVocabularyList.size();i=i+3){
+
+
+            NativeAd nativeAd = new NativeAd(this, "113079036048193_145598676129562");
+            nativeAd.setAdListener(new AdListener() {
+
+                @Override
+                public void onError(Ad ad, AdError adError) {
+
+                    try {
+                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load").putCustomAttribute("Placement", "vocabulary card").putCustomAttribute("errorType", adError.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    mPagerAdapter.notifyDataSetChanged();
+
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+            });
+
+            // Initiate a request to load an ad.
+            nativeAd.loadAd();
+
+            mVocabularyList.get(i).setNativeAd(nativeAd);
+            mVocabularyList.get(i).setContentType(1);
+
+        }
     }
 
     public void showLoadingDialog(String message) {

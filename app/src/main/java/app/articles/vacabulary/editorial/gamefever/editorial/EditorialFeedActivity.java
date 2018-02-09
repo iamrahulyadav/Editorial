@@ -1526,8 +1526,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
                 try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native top").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load").putCustomAttribute("Placement", "Feed native top").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -464,7 +464,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             if (AdsSubscriptionManager.getSubscription(this)) {
                 View header = navigationView.getHeaderView(0);
                 TextView statusTextView = (TextView) header.findViewById(R.id.nav_header_status);
-                statusTextView.setText("Subscribed (Ads Free) @ RS. 29/Month");
+                statusTextView.setText("Subscribed (Ads Free) @ Rs. 30/Month");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package utils;
 
+import com.facebook.ads.NativeAd;
+
 import java.io.Serializable;
 
 
@@ -7,6 +9,9 @@ public class Vocabulary implements Serializable {
 
     private String mWord, mSynonyms, mAntonyms, mForms, mExample, mRelated, mWordMeaning, mHindiMeaning, mPartOfSpeech, mImageURL, wordID;
     private long timeInMillis;
+
+    transient NativeAd nativeAd;
+    int contentType=0;
 
 
     public String getmWord() {
@@ -103,5 +108,21 @@ public class Vocabulary implements Serializable {
 
     public void setTimeInMillis(long timeInMillis) {
         this.timeInMillis = timeInMillis;
+    }
+
+    public NativeAd getNativeAd() {
+        return nativeAd;
+    }
+
+    public void setNativeAd(NativeAd nativeAd) {
+        this.nativeAd = nativeAd;
+    }
+
+    public int getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(int contentType) {
+        this.contentType = contentType;
     }
 }

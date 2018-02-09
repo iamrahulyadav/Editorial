@@ -1,22 +1,31 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAdView;
+import com.facebook.ads.NativeAdViewAttributes;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import utils.NightModeManager;
 import utils.SettingManager;
 import utils.Vocabulary;
 
@@ -76,17 +85,17 @@ public class DailyVocabularyFragment extends Fragment {
         meaningTextView = (TextView) view.findViewById(R.id.vocabularyFragment_meaning_textView);
         synonymsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_synonyms_textView);
         antonymsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_antonyms_textView);
-        formsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_forms_textView);
+        //formsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_forms_textView);
         relatedWordTextView = (TextView) view.findViewById(R.id.vocabularyFragment_relatedWord_textView);
         exampleTextView = (TextView) view.findViewById(R.id.vocabularyFragment_example_textView);
         dateTextView = (TextView) view.findViewById(R.id.vocabularyFragment_date_textView);
 
-        wordTextView.setText(vocabulary.getmWord());
+        wordTextView.setText(vocabulary.getmWord()+" ("+vocabulary.getmPartOfSpeech()+")");
 
         meaningTextView.setText(vocabulary.getmWordMeaning()+" ( "+vocabulary.getmHindiMeaning()+" )");
         synonymsTextView.setText(vocabulary.getmSynonyms());
         antonymsTextView.setText(vocabulary.getmAntonyms());
-        formsTextView.setText(vocabulary.getmForms());
+       // formsTextView.setText(vocabulary.getmForms());
         relatedWordTextView.setText(vocabulary.getmRelated());
         exampleTextView.setText(vocabulary.getmExample());
 
@@ -109,8 +118,103 @@ public class DailyVocabularyFragment extends Fragment {
             wordImageView.setVisibility(View.GONE);
         }
 
+        initializeNAtiveAds(view);
 
         return view;
+    }
+
+    private void initializeNAtiveAds(final View view) {
+        final CardView cardView = view.findViewById(R.id.vocabularyFragment_adContainer_cardView);
+
+        if (vocabulary.getContentType()==1){
+
+            if (vocabulary.getNativeAd()==null){
+                cardView.setVisibility(View.GONE);
+                return;
+            }else {
+                if (vocabulary.getNativeAd().isAdLoaded()){
+                    cardView.setVisibility(View.VISIBLE);
+                    NativeAdViewAttributes viewAttributes;
+                    if (NightModeManager.getNightMode(getContext())) {
+
+                        viewAttributes = new NativeAdViewAttributes()
+                                .setBackgroundColor(Color.parseColor("#28292e"))
+                                .setTitleTextColor(Color.WHITE)
+                                .setButtonTextColor(Color.WHITE)
+                                .setDescriptionTextColor(Color.WHITE)
+                                .setButtonColor(Color.parseColor("#F44336"));
+
+                    } else {
+                    /*viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.LTGRAY)
+
+                            .setButtonTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));*/
+
+                        viewAttributes = new NativeAdViewAttributes()
+                                .setButtonTextColor(Color.WHITE)
+                                .setButtonColor(Color.parseColor("#F44336"));
+
+                    }
+
+                    View adView = NativeAdView.render(getContext(), vocabulary.getNativeAd(), NativeAdView.Type.HEIGHT_120, viewAttributes);
+
+
+
+                    cardView.removeAllViews();
+                    cardView.addView(adView);
+
+                }else {
+                    cardView.setVisibility(View.GONE);
+
+                    vocabulary.getNativeAd().setAdListener(new AdListener() {
+                        @Override
+                        public void onError(Ad ad, AdError adError) {
+
+                        }
+
+                        @Override
+                        public void onAdLoaded(Ad ad) {
+
+                            if (view != null) {
+
+                                try {
+
+                                    cardView.setVisibility(View.VISIBLE);
+
+
+                                    cardView.removeAllViews();
+
+                                    View adView = NativeAdView.render(getContext(), vocabulary.getNativeAd(), NativeAdView.Type.HEIGHT_120);
+                                    // Add the Native Ad View to your ad container
+                                    cardView.addView(adView);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onAdClicked(Ad ad) {
+
+                        }
+
+                        @Override
+                        public void onLoggingImpression(Ad ad) {
+
+                        }
+                    });
+
+
+                }
+            }
+
+        }else{
+            cardView.setVisibility(View.GONE);
+            return;
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
