@@ -235,6 +235,19 @@ public class VacabularyActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
+
     private void onShareClick() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
@@ -243,15 +256,6 @@ public class VacabularyActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
-    private void onSettingClick() {
-    }
-
-
-    private void onRefreashClick() {
-
-
-
-    }
 
     public boolean onSupportNavigateUp() {
         onBackPressed();

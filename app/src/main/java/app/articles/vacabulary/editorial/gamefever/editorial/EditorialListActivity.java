@@ -484,4 +484,12 @@ public class EditorialListActivity extends AppCompatActivity {
 
     public void onSearchOldClick(View view) {
     }
+
+    public void onPIBSummaryClick(View view) {
+    }
+
+    public void onTheHinduClick(View view) {
+    }
+
+
 }

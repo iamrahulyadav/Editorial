@@ -3,22 +3,9 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 
-import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.protocol.BasicHttpContext;
-import cz.msebera.android.httpclient.protocol.HttpContext;
 
 public class Dictionary {
     private String word;
@@ -144,7 +131,7 @@ public class Dictionary {
     }
 
 
-    public void fetchWordMeaning(String mword, EditorialFeedActivity activity) {
+   /* public void fetchWordMeaning(String mword, EditorialFeedActivity activity) {
         this.setWord(mword.trim());
         editorialFeedActivity = activity;
         new GetWordMeaning().execute();
@@ -153,7 +140,7 @@ public class Dictionary {
         new GetRelatedWord().execute();
         Log.d("My TAg", "after GetWordSynonym call");
 
-    }
+    }*/
 
 
     public void processWordMeaning() {
@@ -192,7 +179,6 @@ public class Dictionary {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
 
                     }
                 });
@@ -201,7 +187,7 @@ public class Dictionary {
 // Access the RequestQueue through your singleton class.
         requestQueue.add(jsObjRequest);
     }
-*/
+
 
     private class GetWordMeaning extends AsyncTask<Void, Void, String> {
 
@@ -323,9 +309,9 @@ public class Dictionary {
 
 
     }
-
-
-  /* private class GetWordMeaning extends AsyncTask<Void, Void, String> {
+*/
+/*
+  private class GetWordMeaning extends AsyncTask<Void, Void, String> {
 
         protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
             InputStream in = entity.getContent();
@@ -406,7 +392,7 @@ public class Dictionary {
 
 
     }
-*/
+
 
     private class GetRelatedWord extends AsyncTask<Void, Void, String> {
 
@@ -488,6 +474,6 @@ public class Dictionary {
 
 
     }
-
+*/
 
 }

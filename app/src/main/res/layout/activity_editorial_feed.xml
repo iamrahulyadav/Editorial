@@ -62,10 +62,9 @@
                     android:focusable="true"
                     android:fontFamily="serif"
                     android:text="Heading text"
-                    android:textAlignment="center"
                     android:textAllCaps="true"
                     android:textColor="?attr/primaryTextColor"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
 

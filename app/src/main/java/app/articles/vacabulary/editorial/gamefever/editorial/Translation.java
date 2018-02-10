@@ -1,49 +1,24 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.util.Xml;
-import android.widget.TextView;
 
-import com.android.volley.NetworkResponse;
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
+
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
-import cz.msebera.android.httpclient.ExceptionLogger;
-import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.protocol.BasicHttpContext;
-import cz.msebera.android.httpclient.protocol.HTTP;
-import cz.msebera.android.httpclient.protocol.HttpContext;
-import cz.msebera.android.httpclient.util.EntityUtils;
 import utils.LanguageManager;
 import utils.VolleyManager;
 
 import static android.content.ContentValues.TAG;
-import static java.lang.System.in;
 
 /**
  * Created by gamef on 22-02-2017.
@@ -99,7 +74,7 @@ public class Translation {
     }
 
 
-    private class Hinditranslation extends AsyncTask<Void, Void, String> {
+   /* private class Hinditranslation extends AsyncTask<Void, Void, String> {
 
         protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
             InputStream in = entity.getContent();
@@ -192,7 +167,7 @@ public class Translation {
 
 
     }
-
+*/
 
     public void translate(){
 

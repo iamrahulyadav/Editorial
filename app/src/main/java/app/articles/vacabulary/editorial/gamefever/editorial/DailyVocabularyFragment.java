@@ -15,12 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAdView;
 import com.facebook.ads.NativeAdViewAttributes;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +29,7 @@ import java.util.Date;
 import utils.NightModeManager;
 import utils.SettingManager;
 import utils.Vocabulary;
+import utils.VolleyManager;
 
 
 /**
@@ -77,11 +79,11 @@ public class DailyVocabularyFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_vocabulary, container, false);
 
-        TextView dateTextView,wordTextView, meaningTextView, synonymsTextView, antonymsTextView, formsTextView, relatedWordTextView, exampleTextView;
-        ImageView wordImageView;
+        TextView dateTextView, wordTextView, meaningTextView, synonymsTextView, antonymsTextView, formsTextView, relatedWordTextView, exampleTextView;
+        NetworkImageView wordImageView;
 
         wordTextView = (TextView) view.findViewById(R.id.vocabularyFragment_word_textView);
-        wordImageView = (ImageView) view.findViewById(R.id.vocabularyFragment_word_imageView);
+        wordImageView = (NetworkImageView) view.findViewById(R.id.vocabularyFragment_word_networkImageView);
         meaningTextView = (TextView) view.findViewById(R.id.vocabularyFragment_meaning_textView);
         synonymsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_synonyms_textView);
         antonymsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_antonyms_textView);
@@ -90,12 +92,12 @@ public class DailyVocabularyFragment extends Fragment {
         exampleTextView = (TextView) view.findViewById(R.id.vocabularyFragment_example_textView);
         dateTextView = (TextView) view.findViewById(R.id.vocabularyFragment_date_textView);
 
-        wordTextView.setText(vocabulary.getmWord()+" ("+vocabulary.getmPartOfSpeech()+")");
+        wordTextView.setText(vocabulary.getmWord() + " (" + vocabulary.getmPartOfSpeech() + ")");
 
-        meaningTextView.setText(vocabulary.getmWordMeaning()+" ( "+vocabulary.getmHindiMeaning()+" )");
+        meaningTextView.setText(vocabulary.getmWordMeaning() + " ( " + vocabulary.getmHindiMeaning() + " )");
         synonymsTextView.setText(vocabulary.getmSynonyms());
         antonymsTextView.setText(vocabulary.getmAntonyms());
-       // formsTextView.setText(vocabulary.getmForms());
+        // formsTextView.setText(vocabulary.getmForms());
         relatedWordTextView.setText(vocabulary.getmRelated());
         exampleTextView.setText(vocabulary.getmExample());
 
@@ -109,13 +111,19 @@ public class DailyVocabularyFragment extends Fragment {
             e.printStackTrace();
         }
 
-        if (vocabulary.getmImageURL() != null && !vocabulary.getmImageURL().isEmpty()) {
-            Picasso.with(getContext())
-                    .load(vocabulary.getmImageURL())
-                    .into(wordImageView);
+        try {
+            if (vocabulary.getmImageURL() != null && !vocabulary.getmImageURL().isEmpty()) {
+                ImageLoader imageLoader = VolleyManager.getInstance().getImageLoader();
 
-        } else {
-            wordImageView.setVisibility(View.GONE);
+
+                wordImageView.setImageUrl(vocabulary.getmImageURL(), imageLoader);
+
+
+            } else {
+                wordImageView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         initializeNAtiveAds(view);
@@ -126,13 +134,13 @@ public class DailyVocabularyFragment extends Fragment {
     private void initializeNAtiveAds(final View view) {
         final CardView cardView = view.findViewById(R.id.vocabularyFragment_adContainer_cardView);
 
-        if (vocabulary.getContentType()==1){
+        if (vocabulary.getContentType() == 1) {
 
-            if (vocabulary.getNativeAd()==null){
+            if (vocabulary.getNativeAd() == null) {
                 cardView.setVisibility(View.GONE);
                 return;
-            }else {
-                if (vocabulary.getNativeAd().isAdLoaded()){
+            } else {
+                if (vocabulary.getNativeAd().isAdLoaded()) {
                     cardView.setVisibility(View.VISIBLE);
                     NativeAdViewAttributes viewAttributes;
                     if (NightModeManager.getNightMode(getContext())) {
@@ -160,11 +168,10 @@ public class DailyVocabularyFragment extends Fragment {
                     View adView = NativeAdView.render(getContext(), vocabulary.getNativeAd(), NativeAdView.Type.HEIGHT_120, viewAttributes);
 
 
-
                     cardView.removeAllViews();
                     cardView.addView(adView);
 
-                }else {
+                } else {
                     cardView.setVisibility(View.GONE);
 
                     vocabulary.getNativeAd().setAdListener(new AdListener() {
@@ -188,7 +195,7 @@ public class DailyVocabularyFragment extends Fragment {
                                     View adView = NativeAdView.render(getContext(), vocabulary.getNativeAd(), NativeAdView.Type.HEIGHT_120);
                                     // Add the Native Ad View to your ad container
                                     cardView.addView(adView);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -211,7 +218,7 @@ public class DailyVocabularyFragment extends Fragment {
                 }
             }
 
-        }else{
+        } else {
             cardView.setVisibility(View.GONE);
             return;
         }

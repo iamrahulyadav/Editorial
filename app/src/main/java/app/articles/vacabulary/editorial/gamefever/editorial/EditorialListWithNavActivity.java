@@ -570,6 +570,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     sortSourceIndex = 9;
                 } else if (position == 9) {
                     sortSourceIndex = 10;
+                } else if (position == 10) {
+                    sortSourceIndex = 11;
+                } else if (position == 11) {
+                    sortSourceIndex = 12;
+                } else if (position == 12) {
+                    sortSourceIndex = 13;
                 } else {
                     sortSourceIndex = position - 1;
                 }
@@ -579,6 +585,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 //fetchEditorialSourceSortList();
                 fetchEditorialGeneralList();
+                try {
+                    swipeRefreshLayout.setRefreshing(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -1412,7 +1423,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void onSortBySourceClick() {
         //final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "The Telegraph", "NY Times", "Live Mint", "Business Standard", "Other"};
-        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "The Tribune", "Other", "PIB Summary" , "Down To Earth", "Economic And Political Weekly"};
+        final CharSequence sources[] = new CharSequence[]{"All", "The Hindu", "Financial Express", "Economic Times", "Indian Express", "TOI", "Hindustan Times", "Live Mint", "The Tribune", "Other", "PIB Summary", "Down To Earth", "Economic And Political Weekly"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose source");
@@ -1430,14 +1441,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     fetchEditorialSourceSortList();
                 }
 */
-                onSortBySourceSelected(which);
+                //onSortBySourceSelected(which);
 
                 spinner.setSelection(which, true);
 
                 try {
                     Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", sources[which].toString()));
-                } catch (Exception e) {
 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -1909,5 +1921,33 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         onSortByDateClick();
     }
 
+
+    public void onPIBSummaryClick(View view) {
+
+        try {
+            spinner.setSelection(10, true);
+
+
+            Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", "PIB summary from top head"));
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void onTheHinduClick(View view) {
+
+        try {
+            spinner.setSelection(1, true);
+
+
+            Answers.getInstance().logCustom(new CustomEvent("search Source").putCustomAttribute("Category name", "The Hindu from top head"));
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void onRateUsClick(View view) {
+        onRateUs();
+    }
 
 }

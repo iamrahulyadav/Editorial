@@ -72,11 +72,10 @@
                         android:orientation="vertical">
 
 
-                        <ImageView
-                            android:id="@+id/vocabularyFragment_word_imageView"
+                        <com.android.volley.toolbox.NetworkImageView
+                            android:id="@+id/vocabularyFragment_word_networkImageView"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-
                             android:scaleType="fitXY" />
 
                         <LinearLayout
