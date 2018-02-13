@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
+import utils.AdsSubscriptionManager;
 import utils.NightModeManager;
 import utils.Vocabulary;
 import utils.ZoomOutPageTransformer;
@@ -82,7 +83,13 @@ public class DailyVocabularyActivity extends AppCompatActivity implements
                         mVocabularyList.add(vocab);
                     }
 
-                    addNativeAds();
+                    try {
+                        if (AdsSubscriptionManager.checkShowAds(DailyVocabularyActivity.this)) {
+                            addNativeAds();
+                        }
+                    } catch (Exception e) {
+
+                    }
 
                     mPagerAdapter.notifyDataSetChanged();
 
@@ -111,7 +118,7 @@ public class DailyVocabularyActivity extends AppCompatActivity implements
     }
 
     private void addNativeAds() {
-        for (int i=0;i<mVocabularyList.size();i=i+3){
+        for (int i = 0; i < mVocabularyList.size(); i = i + 3) {
 
 
             NativeAd nativeAd = new NativeAd(this, "113079036048193_145598676129562");
