@@ -279,6 +279,8 @@ public class DailyVocabularyActivity extends AppCompatActivity implements
                     mVocabularyList.addAll(vocabularyArrayList);
 
                     mPagerAdapter.notifyDataSetChanged();
+
+                    mPager.setAdapter(mPagerAdapter);
                     hideLoadingDialog();
 
                 } else {

@@ -75,9 +75,9 @@ public class DatabaseHandlerBookMark extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
             values.put(KEY_EDITORIAL_ID, "'" + editorialGeneralInfo.getEditorialID() + "'");
-            values.put(KEY_EDITORIAL_HEADING, "'" + editorialGeneralInfo.getEditorialHeading() + "'");
-            values.put(KEY_EDITORIAL_SUB_HEADING, "'" + editorialGeneralInfo.getEditorialSubHeading() + "'");
-            values.put(KEY_EDITORIAL_SOURCE, "'" + editorialGeneralInfo.getEditorialSource() + "'");
+            values.put(KEY_EDITORIAL_HEADING,  editorialGeneralInfo.getEditorialHeading() );
+            values.put(KEY_EDITORIAL_SUB_HEADING,   editorialGeneralInfo.getEditorialSourceLink() );
+            values.put(KEY_EDITORIAL_SOURCE, editorialGeneralInfo.getEditorialSource() );
             values.put(KEY_EDITORIAL_TAG, "'" + editorialGeneralInfo.getEditorialTag() + "'");
             values.put(KEY_EDITORIAL_DATE, "'" + editorialGeneralInfo.getEditorialDate() + "'");
             values.put(KEY_EDITORIAL_TEXT, "'" + editorialExtraInfo.getEditorialText() + "'");

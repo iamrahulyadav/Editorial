@@ -21,8 +21,9 @@ import java.util.TreeMap;
  */
 
 public class ShortNotesManager implements Serializable{
-    private String shortNoteHeading ,noteArticleID ,noteArticleSource, noteArticleDate, notesCategory;
+    private String shortNoteHeading ,noteArticleID ,noteArticleSource, noteArticleDate, notesCategory, articleLink;
     private long shortNoteEditTimeInMillis;
+    int sourceIndex;
 
     TreeMap<String ,String> shortNotePointList;
 
@@ -89,7 +90,21 @@ public class ShortNotesManager implements Serializable{
         this.notesCategory = notesCategory;
     }
 
+    public int getSourceIndex() {
+        return sourceIndex;
+    }
 
+    public void setSourceIndex(int sourceIndex) {
+        this.sourceIndex = sourceIndex;
+    }
+
+    public String getArticleLink() {
+        return articleLink;
+    }
+
+    public void setArticleLink(String articleLink) {
+        this.articleLink = articleLink;
+    }
 
     public void uploadShortNote(String userUID){
          DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("shortNote/"+userUID+"/"+getNoteArticleID());

@@ -28,6 +28,7 @@ public class Translation {
     String word ;
     String wordTranslation;
     EditorialFeedActivity editorialFeedActivity;
+    TranslateListener translateListener;
 
     public Translation(String word) {
         this.word = word;
@@ -65,11 +66,29 @@ public class Translation {
 
     }
 
+    public void fetchTranslation(TranslateListener translateListener){
+
+
+        Translation.this.translateListener=translateListener;
+        translate();
+
+        Log.d("tag", "fetchTranslation: After fetching translation");
+
+    }
+
     public void completeFetching(){
         /*call desired method and notify it that translation is fetched sucesfully*/
         Log.d("TAG", "doInBackground: "+wordTranslation);
-        if(!wordTranslation.equalsIgnoreCase("null")) {
+        if(wordTranslation.equalsIgnoreCase("null")) {
+            return;
+        }
+
+        if (editorialFeedActivity!=null){
             editorialFeedActivity.updateTranslateText(this);
+
+        }
+        if (translateListener!=null){
+            translateListener.onTranslate(this);
         }
     }
 
@@ -216,6 +235,10 @@ public class Translation {
         VolleyManager.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
     }
 
+
+    public interface TranslateListener{
+        void onTranslate(Translation translation);
+    }
 
 
 }

@@ -57,14 +57,13 @@ public class NotesFeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (NightModeManager.getNightMode(this)){
+        if (NightModeManager.getNightMode(this)) {
             setTheme(R.style.FeedActivityThemeDark);
         }
 
         setContentView(R.layout.activity_notes_feed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         initializeActivity();
@@ -89,12 +88,12 @@ public class NotesFeedActivity extends AppCompatActivity {
         }
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
-           initializeNativeAds(true);
+            initializeNativeAds(true);
         }
 
         try {
-            Answers.getInstance().logCustom(new CustomEvent("Notes activity feed open").putCustomAttribute("Editorial heading",shortNotesManager.getShortNoteHeading()));
-        }catch (Exception e){
+            Answers.getInstance().logCustom(new CustomEvent("Notes activity feed open").putCustomAttribute("Editorial heading", shortNotesManager.getShortNoteHeading()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -124,7 +123,7 @@ public class NotesFeedActivity extends AppCompatActivity {
     }
 
     private void initializeNativeAds(boolean isFacebook) {
-       final NativeAd nativeAd = new NativeAd(this, "113079036048193_120131468676283");
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_120131468676283");
 
 
         nativeAd.setAdListener(new com.facebook.ads.AdListener() {
@@ -139,7 +138,7 @@ public class NotesFeedActivity extends AppCompatActivity {
                 NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
                         .setAutoplay(true);
 
-                View adView = NativeAdView.render(NotesFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400,viewAttributes);
+                View adView = NativeAdView.render(NotesFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400, viewAttributes);
                 // Find the Ad Container
                 CardView adContainer = (CardView) findViewById(R.id.notesFeed_adContainer_linearLayout);
 
@@ -160,7 +159,6 @@ public class NotesFeedActivity extends AppCompatActivity {
 
         // Initiate a request to load an ad.
         nativeAd.loadAd();
-
 
 
     }
@@ -222,7 +220,19 @@ public class NotesFeedActivity extends AppCompatActivity {
     }
 
     private void onReadEditorialClick() {
-        Intent intent = new Intent(this, EditorialFeedActivity.class);
+
+        Intent intent;
+
+       /* if (shortNotesManager.getArticleLink() == null) {
+            intent = new Intent(this, EditorialFeedActivity.class);
+        } else if (shortNotesManager.getNoteArticleSource().equalsIgnoreCase("The Hindu")) {
+
+            intent = new Intent(this, EditorialFeedWebViewActivity.class);
+
+        } else {
+            intent = new Intent(this, EditorialFeedActivity.class);
+        }*/
+        intent = new Intent(this, EditorialFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("editorialID", shortNotesManager.getNoteArticleID());
         intent.putExtra("isPushNotification", true);
@@ -349,10 +359,10 @@ public class NotesFeedActivity extends AppCompatActivity {
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                 shortNotesManager.getShortNoteHeading()
-                +"\n\n"+shortNotesText
-                +"\n\n️ Notes made with Daily Editorial 🗞 \n Article link - "
-                +shortLink
-                );
+                        + "\n\n" + shortNotesText
+                        + "\n\n️ Notes made with Daily Editorial 🗞 \n Article link - "
+                        + shortLink
+        );
         startActivity(Intent.createChooser(sharingIntent, "Share Notes via"));
         try {
             Answers.getInstance().logCustom(new CustomEvent("Share link created").putCustomAttribute("Content Id", shortNotesManager.getNoteArticleID())

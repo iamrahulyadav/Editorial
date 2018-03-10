@@ -79,7 +79,7 @@ public class DailyVocabularyFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_vocabulary, container, false);
 
-        TextView dateTextView, wordTextView, meaningTextView, synonymsTextView, antonymsTextView, formsTextView, relatedWordTextView, exampleTextView;
+        TextView dateTextView, wordTextView, meaningTextView, synonymsTextView, antonymsTextView, partOfSpeechTextView, relatedWordTextView, exampleTextView;
         NetworkImageView wordImageView;
 
         wordTextView = (TextView) view.findViewById(R.id.vocabularyFragment_word_textView);
@@ -87,12 +87,13 @@ public class DailyVocabularyFragment extends Fragment {
         meaningTextView = (TextView) view.findViewById(R.id.vocabularyFragment_meaning_textView);
         synonymsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_synonyms_textView);
         antonymsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_antonyms_textView);
-        //formsTextView = (TextView) view.findViewById(R.id.vocabularyFragment_forms_textView);
+        partOfSpeechTextView = (TextView) view.findViewById(R.id.vocabularyFragment_partOfSpeech_textView);
         relatedWordTextView = (TextView) view.findViewById(R.id.vocabularyFragment_relatedWord_textView);
         exampleTextView = (TextView) view.findViewById(R.id.vocabularyFragment_example_textView);
         dateTextView = (TextView) view.findViewById(R.id.vocabularyFragment_date_textView);
 
-        wordTextView.setText(vocabulary.getmWord() + " (" + vocabulary.getmPartOfSpeech() + ")");
+        wordTextView.setText(vocabulary.getmWord() );
+        partOfSpeechTextView.setText("("+vocabulary.getmPartOfSpeech()+")");
 
         meaningTextView.setText(vocabulary.getmWordMeaning() + " ( " + vocabulary.getmHindiMeaning() + " )");
         synonymsTextView.setText(vocabulary.getmSynonyms());

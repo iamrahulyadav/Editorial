@@ -70,6 +70,7 @@ import com.facebook.ads.NativeAdView;
 import com.facebook.ads.NativeAdViewAttributes;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -326,6 +327,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
                             e.printStackTrace();
                         }
 
+                        if (editorialGeneralInfo.getEditorialSourceIndex() == 0) {
+                            openEditorialWebviewActivity();
+                        }
+
+
                     } else {
                         Toast.makeText(EditorialFeedActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                     }
@@ -397,6 +403,14 @@ public class EditorialFeedActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
+    }
+
+    private void openEditorialWebviewActivity() {
+        Intent intent = new Intent(EditorialFeedActivity.this, EditorialFeedWebViewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("editorial", currentEditorialFullInfo.getEditorialGeneralInfo());
+        startActivity(intent);
+        finish();
     }
 
     private void init(String textToShow) {
@@ -1178,6 +1192,9 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
             shortNotesManager.setNotesCategory(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialCategory());
 
+            shortNotesManager.setArticleLink(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceLink());
+            shortNotesManager.setSourceIndex(currentEditorialFullInfo.getEditorialGeneralInfo().getEditorialSourceIndex());
+
             ActivityCompat.invalidateOptionsMenu(this);
 
 
@@ -1313,28 +1330,50 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
     public void initializeNativeAds() {
-        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialfeed_native_adView);
-        adView.setVisibility(View.VISIBLE);
 
-        AdRequest request = new AdRequest.Builder().build();
-        adView.loadAd(request);
 
-        adView.setAdListener(new AdListener() {
+        try {
+            final AdView adView = new AdView(this);
+            adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
+            adView.setAdUnitId("ca-app-pub-8455191357100024/8580640678");
 
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
 
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", i));
-                } catch (Exception e) {
-                    e.printStackTrace();
+            AdRequest request = new AdRequest.Builder().build();
+            adView.loadAd(request);
+
+            adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+
+                    try {
+                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
 
-        });
+                    CardView cardView = findViewById(R.id.editorialfeed_admob_cardView);
+                    cardView.setVisibility(View.VISIBLE);
+
+                    cardView.removeAllViews();
+                    cardView.addView(adView);
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -2002,10 +2041,11 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
     public void onInstallPIBClick(View view) {
         try {
-            String link = "https://play.google.com/store/apps/details?id=app.crafty.studio.current.affairs.pib";
+            String link = "https://play.google.com/store/apps/details?id=gk.affairs.current.craftystudio.app.currentaffairs";
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } catch (Exception e) {
 
+            e.printStackTrace();
         }
     }
 

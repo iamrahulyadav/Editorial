@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_share"
+        android:icon="@drawable/ic_action_share"
+        android:title="Share"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_bookmark"
+        android:icon="@drawable/ic_action_name"
+        android:title="BookMark"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_notes"
+        android:title="Take Notes"
+        app:showAsAction="never" />
+
+
+    <item android:id="@+id/action_tts_reader"
+        android:title="Read Editorial (Voice)"
+        app:showAsAction="never" />
+
+</menu>

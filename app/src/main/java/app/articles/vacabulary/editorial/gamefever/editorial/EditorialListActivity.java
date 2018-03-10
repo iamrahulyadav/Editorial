@@ -335,7 +335,16 @@ public class EditorialListActivity extends AppCompatActivity {
         }
 
         EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo)editorialListArrayList.get(position);
-        Intent i = new Intent(this , EditorialFeedActivity.class);
+        Intent i;
+        if (editorialgenralInfo.getEditorialSource().equalsIgnoreCase("The Hindu")){
+            i = new Intent(this, EditorialFeedWebViewActivity.class);
+            editorialgenralInfo.setEditorialSourceLink(editorialgenralInfo.getEditorialSubHeading().replaceAll("'",""));
+
+        }else{
+             i = new Intent(this , EditorialFeedActivity.class);
+        }
+
+
         i.putExtra("editorialID",editorialgenralInfo.getEditorialID());
         i.putExtra("editorialDate",editorialgenralInfo.getEditorialDate());
         i.putExtra("editorialHeading",editorialgenralInfo.getEditorialHeading());
@@ -343,6 +352,7 @@ public class EditorialListActivity extends AppCompatActivity {
         i.putExtra("editorialSubheading",editorialgenralInfo.getEditorialSubHeading());
         i.putExtra("editorialTag",editorialgenralInfo.getEditorialTag());
         i.putExtra("isBookMarked",true);
+        i.putExtra("editorial", editorialgenralInfo);
 
         startActivity(i);
 

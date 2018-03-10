@@ -119,7 +119,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     com.facebook.ads.InterstitialAd facebookInterstitial;
 
 
-    private int editorialcountAdMax = 2;
+    private int editorialcountAdMax = 3;
     boolean isActivityInitialized = false;
     //private InterstitialAd mSubscriptionInterstitialAd;
 
@@ -665,7 +665,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
         EditorialGeneralInfo editorialgenralInfo = (EditorialGeneralInfo) editorialListArrayList.get(position);
-        Intent i = new Intent(this, EditorialFeedActivity.class);
+        Intent i;
+        if (editorialgenralInfo.getEditorialSourceIndex() == 0) {
+            i = new Intent(this, EditorialFeedWebViewActivity.class);
+        } else {
+            i = new Intent(this, EditorialFeedActivity.class);
+        }
+
         i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
         i.putExtra("editorialDate", editorialgenralInfo.getEditorialDate());
         i.putExtra("editorialHeading", editorialgenralInfo.getEditorialHeading());
@@ -698,7 +704,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             return;
         }
 
-        Intent i = new Intent(this, EditorialFeedActivity.class);
+        Intent i;
+        if (editorialgenralInfo.getEditorialSourceIndex()==0){
+            i = new Intent(this, EditorialFeedWebViewActivity.class);
+        }else {
+             i = new Intent(this, EditorialFeedActivity.class);
+        }
+
         i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
         i.putExtra("editorialDate", editorialgenralInfo.getEditorialDate());
         i.putExtra("editorialHeading", editorialgenralInfo.getEditorialHeading());
@@ -1074,7 +1086,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
 
-            editorialcountAdMax = 2;
+            editorialcountAdMax = 3;
         }
 
 

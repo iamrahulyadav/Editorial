@@ -34,6 +34,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import utils.AdsSubscriptionManager;
 import utils.NightModeManager;
@@ -74,10 +75,7 @@ public class VacabularyActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position == 0){
-                    openWordOfTheDay();
-                    return;
-                }
+
 
                 openBottomSheet(dictionaryArrayList.get(position));
 
@@ -163,11 +161,14 @@ public class VacabularyActivity extends AppCompatActivity {
     private void fetchDictionaryword() {
         DatabaseHandler databasehandler = new DatabaseHandler(this);
         dictionaryArrayList = databasehandler.getAllDictionaryWord();
-        Dictionary todayWord =new Dictionary("Today's Word");
-        dictionaryArrayList.add(0,todayWord);
+        Collections.reverse(dictionaryArrayList);
+
         for (Dictionary dictionary : dictionaryArrayList) {
             arrayListword.add(dictionary.getWord());
         }
+
+
+
 
         mAdapter.notifyDataSetChanged();
 

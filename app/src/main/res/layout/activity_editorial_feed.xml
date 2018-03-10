@@ -32,8 +32,7 @@
         android:id="@+id/editorialFeed_scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -207,6 +206,20 @@
 
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                android:id="@+id/editorialfeed_admob_cardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                >
+
+
+
+            </android.support.v7.widget.CardView>
+
+
             <TextView
                 android:id="@+id/editorialfeed_sourceLink_textView"
                 android:layout_width="match_parent"
@@ -309,18 +322,6 @@
             </LinearLayout>
 
 
-            <com.google.android.gms.ads.NativeExpressAdView
-                android:id="@+id/editorialfeed_native_adView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:descendantFocusability="blocksDescendants"
-                android:visibility="gone"
-                app:adSize="320x300"
-                app:adUnitId="ca-app-pub-8455191357100024/9880085376">
-
-            </com.google.android.gms.ads.NativeExpressAdView>
-
             <!--Comment System layout-->
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -364,7 +365,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:isScrollContainer="false"
-                        android:nestedScrollingEnabled="true">
+                        android:nestedScrollingEnabled="false">
 
 
                     </android.support.v7.widget.RecyclerView>
@@ -512,7 +513,7 @@
                         android:id="@+id/editorialFeed_suggestion_recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="true"
+                        android:nestedScrollingEnabled="false"
                         android:overScrollMode="ifContentScrolls">
 
 
@@ -637,6 +638,7 @@
 
             <!--PIB INSTSTALL BOX-->
             <android.support.v7.widget.CardView
+                android:id="@+id/editorialfeed_pibBox_cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="60dp"
@@ -644,7 +646,6 @@
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="6dp"
                 android:visibility="visible"
-                android:id="@+id/editorialfeed_pibBox_cardView"
                 app:cardBackgroundColor="?attr/backgroundCardColor"
                 app:cardCornerRadius="0dp"
                 app:cardElevation="6dp">
@@ -659,8 +660,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:text="PIB Reader App"
+                        android:text="Current Affairs Master"
                         android:textAlignment="center"
                         android:textColor="?attr/primaryTextColor"
                         android:textSize="16sp" />
@@ -676,13 +676,13 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="8dp"
                             android:onClick="onInstallPIBClick"
-                            android:src="@drawable/pib_logo" />
+                            android:src="@drawable/ca_logo" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
-                            android:text="PIB Reader app provides easy and fast access to PIB news, AIR Radio, DD NEWS and RSTV all in a single app." />
+                            android:text="Current affairs Master provide daily current affairs crisp pointwise notes. (GK Included)" />
 
                     </LinearLayout>
 
