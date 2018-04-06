@@ -1,6 +1,7 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,6 +76,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import io.fabric.sdk.android.Fabric;
 import utils.AdsSubscriptionManager;
 import utils.ClickListener;
+import utils.CurrentAffairs;
 import utils.DatabaseHandlerRead;
 import utils.LanguageManager;
 import utils.NightModeManager;
@@ -199,6 +201,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
         initializeSubscriptionAds();
+
+        CurrentAffairListFragment fragment = CurrentAffairListFragment.newInstance();
+        fragment.fetchCurrentAffairs();
 
     }
 
