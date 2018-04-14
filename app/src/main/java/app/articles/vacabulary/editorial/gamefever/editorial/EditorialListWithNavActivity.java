@@ -202,8 +202,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         initializeSubscriptionAds();
 
-        CurrentAffairListFragment fragment = CurrentAffairListFragment.newInstance();
-        fragment.fetchCurrentAffairs();
 
     }
 
@@ -309,31 +307,54 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                             deepLink = pendingDynamicLinkData.getLink();
                             Log.d("DeepLink", "onSuccess: " + deepLink);
 
-                            String editorialID = deepLink.getQueryParameter("editorialID");
-                            // Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
+                            String contentType = deepLink.getQueryParameter("contentType");
+
+                            String editorialID = null;
+                            String articleID = null;
+
+                            if (contentType != null) {
+
+                                if (contentType.equalsIgnoreCase("1")) {
+
+                                    articleID = deepLink.getQueryParameter("articleID");
+
+                                } else {
+                                    editorialID = deepLink.getQueryParameter("editorialID");
+                                }
 
 
-                            if (editorialID == null) {
-                                String deepLinkstring = deepLink.toString();
+                            } else {
 
-                                //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
-
-                                int lastIndex = deepLinkstring.indexOf("?", 27);
-                                editorialID = deepLinkstring.substring(27, lastIndex);
-                                // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
+                                editorialID = deepLink.getQueryParameter("editorialID");
+                                // Toast.makeText(EditorialListWithNavActivity.this, "newsArticle id " + editorialID, Toast.LENGTH_SHORT).show();
 
 
-                                // Handle the deep link. For example, open the linked
-                                // content, or apply promotional credit to the user's
-                                // account.
+                                if (editorialID == null) {
+                                    String deepLinkstring = deepLink.toString();
 
-                                // ...
+                                    //  Toast.makeText(EditorialListWithNavActivity.this, "link is"+deepLink, Toast.LENGTH_SHORT).show();
+
+                                    int lastIndex = deepLinkstring.indexOf("?", 27);
+                                    editorialID = deepLinkstring.substring(27, lastIndex);
+                                    // Toast.makeText(EditorialListWithNavActivity.this, "id  "+editorialID, Toast.LENGTH_SHORT).show();
 
 
+                                    // Handle the deep link. For example, open the linked
+                                    // content, or apply promotional credit to the user's
+                                    // account.
+
+                                    // ...
+
+
+                                }
                             }
 
 
-                            fetchEditorialByID(editorialID);
+                            if (editorialID != null) {
+                                fetchEditorialByID(editorialID);
+                            } else if (articleID != null) {
+                                openCurrentAffairFeed(articleID);
+                            }
 
                             try {
                                 Answers.getInstance().logCustom(new CustomEvent("User via Dynamic link")
@@ -372,6 +393,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     }
+
 
     @Override
     protected void onRestart() {
@@ -437,6 +459,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void fetchEditorialByID(String editorialID) {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         dbHelperFirebase.getEditorialExtraInfoByID(editorialID, this);
+
+    }
+
+    private void openCurrentAffairFeed(String articleID) {
+
+        Intent intent = new Intent(EditorialListWithNavActivity.this, CurrentAffairsFeedActivity.class);
+        CurrentAffairs currentAffairs = new CurrentAffairs();
+        currentAffairs.setId(Integer.valueOf(articleID));
+        intent.putExtra("news", currentAffairs);
+
+        startActivity(intent);
 
     }
 
@@ -710,10 +743,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
         Intent i;
-        if (editorialgenralInfo.getEditorialSourceIndex()==0){
+        if (editorialgenralInfo.getEditorialSourceIndex() == 0) {
             i = new Intent(this, EditorialFeedWebViewActivity.class);
-        }else {
-             i = new Intent(this, EditorialFeedActivity.class);
+        } else {
+            i = new Intent(this, EditorialFeedActivity.class);
         }
 
         i.putExtra("editorialID", editorialgenralInfo.getEditorialID());
@@ -1189,7 +1222,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
             case R.id.nav_bookmark:
-                onBookMark();
+                //onBookMark();
+                openMainActivity();
                 break;
 
             case R.id.nav_day_mode:
@@ -1265,6 +1299,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openMainActivity() {
+
+        Intent intent = new Intent(EditorialListWithNavActivity.this, MainActivity.class);
+        startActivity(intent);
+
     }
 
     private void onEnglishGrammer() {

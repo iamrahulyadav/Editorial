@@ -207,9 +207,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         });
 
 
-        MobileAds.initialize(
-
-                getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
         mAd = MobileAds.getRewardedVideoAdInstance(this);
 
         checkShowAds = AdsSubscriptionManager.checkShowAds(this);

@@ -1,9 +1,13 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 import utils.CurrentAffairs;
+import utils.CurrentAffairsAdapter;
 import utils.JsonParser;
 import utils.VolleyManager;
 
@@ -29,14 +34,22 @@ public class CurrentAffairListFragment extends Fragment {
 
 
     ArrayList<CurrentAffairs> currentAffairsArrayList = new ArrayList<>();
+    private int category;
+
+    RecyclerView recyclerView;
+    CurrentAffairsAdapter currentAffairsAdapter;
+
+    private boolean isLoading = false;
+    int pageNumber = 2;
+
 
     public CurrentAffairListFragment() {
     }
 
-
-    public static CurrentAffairListFragment newInstance() {
+    public static CurrentAffairListFragment newInstance(int category) {
         CurrentAffairListFragment fragment = new CurrentAffairListFragment();
         Bundle args = new Bundle();
+        args.putInt("category", category);
 
         fragment.setArguments(args);
         return fragment;
@@ -46,6 +59,7 @@ public class CurrentAffairListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            category = getArguments().getInt("category");
 
         }
 
@@ -55,7 +69,7 @@ public class CurrentAffairListFragment extends Fragment {
 
     public void fetchCurrentAffairs() {
 
-        String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=3";
+        String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
@@ -64,8 +78,99 @@ public class CurrentAffairListFragment extends Fragment {
 
                         Log.d(TAG, "onResponse: " + response);
 
-                        currentAffairsArrayList= new JsonParser().parseCurrentAffairsList(response);
+                        currentAffairsArrayList = new JsonParser().parseCurrentAffairsList(response);
 
+                        currentAffairsAdapter = new CurrentAffairsAdapter(currentAffairsArrayList, getContext());
+
+                        setAdapterListener();
+
+                        if (recyclerView!=null) {
+                            recyclerView.setAdapter(currentAffairsAdapter);
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.d(TAG, "onErrorResponse: " + error);
+
+                    }
+                });
+
+
+        jsonArrayRequest.setShouldCache(true);
+
+        VolleyManager.getInstance().addToRequestQueue(jsonArrayRequest, "Group request");
+
+    }
+
+    private void setAdapterListener() {
+        currentAffairsAdapter.setClickListener(new CurrentAffairsAdapter.ClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getContext(), CurrentAffairsFeedActivity.class);
+                intent.putExtra("news", currentAffairsArrayList.get(position));
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_current_affair_list, container, false);
+
+        recyclerView = view.findViewById(R.id.currentAffairFragment_recyclerView);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        recyclerView.setAdapter(currentAffairsAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+
+                    if (!isLoading) {
+                        downloadMoreArticleList();
+                        //Toast.makeText(MainActivity.this, "Loading", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
+
+
+        return view;
+    }
+
+    private void downloadMoreArticleList() {
+
+        String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category+"&page="+pageNumber;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d(TAG, "onResponse: " + response);
+
+                        ArrayList<CurrentAffairs> currentAffairsList = new JsonParser().parseCurrentAffairsList(response);
+
+                        currentAffairsArrayList.addAll(currentAffairsList);
+
+                        currentAffairsAdapter.notifyDataSetChanged();
+
+                        pageNumber++;
+
+                        isLoading = false;
 
 
                     }
@@ -87,13 +192,6 @@ public class CurrentAffairListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_current_affair_list, container, false);
-    }
-
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
@@ -104,8 +202,8 @@ public class CurrentAffairListFragment extends Fragment {
         super.onDetach();
     }
 
-
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
 }

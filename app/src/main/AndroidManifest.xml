@@ -82,6 +82,14 @@
         <activity
             android:name=".EditorialFeedWebViewActivity"
             android:label="@string/title_activity_editorial_feed_web_view"
+            android:theme="@style/FeedActivityThemeLight" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/FeedActivityThemeLight" />
+        <activity
+            android:name=".CurrentAffairsFeedActivity"
+            android:label="@string/title_activity_current_affairs_feed"
             android:theme="@style/FeedActivityThemeLight"></activity>
     </application>
 

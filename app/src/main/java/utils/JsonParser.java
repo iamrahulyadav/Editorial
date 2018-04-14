@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class JsonParser {
 
-    public ArrayList<CurrentAffairs> parseCurrentAffairsList(JSONArray response){
+    public ArrayList<CurrentAffairs> parseCurrentAffairsList(JSONArray response) {
 
 
         ArrayList<CurrentAffairs> currentAffairsArrayList = new ArrayList<>();
@@ -20,34 +20,81 @@ public class JsonParser {
 
             CurrentAffairs currentAffairs;
 
-        for(int i = 0 ; i<response.length();i++){
+            for (int i = 0; i < response.length(); i++) {
 
-            currentAffairs = new CurrentAffairs();
+                currentAffairs = new CurrentAffairs();
 
-            JSONObject jsonObject = response.getJSONObject(i);
+                JSONObject jsonObject = response.getJSONObject(i);
 
-            currentAffairs.setDate(jsonObject.getString("date"));
-            currentAffairs.setLink(jsonObject.getString("link"));
+                currentAffairs.setDate(jsonObject.getString("date"));
+                currentAffairs.setLink(jsonObject.getString("link"));
 
-            currentAffairs.setTitle(jsonObject.getJSONObject("title").getString("rendered"));
+                currentAffairs.setTitle(jsonObject.getJSONObject("title").getString("rendered"));
 
-            currentAffairs.setContent(jsonObject.getJSONObject("content").getString("rendered"));
+                currentAffairs.setContent(jsonObject.getJSONObject("content").getString("rendered"));
 
-            currentAffairs.setId(jsonObject.getInt("id"));
+                currentAffairs.setId(jsonObject.getInt("id"));
 
-            currentAffairs.setCategory(jsonObject.getJSONArray("categories").getInt(0));
+                if (jsonObject.getJSONArray("categories").length() > 1) {
+                    currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(1));
+                } else {
+                    currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(0));
+                }
 
 
-            currentAffairsArrayList.add(currentAffairs);
 
-        }
+                currentAffairsArrayList.add(currentAffairs);
 
-        }catch (Exception e){
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return currentAffairsArrayList;
 
     }
+
+    public CurrentAffairs parseCurrentAffairs(JSONObject jsonObject) {
+
+
+        CurrentAffairs currentAffairs=null;
+
+        try {
+
+
+
+
+                currentAffairs = new CurrentAffairs();
+
+
+                currentAffairs.setDate(jsonObject.getString("date"));
+                currentAffairs.setLink(jsonObject.getString("link"));
+
+                currentAffairs.setTitle(jsonObject.getJSONObject("title").getString("rendered"));
+
+                currentAffairs.setContent(jsonObject.getJSONObject("content").getString("rendered"));
+
+                currentAffairs.setId(jsonObject.getInt("id"));
+
+                if (jsonObject.getJSONArray("categories").length() > 1) {
+                    currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(1));
+                } else {
+                    currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(0));
+                }
+
+
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return currentAffairs;
+
+    }
+
 
 }
