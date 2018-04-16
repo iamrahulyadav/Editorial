@@ -13,7 +13,9 @@ import java.util.Date;
 public class AdsSubscriptionManager {
 
 
-    public static void setSubscriptionTime(Context mContext ,int subscriptionDays ) {
+    public static int ADSPOSITION_COUNT= 8;
+
+    public static void setSubscriptionTime(Context mContext , int subscriptionDays ) {
         SharedPreferences prefs = mContext.getSharedPreferences("adsmanager", 0);
 
 

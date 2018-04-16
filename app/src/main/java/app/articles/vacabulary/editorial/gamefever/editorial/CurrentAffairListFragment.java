@@ -12,16 +12,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import utils.AdsSubscriptionManager;
 import utils.CurrentAffairs;
 import utils.CurrentAffairsAdapter;
 import utils.JsonParser;
@@ -33,7 +40,7 @@ import static android.content.ContentValues.TAG;
 public class CurrentAffairListFragment extends Fragment {
 
 
-    ArrayList<CurrentAffairs> currentAffairsArrayList = new ArrayList<>();
+    ArrayList<Object> currentAffairsArrayList = new ArrayList<>();
     private int category;
 
     RecyclerView recyclerView;
@@ -78,13 +85,21 @@ public class CurrentAffairListFragment extends Fragment {
 
                         Log.d(TAG, "onResponse: " + response);
 
-                        currentAffairsArrayList = new JsonParser().parseCurrentAffairsList(response);
+                        ArrayList<CurrentAffairs> arrayList;
+
+                        arrayList = new JsonParser().parseCurrentAffairsList(response);
+
+                        for (CurrentAffairs currentAffairs : arrayList) {
+                            currentAffairsArrayList.add(currentAffairs);
+                        }
+
+                        addNativeExpressAds();
 
                         currentAffairsAdapter = new CurrentAffairsAdapter(currentAffairsArrayList, getContext());
 
                         setAdapterListener();
 
-                        if (recyclerView!=null) {
+                        if (recyclerView != null) {
                             recyclerView.setAdapter(currentAffairsAdapter);
                         }
 
@@ -110,8 +125,13 @@ public class CurrentAffairListFragment extends Fragment {
         currentAffairsAdapter.setClickListener(new CurrentAffairsAdapter.ClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+
+                if (position % AdsSubscriptionManager.ADSPOSITION_COUNT == 0) {
+                    return;
+                }
+
                 Intent intent = new Intent(getContext(), CurrentAffairsFeedActivity.class);
-                intent.putExtra("news", currentAffairsArrayList.get(position));
+                intent.putExtra("news", (CurrentAffairs)currentAffairsArrayList.get(position));
                 startActivity(intent);
             }
         });
@@ -140,7 +160,7 @@ public class CurrentAffairListFragment extends Fragment {
 
                     if (!isLoading) {
                         downloadMoreArticleList();
-                        //Toast.makeText(MainActivity.this, "Loading", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Loading", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -153,7 +173,9 @@ public class CurrentAffairListFragment extends Fragment {
 
     private void downloadMoreArticleList() {
 
-        String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category+"&page="+pageNumber;
+        isLoading=true;
+
+        String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category + "&page=" + pageNumber;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
@@ -165,6 +187,8 @@ public class CurrentAffairListFragment extends Fragment {
                         ArrayList<CurrentAffairs> currentAffairsList = new JsonParser().parseCurrentAffairsList(response);
 
                         currentAffairsArrayList.addAll(currentAffairsList);
+
+                        addNativeExpressAds();
 
                         currentAffairsAdapter.notifyDataSetChanged();
 
@@ -190,6 +214,63 @@ public class CurrentAffairListFragment extends Fragment {
         VolleyManager.getInstance().addToRequestQueue(jsonArrayRequest, "Group request");
 
     }
+
+    private void addNativeExpressAds() {
+
+        boolean checkShowAds = AdsSubscriptionManager.checkShowAds(getContext());
+
+
+        for (int i = 0; i < (currentAffairsArrayList.size()); i += AdsSubscriptionManager.ADSPOSITION_COUNT) {
+            if (currentAffairsArrayList.get(i) != null) {
+                if (currentAffairsArrayList.get(i).getClass() != NativeAd.class) {
+
+
+                    NativeAd nativeAd = new NativeAd(getContext(), "113079036048193_119892505366846");
+                    nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+                        @Override
+                        public void onError(Ad ad, AdError error) {
+                            // Ad error callback
+                            try {
+                                Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                        .putCustomAttribute("Placement", "List native").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onAdLoaded(Ad ad) {
+                            // Ad loaded callback
+                            currentAffairsAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAdClicked(Ad ad) {
+                            // Ad clicked callback
+                        }
+
+                        @Override
+                        public void onLoggingImpression(Ad ad) {
+                            // Ad impression logged callback
+                        }
+                    });
+
+                    // Request an ad
+                    if (checkShowAds) {
+                        nativeAd.loadAd();
+                    }
+
+                    currentAffairsArrayList.add(i, nativeAd);
+
+                }
+            }
+        }
+
+
+    }
+
+
 
     @Override
     public void onAttach(Context context) {

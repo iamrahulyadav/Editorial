@@ -12,6 +12,7 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/editorialFeed_scrollView"
         android:layout_width="match_parent"
+        android:layout_marginBottom="40dp"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -109,6 +110,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+
+                    <com.google.android.gms.ads.NativeExpressAdView
+                        android:id="@+id/editorialFeed_top_nativeAds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:descendantFocusability="blocksDescendants"
+                        android:visibility="gone"
+                        app:adSize="320x132"
+                        app:adUnitId="ca-app-pub-8455191357100024/9929021950">
+
+                    </com.google.android.gms.ads.NativeExpressAdView>
 
 
 

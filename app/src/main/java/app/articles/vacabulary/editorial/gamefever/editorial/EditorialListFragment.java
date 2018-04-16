@@ -129,6 +129,62 @@ public class EditorialListFragment extends Fragment {
 
     }
 
+    public void fetchEditorialGeneralList(int sortSourceIndex, int sortCategoryIndex, long sortDateMillis) {
+        EditorialListFragment.this.sortSourceIndex = sortSourceIndex;
+        EditorialListFragment.this.sortCategoryIndex=sortCategoryIndex;
+        EditorialListFragment.this.sortDateMillis=sortDateMillis;
+
+
+        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
+
+        DBHelperFirebase.OnEditorialListListener onEditorialListListener = new DBHelperFirebase.OnEditorialListListener() {
+            @Override
+            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+                //onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
+
+                EditorialListFragment.this.editorialGeneralInfoArrayList.clear();
+
+                for (int i=editorialGeneralInfoArrayList.size()-1;i>=0;i--){
+                    EditorialListFragment.this.editorialGeneralInfoArrayList.add(editorialGeneralInfoArrayList.get(i));
+                }
+
+                addReadStatus();
+                addNativeExpressAds();
+
+                editorialGeneralInfoAdapter = new EditorialGeneralInfoAdapter(EditorialListFragment.this.editorialGeneralInfoArrayList,"",getContext());
+
+                setAdapterListener();
+
+                if (recyclerView!=null) {
+                    recyclerView.setAdapter(editorialGeneralInfoAdapter);
+                }
+
+            }
+
+            @Override
+            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+
+            }
+        };
+
+        //isRefreshing = true;
+
+        if (sortSourceIndex > -1) {
+            dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, sortSourceIndex, onEditorialListListener);
+
+        } else if (sortCategoryIndex > -1) {
+            dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, sortCategoryIndex, onEditorialListListener);
+
+        } else if (sortDateMillis > -1l) {
+            dbHelperFirebase.fetchDateSortEditorialList(sortDateMillis, (sortDateMillis + 86400000), onEditorialListListener);
+        } else {
+            dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, onEditorialListListener);
+
+        }
+
+    }
+
+
     private void setAdapterListener() {
 
         editorialGeneralInfoAdapter.setOnclickListener(new ClickListener() {

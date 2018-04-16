@@ -2,7 +2,9 @@ package app.articles.vacabulary.editorial.gamefever.editorial;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -25,11 +29,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +46,16 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
+import com.facebook.ads.NativeAdViewAttributes;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -54,9 +70,11 @@ import java.text.BreakIterator;
 import java.util.Locale;
 import java.util.TreeMap;
 
+import utils.AdsSubscriptionManager;
 import utils.CurrentAffairs;
 import utils.CurrentAffairsAdapter;
 import utils.JsonParser;
+import utils.NightModeManager;
 import utils.SettingManager;
 import utils.ShortNotesManager;
 import utils.VolleyManager;
@@ -128,6 +146,12 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         initializeActivity();
 
 
+        if (AdsSubscriptionManager.checkShowAds(this)) {
+            initializeBottomSheetAd(true);
+            initializeNativeAds(true);
+            initializeTopNativeAds(true);
+        }
+
     }
 
     private void initializeActivity() {
@@ -144,7 +168,6 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         sourceLinkTextView.setText(currentAffairs.getLink());
 
 
-
     }
 
     private void fetchArticle() {
@@ -157,7 +180,6 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         currentAffairs = new JsonParser().parseCurrentAffairs(response);
                         initializeActivity();
-
 
 
                     }
@@ -198,7 +220,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
             case R.id.action_toggle:
 
-                //switchTheme();
+                switchTheme();
                 return true;
             case R.id.action_share:
                 onShareClick();
@@ -234,7 +256,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_textsize:
-                //onTextSizeClick();
+                onTextSizeClick();
                 return true;
 
             default:
@@ -492,6 +514,10 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, SettingManager.getTextSize(this));
     }
 
+    public void setTextSize(TextView tv, int size) {
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+    }
+
     private void initializeTTS() {
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -738,6 +764,342 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private void switchTheme() {
+        if (NightModeManager.getNightMode(this)) {
+            NightModeManager.setNightMode(CurrentAffairsFeedActivity.this, false);
+        } else {
+            NightModeManager.setNightMode(CurrentAffairsFeedActivity.this, true);
+        }
+        recreate();
+    }
+
+    private void onTextSizeClick() {
+        final CharSequence sources[] = new CharSequence[]{"Small", "Medium", "Large", "Extra Large"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose Text Size");
+        builder.setItems(sources, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                TextView definitionView = (TextView) findViewById(R.id.editorial_text_textview);
+
+
+                int size = 18;
+
+                if (which == 0) {
+                    size = 16;
+                } else if (which == 1) {
+                    size = 18;
+                } else if (which == 2) {
+                    size = 20;
+                } else if (which == 3) {
+                    size = 22;
+                }
+
+                setTextSize(contentTextView, size);
+
+                SettingManager.setTextSize(CurrentAffairsFeedActivity.this, size);
+
+
+            }
+        });
+
+        builder.show();
+    }
+
+
+    public void initializeNativeAds() {
+
+
+        try {
+            final AdView adView = new AdView(this);
+            adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
+            adView.setAdUnitId("ca-app-pub-8455191357100024/8580640678");
+
+
+            AdRequest request = new AdRequest.Builder().build();
+            adView.loadAd(request);
+
+            adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+
+                    try {
+                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+
+                    CardView cardView = findViewById(R.id.currentAffairsFeed_admob_cardView);
+                    cardView.setVisibility(View.VISIBLE);
+
+                    cardView.removeAllViews();
+                    cardView.addView(adView);
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void initializeNativeAds(boolean isFacebook) {
+
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_119919118697518");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                initializeNativeAds();
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Feed native bottom CA").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+
+                CardView linearLayout = (CardView) findViewById(R.id.currentAffairsFeed_facebook_cardView);
+                linearLayout.setVisibility(View.VISIBLE);
+                NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                        .setBackgroundColor(Color.parseColor("#28292e"))
+                        .setTitleTextColor(Color.WHITE)
+                        .setButtonTextColor(Color.WHITE)
+                        .setDescriptionTextColor(Color.WHITE)
+                        .setButtonColor(Color.parseColor("#F44336"));
+
+                View adView = NativeAdView.render(CurrentAffairsFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_400, viewAttributes);
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(adView);
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
+
+
+    }
+
+    public void initializeBottomSheetAd() {
+        AdView mAdView = (AdView) findViewById(R.id.editorialFeed_bottomSheet_bannerAdview);
+        mAdView.setVisibility(View.VISIBLE);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Bottom sheet").putCustomAttribute("errorType", i));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+
+    public void initializeBottomSheetAd(boolean isFacebook) {
+
+
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_121732315182865");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                initializeBottomSheetAd();
+
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "Feed native meaning bottom").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.editorialFeed_bottomSheet_adcontainer);
+                linearLayout.setVisibility(View.VISIBLE);
+                NativeAdViewAttributes viewAttributes;
+                if (NightModeManager.getNightMode(CurrentAffairsFeedActivity.this)) {
+
+                    viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.parseColor("#28292e"))
+                            .setTitleTextColor(Color.WHITE)
+                            .setButtonTextColor(Color.WHITE)
+                            .setDescriptionTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                } else {
+                    viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.LTGRAY)
+
+                            .setButtonTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                }
+
+                View adView = NativeAdView.render(CurrentAffairsFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_100, viewAttributes);
+
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(adView);
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
+    }
+
+    private void initializeTopNativeAds() {
+        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialFeed_top_nativeAds);
+        adView.setVisibility(View.VISIBLE);
+
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                            .putCustomAttribute("Placement", "top Native small").putCustomAttribute("errorType", i));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void initializeTopNativeAds(boolean isFacebook) {
+
+
+        final NativeAd nativeAd = new NativeAd(this, "113079036048193_121737141849049");
+        nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                initializeTopNativeAds();
+
+
+                try {
+                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load").putCustomAttribute("Placement", "Feed native top").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.currentAffairsFeed_top_adContainer);
+                linearLayout.setVisibility(View.VISIBLE);
+                NativeAdViewAttributes viewAttributes;
+                if (NightModeManager.getNightMode(CurrentAffairsFeedActivity.this)) {
+
+                    viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.parseColor("#28292e"))
+                            .setTitleTextColor(Color.WHITE)
+                            .setButtonTextColor(Color.WHITE)
+                            .setDescriptionTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                } else {
+
+
+                    viewAttributes = new NativeAdViewAttributes()
+                            .setBackgroundColor(Color.LTGRAY)
+                            .setButtonTextColor(Color.WHITE)
+                            .setButtonColor(Color.parseColor("#F44336"));
+
+                }
+
+                View adView = NativeAdView.render(CurrentAffairsFeedActivity.this, nativeAd, NativeAdView.Type.HEIGHT_120, viewAttributes);
+
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(adView);
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
     }
 
 

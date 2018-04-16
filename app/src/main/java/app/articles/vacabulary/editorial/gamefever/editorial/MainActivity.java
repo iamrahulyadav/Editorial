@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+    EditorialListFragment editorialListFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +56,15 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager) {
 
 
-
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(CurrentAffairListFragment.newInstance(3), "Current Affairs");
 
-        adapter.addFragment(EditorialListFragment.newInstance(-1,-1,-1),"Editorial");
+        editorialListFragment = EditorialListFragment.newInstance(-1, -1, -1);
+
+        adapter.addFragment(editorialListFragment, "Editorial");
 
         adapter.addFragment(CurrentAffairListFragment.newInstance(2), "Analysis");
-
-
 
 
         viewPager.setAdapter(adapter);
@@ -126,6 +127,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void onFilterClick(View view) {
+        editorialListFragment.fetchEditorialGeneralList(1, -1, -1);
+    }
+
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -151,15 +156,11 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
-
-
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
     }
-
 
 
 }

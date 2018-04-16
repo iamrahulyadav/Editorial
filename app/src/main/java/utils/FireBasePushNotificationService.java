@@ -56,6 +56,8 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
             intent.putExtra("editorialID", editorialID);
             intent.putExtra("isPushNotification", true);
 
+
+
             showNotification(remoteMessage.getData().get("notificationT"), remoteMessage.getData().get("notificationB"));
 
         }
