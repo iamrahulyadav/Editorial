@@ -9,6 +9,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,6 +39,9 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public class CurrentAffairsViewHolder extends RecyclerView.ViewHolder {
         public TextView headingTextView, dateTextView, sourceTextView, subHeadingTextView;
 
+        ImageView readMaskImageView;
+        CardView backGroundCard;
+
         public CurrentAffairsViewHolder(final View view) {
             super(view);
 
@@ -45,6 +49,9 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             dateTextView = view.findViewById(R.id.currentAffairs_date_textView);
             sourceTextView = view.findViewById(R.id.currentAffairs_source_textView);
             subHeadingTextView = view.findViewById(R.id.currentAffairs_subheading_textView);
+
+            backGroundCard= view.findViewById(R.id.currentAffairs_background_card);
+            readMaskImageView=view.findViewById(R.id.currentAffairs_isReadMask_imageView);
 
 
 
@@ -176,6 +183,13 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder.subHeadingTextView.setText(currentAffairs.getSubHeading());
 
 
+                if (currentAffairs.isReadStatus()){
+                    viewHolder.backGroundCard.setCardElevation(0);
+                    viewHolder.readMaskImageView.setVisibility(View.VISIBLE);
+                }else{
+                    viewHolder.backGroundCard.setCardElevation(16);
+                    viewHolder.readMaskImageView.setVisibility(View.GONE);
+                }
 
 
         }

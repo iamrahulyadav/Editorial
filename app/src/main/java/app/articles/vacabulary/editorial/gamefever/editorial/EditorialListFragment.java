@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,14 +40,14 @@ public class EditorialListFragment extends Fragment {
 
     public ArrayList<Object> editorialGeneralInfoArrayList = new ArrayList<>();
 
-    EditorialGeneralInfoAdapter editorialGeneralInfoAdapter ;
-
+    EditorialGeneralInfoAdapter editorialGeneralInfoAdapter;
 
 
     RecyclerView recyclerView;
 
     private boolean isLoading = false;
     int pageNumber = 2;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public EditorialListFragment() {
@@ -63,7 +64,6 @@ public class EditorialListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
 
     @Override
@@ -83,26 +83,32 @@ public class EditorialListFragment extends Fragment {
     public void fetchEditorialGeneralList() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
 
+        showRefreshing(true);
+
         DBHelperFirebase.OnEditorialListListener onEditorialListListener = new DBHelperFirebase.OnEditorialListListener() {
             @Override
             public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
                 //onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
 
 
-                for (int i=editorialGeneralInfoArrayList.size()-1;i>=0;i--){
+                for (int i = editorialGeneralInfoArrayList.size() - 1; i >= 0; i--) {
                     EditorialListFragment.this.editorialGeneralInfoArrayList.add(editorialGeneralInfoArrayList.get(i));
                 }
 
                 addReadStatus();
                 addNativeExpressAds();
 
-                editorialGeneralInfoAdapter = new EditorialGeneralInfoAdapter(EditorialListFragment.this.editorialGeneralInfoArrayList,"",getContext());
+                editorialGeneralInfoAdapter = new EditorialGeneralInfoAdapter(EditorialListFragment.this.editorialGeneralInfoArrayList, "", getContext());
 
                 setAdapterListener();
 
-                if (recyclerView!=null) {
+                if (recyclerView != null) {
                     recyclerView.setAdapter(editorialGeneralInfoAdapter);
                 }
+
+                showRefreshing(false);
+
+                EditorialListWithNavActivity.editorialListArrayList = EditorialListFragment.this.editorialGeneralInfoArrayList;
 
             }
 
@@ -131,9 +137,11 @@ public class EditorialListFragment extends Fragment {
 
     public void fetchEditorialGeneralList(int sortSourceIndex, int sortCategoryIndex, long sortDateMillis) {
         EditorialListFragment.this.sortSourceIndex = sortSourceIndex;
-        EditorialListFragment.this.sortCategoryIndex=sortCategoryIndex;
-        EditorialListFragment.this.sortDateMillis=sortDateMillis;
+        EditorialListFragment.this.sortCategoryIndex = sortCategoryIndex;
+        EditorialListFragment.this.sortDateMillis = sortDateMillis;
 
+
+        showRefreshing(true);
 
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
 
@@ -144,20 +152,22 @@ public class EditorialListFragment extends Fragment {
 
                 EditorialListFragment.this.editorialGeneralInfoArrayList.clear();
 
-                for (int i=editorialGeneralInfoArrayList.size()-1;i>=0;i--){
+                for (int i = editorialGeneralInfoArrayList.size() - 1; i >= 0; i--) {
                     EditorialListFragment.this.editorialGeneralInfoArrayList.add(editorialGeneralInfoArrayList.get(i));
                 }
 
                 addReadStatus();
                 addNativeExpressAds();
 
-                editorialGeneralInfoAdapter = new EditorialGeneralInfoAdapter(EditorialListFragment.this.editorialGeneralInfoArrayList,"",getContext());
+                editorialGeneralInfoAdapter = new EditorialGeneralInfoAdapter(EditorialListFragment.this.editorialGeneralInfoArrayList, "", getContext());
 
                 setAdapterListener();
 
-                if (recyclerView!=null) {
+                if (recyclerView != null) {
                     recyclerView.setAdapter(editorialGeneralInfoAdapter);
                 }
+
+                showRefreshing(false);
 
             }
 
@@ -224,7 +234,7 @@ public class EditorialListFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                //showInterstitialAd();
+                EditorialListWithNavActivity.showInterstitialAd(getContext());
 
 
             }
@@ -234,6 +244,10 @@ public class EditorialListFragment extends Fragment {
 
 
     private void addNativeExpressAds() {
+
+        if (getContext()==null){
+            return;
+        }
 
         boolean checkShowAds = AdsSubscriptionManager.checkShowAds(getContext());
 
@@ -338,12 +352,41 @@ public class EditorialListFragment extends Fragment {
         });
 
 
+        swipeRefreshLayout = view.findViewById(R.id.swiperefreshlayout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, -1);
+
+            }
+        });
+
+        if (editorialGeneralInfoArrayList.isEmpty()) {
+            showRefreshing(true);
+        }
+
+
         return view;
     }
 
+    public void showRefreshing(boolean value) {
+
+        try {
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(value);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     private void downloadMoreArticleList() {
 
-        isLoading=true;
+        isLoading = true;
+        showRefreshing(true);
 
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         //dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, editorialListArrayList.get(editorialListArrayList.size() - 1).getEditorialID(), this, false);
@@ -357,18 +400,21 @@ public class EditorialListFragment extends Fragment {
             @Override
             public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
 
-                editorialGeneralInfoArrayList.remove(editorialGeneralInfoArrayList.size()-1);
+                editorialGeneralInfoArrayList.remove(editorialGeneralInfoArrayList.size() - 1);
 
-                for (int i=editorialGeneralInfoArrayList.size()-1;i>=0;i--){
+                for (int i = editorialGeneralInfoArrayList.size() - 1; i >= 0; i--) {
                     EditorialListFragment.this.editorialGeneralInfoArrayList.add(editorialGeneralInfoArrayList.get(i));
                 }
 
                 addReadStatus();
                 addNativeExpressAds();
 
-                editorialGeneralInfoAdapter.notifyDataSetChanged();
+                if (editorialGeneralInfoAdapter != null) {
+                    editorialGeneralInfoAdapter.notifyDataSetChanged();
+                }
 
-                isLoading=false;
+                isLoading = false;
+                showRefreshing(false);
             }
         };
 

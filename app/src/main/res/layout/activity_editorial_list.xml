@@ -48,6 +48,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/editoriallist_swiperefreshlayout"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="0dp"
         android:layout_weight="1">
 

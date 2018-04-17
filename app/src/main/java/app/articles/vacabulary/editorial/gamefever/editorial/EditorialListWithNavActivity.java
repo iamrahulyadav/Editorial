@@ -14,6 +14,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
@@ -88,6 +92,7 @@ import java.util.ArrayList;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class EditorialListWithNavActivity extends AppCompatActivity
@@ -117,11 +122,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     SwipeRefreshLayout swipeRefreshLayout;
 
-    InterstitialAd mInterstitialAd;
-    com.facebook.ads.InterstitialAd facebookInterstitial;
+    static InterstitialAd mInterstitialAd;
+    static com.facebook.ads.InterstitialAd facebookInterstitial;
 
 
-    private int editorialcountAdMax = 3;
+    private static int editorialcountAdMax = 3;
     boolean isActivityInitialized = false;
     //private InterstitialAd mSubscriptionInterstitialAd;
 
@@ -136,6 +141,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     BillingProcessor bp;
     final String SUBSCRIPTION_ID = "ad_free_subscription";
+
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    EditorialListFragment editorialListFragment;
+    CurrentAffairListFragment currentAffairListFragment, editorialAnalysisFragment;
 
 
     @Override
@@ -186,7 +197,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         }
 
-        initializeSplashScreen();
+        //initializeSplashScreen();
+        initializeActivity();
 
         //see intentdata for sort condition if any
         getSortCondition();
@@ -294,7 +306,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     private void openDynamicLink() {
 
-        fetchEditorialGeneralList();
+        //fetchEditorialGeneralList();
 
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(getIntent())
@@ -417,7 +429,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onResume();
 
         if (isSplashScreenVisible && !isRefreshing) {
-            fetchEditorialGeneralList();
+            //fetchEditorialGeneralList();
         }
         if (NightModeManager.getNightMode(getApplicationContext())) {
 
@@ -475,6 +487,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     public void initializeActivity() {
 
+
 // the content to show and initialize navigation drawer
 
         setContentView(R.layout.activity_editorial_list_with_nav);
@@ -514,6 +527,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 // the content of EditorialListActivity from here
         isSplashScreenVisible = false;
 
+/*
 
         recyclerView = (RecyclerView) findViewById(R.id.editoriallist_recyclerview);
 
@@ -543,6 +557,19 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         progressBar = (ProgressBar) findViewById(R.id.editoriallist_activity_progressbar);
         progressBar.setVisibility(View.VISIBLE);
 
+          swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.editoriallist_swiperefreshlayout);
+
+          swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //sortCategoryIndex = -1;
+                //sortSourceIndex = -1;
+                fetchEditorialGeneralList();
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+*/
+
 
         if (AdsSubscriptionManager.checkShowAds(this)) {
 
@@ -553,18 +580,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             facebookInterstitial = new com.facebook.ads.InterstitialAd(this, "113079036048193_121778881844875");
             initializeInterstitialAds(true);
         }
-
-
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.editoriallist_swiperefreshlayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //sortCategoryIndex = -1;
-                //sortSourceIndex = -1;
-                fetchEditorialGeneralList();
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
 
 
         spinner = (Spinner) findViewById(R.id.editoriallist_source_spinner);
@@ -585,7 +600,40 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
 
 
+        viewPager = (ViewPager) findViewById(R.id.mainActivity_viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.mainActivity_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+
     }
+
+
+    private void setupViewPager(ViewPager viewPager) {
+
+
+        EditorialListWithNavActivity.ViewPagerAdapter adapter = new EditorialListWithNavActivity.ViewPagerAdapter(getSupportFragmentManager());
+
+
+        editorialListFragment = EditorialListFragment.newInstance(-1, -1, -1);
+
+        currentAffairListFragment = CurrentAffairListFragment.newInstance(3);
+
+        editorialAnalysisFragment = CurrentAffairListFragment.newInstance(2);
+
+
+        adapter.addFragment(currentAffairListFragment, "Current Affairs");
+
+        adapter.addFragment(editorialListFragment, "Editorial");
+
+        adapter.addFragment(editorialAnalysisFragment, "Analysis");
+
+        viewPager.setCurrentItem(1);
+
+        viewPager.setAdapter(adapter);
+    }
+
 
     private void onSortBySourceSelected(int position) {
         if (position == 0 && sortSourceIndex == -1) {
@@ -598,7 +646,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortCategoryIndex = -1;
                 sortByDate = false;
 
-                fetchEditorialGeneralList();
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, -1);
+
+                //fetchEditorialGeneralList();
             } else {
 
 
@@ -622,9 +672,12 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortByDate = false;
 
                 //fetchEditorialSourceSortList();
-                fetchEditorialGeneralList();
+
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, -1);
+
+                //fetchEditorialGeneralList();
                 try {
-                    swipeRefreshLayout.setRefreshing(true);
+                    //swipeRefreshLayout.setRefreshing(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -639,7 +692,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         super.onPostResume();
 
     }
-
 
     public void initializeSplashScreen() {
 
@@ -688,7 +740,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
     }
-
 
     private void onRecyclerViewItemClick(int position) {
 
@@ -765,14 +816,13 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-
     public void fetchEditorialGeneralList() {
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
 
         DBHelperFirebase.OnEditorialListListener onEditorialListListener = new DBHelperFirebase.OnEditorialListListener() {
             @Override
             public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
-                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
+                //onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
             }
 
             @Override
@@ -811,7 +861,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
 
-                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, false);
+                //onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, false);
             }
         };
 
@@ -845,9 +895,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 }
             }
         }
-        addMoreButton.setVisibility(View.INVISIBLE);
+       /* addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-
+*/
         //sortEditorList(selectedSortWord);
 
     }
@@ -856,9 +906,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
         dbHelperFirebase.fetchEditorialList(EditorialListWithNavActivity.listLimit, ((EditorialGeneralInfo) editorialListArrayList.get(editorialListArrayList.size() - 1)).getEditorialID(), this, false);
 
-        addMoreButton.setVisibility(View.INVISIBLE);
+       /* addMoreButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-
+*/
         sortEditorList(selectedSortWord);
 
     }
@@ -894,22 +944,18 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         addNativeExpressAds();
 
 
-        if (isFirst) {
-            recyclerView.smoothScrollToPosition(1);
-        }
-
         mAdapter.notifyDataSetChanged();
 
 
-        addMoreButton.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+        //addMoreButton.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.GONE);
         isRefreshing = false;
 
         //sortEditorList(selectedSortWord);
 
-        if (swipeRefreshLayout != null) {
+       /* if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
-        }
+        }*/
 
     }
 
@@ -1036,7 +1082,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-
     public void initializeAds() {
         // MobileAds.initialize(getApplicationContext(), "ca-app-pub-8455191357100024~6634740792");
     /*    final AdView mAdView = (AdView) findViewById(R.id.editorialList_activity_adView);
@@ -1069,7 +1114,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         });
 */
     }
-
 
     public void initializeRemoteConfig() {
         final FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -1130,7 +1174,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -1149,12 +1192,23 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 if (sortCategoryIndex > -1 || sortSourceIndex > -1 || sortByDate) {
                     sortCategoryIndex = -1;
                     sortSourceIndex = -1;
+                    sortDateMillis=-1;
                     sortByDate = false;
 
                     spinner.setSelection(0);
-                    fetchEditorialGeneralList();
+
+                    editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, sortDateMillis);
+
+                    currentAffairListFragment.sortDateMillis = -1;
+                    editorialAnalysisFragment.sortDateMillis = -1;
+
+                    currentAffairListFragment.fetchCurrentAffairs();
+                    editorialAnalysisFragment.fetchCurrentAffairs();
+
+
+
                     try {
-                        swipeRefreshLayout.setRefreshing(true);
+                        // swipeRefreshLayout.setRefreshing(true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1196,7 +1250,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         }
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -1286,7 +1339,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_daily_vacabulary:
-                onDailyVocabularyClick(recyclerView);
+                onDailyVocabularyClick(tabLayout);
                 break;
 
             case R.id.nav_english_grammer:
@@ -1367,7 +1420,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
     }
 
-
     private void onPIBAppClick() {
         try {
             String link = "https://play.google.com/store/apps/details?id=app.crafty.studio.current.affairs.pib";
@@ -1431,7 +1483,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortSourceIndex = -1;
                 sortByDate = false;
 
-                fetchEditorialCategorySortList();
+                //fetchEditorialCategorySortList();
+
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, -1);
+
                 setToolBarSubTitle(category[which].toString());
 
                 try {
@@ -1450,33 +1505,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortCategoryIndex = -1;
                 sortSourceIndex = -1;
                 sortByDate = false;
-                fetchEditorialGeneralList();
+                //fetchEditorialGeneralList();
+
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, -1);
+
 
             }
         });
 
         builder.show();
-    }
-
-    private void fetchEditorialCategorySortList() {
-        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchCategorySortEditorialList(EditorialListWithNavActivity.listLimit, sortCategoryIndex, new DBHelperFirebase.OnEditorialListListener() {
-            @Override
-            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
-                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
-            }
-
-            @Override
-            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
-
-            }
-        });
-
-        try {
-            swipeRefreshLayout.setRefreshing(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void onSortBySourceClick() {
@@ -1520,7 +1557,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 sortCategoryIndex = -1;
                 sortByDate = false;
 
-                fetchEditorialGeneralList();
+                //fetchEditorialGeneralList();
+
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex,sortCategoryIndex,sortDateMillis);
 
 
             }
@@ -1546,7 +1585,17 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                     sortByDate = true;
                     sortDateMillis = date.getTime();
 
-                    fetchEditorialGeneralList();
+
+                    //fetchEditorialGeneralList();
+
+                    editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, sortDateMillis);
+
+                    currentAffairListFragment.sortDateMillis = date.getTime();
+                    editorialAnalysisFragment.sortDateMillis = date.getTime();
+
+                    currentAffairListFragment.fetchCurrentAffairs(true);
+                    editorialAnalysisFragment.fetchCurrentAffairs(true);
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1557,30 +1606,27 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         datePickerDialog.getDatePicker().setMinDate(1501525800000l);
-        datePickerDialog.show();
 
-    }
-
-    private void fetchEditorialSourceSortList() {
-
-        DBHelperFirebase dbHelperFirebase = new DBHelperFirebase();
-        dbHelperFirebase.fetchSourceSortEditorialList(EditorialListWithNavActivity.listLimit, sortSourceIndex, new DBHelperFirebase.OnEditorialListListener() {
+        datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
-                onFetchEditorialGeneralInfo(editorialGeneralInfoArrayList, true);
-            }
+            public void onCancel(DialogInterface dialogInterface) {
 
-            @Override
-            public void onMoreEditorialList(ArrayList<EditorialGeneralInfo> editorialGeneralInfoArrayList, boolean isSuccessful) {
+                sortCategoryIndex=-1;
+                sortSourceIndex=-1;
+                sortByDate = false;
+                sortDateMillis = -1;
+
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, sortDateMillis);
+
+                currentAffairListFragment.sortDateMillis = -1;
+                editorialAnalysisFragment.sortDateMillis = -1;
+
+                currentAffairListFragment.fetchCurrentAffairs();
+                editorialAnalysisFragment.fetchCurrentAffairs();
 
             }
         });
-
-        try {
-            swipeRefreshLayout.setRefreshing(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        datePickerDialog.show();
 
     }
 
@@ -1761,7 +1807,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-
     private void onRateUs() {
         try {
             String link = "https://play.google.com/store/apps/details?id=" + this.getPackageName();
@@ -1771,7 +1816,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         }
 
     }
-
 
     private void onVacabularyClick() {
         Intent i = new Intent(this, VacabularyActivity.class);
@@ -1792,7 +1836,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
-
     private void onSuggestionClick() {
 
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -1804,19 +1847,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         intent.setType("message/rfc822");
 
         startActivity(Intent.createChooser(intent, "Select Email App"));
-
-    }
-
-    private void onRefreashClick() {
-
-        editorialListArrayList.clear();
-        mAdapter.notifyDataSetChanged();
-        addMoreButton.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        if (!isRefreshing) {
-            fetchEditorialGeneralList();
-            isRefreshing = true;
-        }
 
     }
 
@@ -1832,13 +1862,11 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         onSharedLinkOpen(editorialGeneralInfo);
     }
 
-
-    private void loadInterstitialAd() {
+    private static void loadInterstitialAd() {
 
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
     }
-
 
     public void initializeInterstitialAds() {
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -1957,6 +1985,37 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
     }
 
+    public static void showInterstitialAd(Context context) {
+
+
+        if (AdsSubscriptionManager.checkShowAds(context)) {
+            if (EDITORIALCOUNTADS >= editorialcountAdMax) {
+
+                if (facebookInterstitial != null) {
+                    if (facebookInterstitial.isAdLoaded()) {
+
+                        facebookInterstitial.show();
+                        EDITORIALCOUNTADS = 0;
+                    } else if (mInterstitialAd != null) {
+
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                            EDITORIALCOUNTADS = 0;
+
+                        } else {
+                            loadInterstitialAd();
+                        }
+
+                    }
+                }
+
+            } else {
+                EDITORIALCOUNTADS++;
+            }
+        }
+
+    }
+
     public void onDailyVocabularyClick(View view) {
         Intent intent = new Intent(this, DailyVocabularyActivity.class);
         startActivity(intent);
@@ -1974,11 +2033,9 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         onBookMark();
     }
 
-
     public void onSearchOldClick(View view) {
         onSortByDateClick();
     }
-
 
     public void onPIBSummaryClick(View view) {
 
@@ -2007,5 +2064,36 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     public void onRateUsClick(View view) {
         onRateUs();
     }
+
+    public class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<android.support.v4.app.Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(android.support.v4.app.Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
 
 }

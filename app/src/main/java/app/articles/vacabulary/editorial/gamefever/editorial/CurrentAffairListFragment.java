@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -26,11 +29,15 @@ import com.facebook.ads.NativeAd;
 
 import org.json.JSONArray;
 
+import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import utils.AdsSubscriptionManager;
 import utils.CurrentAffairs;
 import utils.CurrentAffairsAdapter;
+import utils.DatabaseHandlerRead;
 import utils.JsonParser;
 import utils.VolleyManager;
 
@@ -49,6 +56,10 @@ public class CurrentAffairListFragment extends Fragment {
     private boolean isLoading = false;
     int pageNumber = 2;
 
+
+    public long sortDateMillis = -1;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public CurrentAffairListFragment() {
     }
@@ -76,7 +87,30 @@ public class CurrentAffairListFragment extends Fragment {
 
     public void fetchCurrentAffairs() {
 
+        if (category<1){
+            return;
+        }
+
         String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category;
+        ;
+
+        if (sortDateMillis < 1) {
+            url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category;
+        } else if (sortDateMillis >= 1) {
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String afterDateString = dateFormat.format(sortDateMillis) + "T05:30:00";
+            String beforeDateString = dateFormat.format((sortDateMillis + 86400000l)) + "T05:30:00";
+
+
+            url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category + "&after=" + afterDateString + "&before=" + beforeDateString;
+
+
+        }
+
+        loadCache(url);
+
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
@@ -89,11 +123,14 @@ public class CurrentAffairListFragment extends Fragment {
 
                         arrayList = new JsonParser().parseCurrentAffairsList(response);
 
+                        currentAffairsArrayList.clear();
+
                         for (CurrentAffairs currentAffairs : arrayList) {
                             currentAffairsArrayList.add(currentAffairs);
                         }
 
-                        addNativeExpressAds();
+                        addNativeExpressAds(true);
+                        addReadStatus();
 
                         currentAffairsAdapter = new CurrentAffairsAdapter(currentAffairsArrayList, getContext());
 
@@ -102,6 +139,9 @@ public class CurrentAffairListFragment extends Fragment {
                         if (recyclerView != null) {
                             recyclerView.setAdapter(currentAffairsAdapter);
                         }
+
+                        showRefreshing(false);
+
 
                     }
                 },
@@ -121,21 +161,179 @@ public class CurrentAffairListFragment extends Fragment {
 
     }
 
+    private void loadCache(String url) {
+
+        Cache cache = VolleyManager.getInstance().getRequestQueue().getCache();
+
+        Cache.Entry entry = cache.get(url);
+        if (entry != null) {
+            //Cache data available.
+            try {
+
+                String response = new String(entry.data, "UTF-8");
+
+                ArrayList<CurrentAffairs> arrayList;
+
+                arrayList = new JsonParser().parseCurrentAffairsList(response);
+
+                currentAffairsArrayList.clear();
+
+                for (CurrentAffairs currentAffairs : arrayList) {
+                    currentAffairsArrayList.add(currentAffairs);
+                }
+
+                addNativeExpressAds(false);
+                addReadStatus();
+
+                currentAffairsAdapter = new CurrentAffairsAdapter(currentAffairsArrayList, getContext());
+
+                setAdapterListener();
+
+                if (recyclerView != null) {
+                    recyclerView.setAdapter(currentAffairsAdapter);
+                }
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Cache data not exist.
+        }
+
+    }
+
+
+    public void fetchCurrentAffairs(boolean date) {
+
+        if (!(category > 1)) {
+            return;
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String afterDateString = dateFormat.format(sortDateMillis) + "T05:30:00";
+        String beforeDateString = dateFormat.format((sortDateMillis + 86400000l)) + "T05:30:00";
+
+
+        String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category + "&after=" + afterDateString + "&before=" + beforeDateString;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d(TAG, "onResponse: " + response);
+
+                        ArrayList<CurrentAffairs> arrayList;
+
+                        arrayList = new JsonParser().parseCurrentAffairsList(response);
+
+                        currentAffairsArrayList.clear();
+
+                        for (CurrentAffairs currentAffairs : arrayList) {
+                            currentAffairsArrayList.add(currentAffairs);
+                        }
+
+                        addNativeExpressAds(true);
+                        addReadStatus();
+
+                        currentAffairsAdapter = new CurrentAffairsAdapter(currentAffairsArrayList, getContext());
+
+                        setAdapterListener();
+
+                        if (recyclerView != null) {
+                            recyclerView.setAdapter(currentAffairsAdapter);
+                        }
+
+                        showRefreshing(false);
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.d(TAG, "onErrorResponse: " + error);
+
+                    }
+                });
+
+
+        jsonArrayRequest.setShouldCache(true);
+
+        VolleyManager.getInstance().addToRequestQueue(jsonArrayRequest, "Group request");
+
+    }
+
+
+    public void showRefreshing(boolean value) {
+
+        try {
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(value);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void setAdapterListener() {
         currentAffairsAdapter.setClickListener(new CurrentAffairsAdapter.ClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
+                if (position < 0) {
+
+                    return;
+                }
+
                 if (position % AdsSubscriptionManager.ADSPOSITION_COUNT == 0) {
                     return;
                 }
 
+                CurrentAffairs currentAffairs = (CurrentAffairs) currentAffairsArrayList.get(position);
+
                 Intent intent = new Intent(getContext(), CurrentAffairsFeedActivity.class);
-                intent.putExtra("news", (CurrentAffairs)currentAffairsArrayList.get(position));
+                intent.putExtra("news", currentAffairs);
                 startActivity(intent);
+
+                EditorialListWithNavActivity.showInterstitialAd(getContext());
+
+                /*Read Status*/
+
+                try {
+                    currentAffairs.setReadStatus(true);
+                    currentAffairsAdapter.notifyDataSetChanged();
+
+                    new DatabaseHandlerRead(getContext()).addReadNews(currentAffairs);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }
+
+    private void addReadStatus() {
+        try {
+            DatabaseHandlerRead databaseHandlerRead = new DatabaseHandlerRead(getContext());
+            CurrentAffairs currentAffairs;
+            for (Object object : currentAffairsArrayList) {
+                if (object.getClass() == CurrentAffairs.class) {
+                    currentAffairs = (CurrentAffairs) object;
+                    currentAffairs.setReadStatus(databaseHandlerRead.getNewsReadStatus(String.valueOf(currentAffairs.getId())));
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -168,12 +366,33 @@ public class CurrentAffairListFragment extends Fragment {
         });
 
 
+        swipeRefreshLayout = view.findViewById(R.id.swiperefreshlayout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchCurrentAffairs();
+                showRefreshing(true);
+            }
+        });
+
+        if (currentAffairsArrayList.isEmpty()) {
+            showRefreshing(true);
+        }
+
+
         return view;
     }
 
     private void downloadMoreArticleList() {
 
-        isLoading=true;
+        if (sortDateMillis > 1) {
+
+            return;
+        }
+
+        isLoading = true;
+        showRefreshing(true);
 
         String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category + "&page=" + pageNumber;
 
@@ -188,13 +407,17 @@ public class CurrentAffairListFragment extends Fragment {
 
                         currentAffairsArrayList.addAll(currentAffairsList);
 
-                        addNativeExpressAds();
+                        addNativeExpressAds(true);
+                        addReadStatus();
 
-                        currentAffairsAdapter.notifyDataSetChanged();
+                        if (currentAffairsAdapter != null) {
+                            currentAffairsAdapter.notifyDataSetChanged();
+                        }
 
                         pageNumber++;
 
                         isLoading = false;
+                        showRefreshing(false);
 
 
                     }
@@ -215,7 +438,12 @@ public class CurrentAffairListFragment extends Fragment {
 
     }
 
-    private void addNativeExpressAds() {
+    private void addNativeExpressAds(boolean loadAd) {
+
+if (getContext()==null){
+    return;
+}
+
 
         boolean checkShowAds = AdsSubscriptionManager.checkShowAds(getContext());
 
@@ -257,7 +485,7 @@ public class CurrentAffairListFragment extends Fragment {
                     });
 
                     // Request an ad
-                    if (checkShowAds) {
+                    if (checkShowAds && loadAd) {
                         nativeAd.loadAd();
                     }
 
@@ -269,8 +497,6 @@ public class CurrentAffairListFragment extends Fragment {
 
 
     }
-
-
 
     @Override
     public void onAttach(Context context) {

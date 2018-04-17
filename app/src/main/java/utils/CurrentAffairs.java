@@ -14,6 +14,8 @@ public class CurrentAffairs implements Serializable {
     String title, content, link, date, category, subHeading;
     int id, categoryIndex;
 
+    boolean readStatus;
+
     public String getTitle() {
         return title;
     }
@@ -82,6 +84,14 @@ public class CurrentAffairs implements Serializable {
 
     public void setSubHeading(String subHeading) {
         this.subHeading = subHeading;
+    }
+
+    public boolean isReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(boolean readStatus) {
+        this.readStatus = readStatus;
     }
 
     public void resolveCategory() {
@@ -188,11 +198,14 @@ public class CurrentAffairs implements Serializable {
         String str = content;
         str = str.replaceAll("<p>", "\n");
         str = str.replaceAll("</p>", "");
-        str = str.replaceAll("<br>", "");
+        str = str.replaceAll("<br>", "\n");
 
         setContent(str);
 
 
     }
+
+
+
 
 }

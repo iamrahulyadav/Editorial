@@ -110,6 +110,11 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (NightModeManager.getNightMode(this)) {
+            setTheme(R.style.FeedActivityThemeDark);
+        }
+
         setContentView(R.layout.activity_current_affairs_feed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -202,14 +207,10 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (notesMode) {
 
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.activity_notes_mode_action, menu);
-        } else {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.activity_editorial_feed_actions, menu);
-        }
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_current_affairs_feed_actions, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -289,6 +290,16 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (textToSpeech != null) {
+            speakOutWord(".");
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
     }
 
     private void init(String content) {

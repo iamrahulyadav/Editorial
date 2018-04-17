@@ -84,8 +84,26 @@ public class DatabaseHandlerRead extends SQLiteOpenHelper {
         values.put(KEY_IS_LIKED, false);
 
 
+        // Inserting Row
+        db.insert(TABLE_READ_FEEDS, null, values);
 
-            // Inserting Row
+        // db.close(); // Closing database connection
+    }
+
+    public void addReadNews(CurrentAffairs currentAffairs) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_PUSHID, String.valueOf(currentAffairs.getId()));
+        values.put(KEY_LINK, currentAffairs.getLink() + "");
+        values.put(KEY_HEADING, currentAffairs.getTitle());
+        values.put(KEY_DATE, currentAffairs.getDate());
+        values.put(KEY_CATEGORY, currentAffairs.getCategory());
+        values.put(KEY_SOURCE, currentAffairs.getCategory());
+        values.put(KEY_IS_LIKED, false);
+
+
+        // Inserting Row
         db.insert(TABLE_READ_FEEDS, null, values);
 
         // db.close(); // Closing database connection

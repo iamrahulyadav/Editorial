@@ -55,6 +55,55 @@ public class JsonParser {
 
     }
 
+    public ArrayList<CurrentAffairs> parseCurrentAffairsList(String string) {
+
+
+
+        ArrayList<CurrentAffairs> currentAffairsArrayList = new ArrayList<>();
+
+        try {
+
+            JSONArray response = new JSONArray(string);
+
+
+            CurrentAffairs currentAffairs;
+
+            for (int i = 0; i < response.length(); i++) {
+
+                currentAffairs = new CurrentAffairs();
+
+                JSONObject jsonObject = response.getJSONObject(i);
+
+                currentAffairs.setDate(jsonObject.getString("date"));
+                currentAffairs.setLink(jsonObject.getString("link"));
+
+                currentAffairs.setTitle(jsonObject.getJSONObject("title").getString("rendered"));
+
+                currentAffairs.setContent(jsonObject.getJSONObject("content").getString("rendered"));
+
+                currentAffairs.setId(jsonObject.getInt("id"));
+
+                if (jsonObject.getJSONArray("categories").length() > 1) {
+                    currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(1));
+                } else {
+                    currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(0));
+                }
+
+
+
+                currentAffairsArrayList.add(currentAffairs);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return currentAffairsArrayList;
+
+    }
+
+
     public CurrentAffairs parseCurrentAffairs(JSONObject jsonObject) {
 
 
