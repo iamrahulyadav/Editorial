@@ -45,7 +45,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.InviteEvent;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.NativeAd;
@@ -87,7 +89,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
     CurrentAffairs currentAffairs;
 
 
-    TextView headingTextView, dateTextView, sourceTextView, contentTextView, notesTextView, sourceLinkTextView;
+    TextView headingTextView, dateTextView, sourceTextView, contentTextView, notesTextView, sourceLinkTextView, articleTypeTextView, tagTextView;
 
     TextView translateText;
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -121,6 +123,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
 
         currentAffairs = (CurrentAffairs) getIntent().getSerializableExtra("news");
+        isPushNotification = getIntent().getBooleanExtra("isPushNotification", false);
 
 
         if (currentAffairs == null) {
@@ -139,6 +142,8 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         contentTextView = findViewById(R.id.currentAffairsFeed_content_textview);
         notesTextView = findViewById(R.id.currentAffairsFeed_notesText_textview);
         sourceLinkTextView = findViewById(R.id.currentAffairsFeed_sourceLink_textView);
+        articleTypeTextView = findViewById(R.id.currentAffairsFeed_articleType_textview);
+        tagTextView = findViewById(R.id.currentAffairsFeed_tag_textview);
 
         muteVoice = SettingManager.getMuteVoice(this);
 
@@ -157,6 +162,37 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
             initializeTopNativeAds(true);
         }
 
+
+        if (isPushNotification) {
+            try {
+                Answers.getInstance().logInvite(new InviteEvent()
+                        .putMethod("push notification")
+                        .putCustomAttribute("editorialID", String.valueOf(currentAffairs.getId()))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        try {
+
+            if (currentAffairs.getArticleType()!=null) {
+                getSupportActionBar().setTitle(currentAffairs.getArticleType());
+            }
+
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentId(String.valueOf(currentAffairs.getId()))
+                    .putContentType(currentAffairs.getArticleType())
+                    .putCustomAttribute("Category", currentAffairs.getCategory())
+                    .putContentName(currentAffairs.getTitle())
+                    .putCustomAttribute("Mode", "Current Affairs")
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initializeActivity() {
@@ -170,8 +206,11 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         contentTextView.setText(currentAffairs.getContent());
         init(currentAffairs.getContent());
 
-        sourceLinkTextView.setText(currentAffairs.getLink());
+        sourceLinkTextView.setText("Website Link : "+currentAffairs.getLink());
 
+        articleTypeTextView.setText(currentAffairs.getArticleType());
+
+        tagTextView.setText(currentAffairs.getTag());
 
     }
 
@@ -356,6 +395,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
                 if (mWord.contentEquals(selectedWord)) {
                     ds.setUnderlineText(true);
+
                 }
                 //ds.setColor(ds.linkColor);
                 //super.updateDrawState(ds);
@@ -746,7 +786,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CurrentAffairsFeedActivity.this, "Connection Failed! Try again later", Toast.LENGTH_SHORT).show();
+                        openShareDialog(Uri.parse(currentAffairs.getLink()));
                         try {
                             pd.dismiss();
                         } catch (Exception exception) {
@@ -766,8 +806,8 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download the app and Start reading");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shortLink
                 + "\n" + currentAffairs.getTitle()
-                + "\n\nRead full editorial at Daily editorial app");
-        startActivity(Intent.createChooser(sharingIntent, "Share Editorial via"));
+                + "\n\nRead full article in Daily editorial app");
+        startActivity(Intent.createChooser(sharingIntent, "Share Article via"));
         try {
             Answers.getInstance().logCustom(new CustomEvent("Share link created").putCustomAttribute("Content Id", currentAffairs.getId())
                     .putCustomAttribute("Shares", currentAffairs.getTitle()));
@@ -1019,31 +1059,52 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
     }
 
     private void initializeTopNativeAds() {
-        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialFeed_top_nativeAds);
-        adView.setVisibility(View.VISIBLE);
 
-        AdRequest request = new AdRequest.Builder().build();
-        adView.loadAd(request);
+        try {
+            final AdView adView = new AdView(this);
+            adView.setAdSize(AdSize.BANNER);
+            adView.setAdUnitId("ca-app-pub-8455191357100024/8580640678");
 
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-            }
 
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "top Native small").putCustomAttribute("errorType", i));
+            AdRequest request = new AdRequest.Builder().build();
+            adView.loadAd(request);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+            adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+
+                    try {
+                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+
+                    CardView cardView = findViewById(R.id.editorialfeed_top_admob_cardView);
+                    cardView.setVisibility(View.VISIBLE);
+
+                    cardView.removeAllViews();
+                    cardView.addView(adView);
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
 
     public void initializeTopNativeAds(boolean isFacebook) {
 
@@ -1114,4 +1175,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
     }
 
 
+    public void onShareClick(View view) {
+        onShareClick();
+    }
 }

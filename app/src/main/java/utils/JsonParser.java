@@ -41,6 +41,10 @@ public class JsonParser {
                     currentAffairs.setCategoryIndex(jsonObject.getJSONArray("categories").getInt(0));
                 }
 
+                if (jsonObject.getJSONArray("tags").length() != 0) {
+                    currentAffairs.setTagIndex(jsonObject.getJSONArray("tags").getInt(0));
+                }
+
 
 
                 currentAffairsArrayList.add(currentAffairs);
@@ -102,7 +106,6 @@ public class JsonParser {
         return currentAffairsArrayList;
 
     }
-
 
     public CurrentAffairs parseCurrentAffairs(JSONObject jsonObject) {
 

@@ -1,16 +1,22 @@
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/swiperefreshlayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swiperefreshlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="app.articles.vacabulary.editorial.gamefever.editorial.EditorialListFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/editorialFragment_recyclerView"
-        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/editorialFragment_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
+
 
 </android.support.v4.widget.SwipeRefreshLayout>

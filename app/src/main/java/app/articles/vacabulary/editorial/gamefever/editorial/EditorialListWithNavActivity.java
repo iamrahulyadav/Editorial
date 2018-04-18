@@ -85,6 +85,7 @@ import utils.DatabaseHandlerRead;
 import utils.LanguageManager;
 import utils.NightModeManager;
 import utils.PushNotificationManager;
+import utils.SettingManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -185,7 +186,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
 
-                    onBookMark();
+                    //onBookMark();
 
                     dialog.cancel();
                 }
@@ -210,6 +211,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         if (PushNotificationManager.getPushNotification(this)) {
             FirebaseMessaging.getInstance().subscribeToTopic("subscribed");
+            FirebaseMessaging.getInstance().subscribeToTopic("caNotification");
+
         }
 
         initializeSubscriptionAds();
@@ -483,6 +486,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         startActivity(intent);
 
+        try {
+            Answers.getInstance().logCustom(new CustomEvent("User via Dynamic link")
+                    .putCustomAttribute("editorial", articleID)
+                    .putCustomAttribute("ArticleType", "Current Affairs")
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void initializeActivity() {
@@ -629,9 +641,31 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
         adapter.addFragment(editorialAnalysisFragment, "Analysis");
 
-        viewPager.setCurrentItem(1);
 
         viewPager.setAdapter(adapter);
+
+        viewPager.setCurrentItem(SettingManager.getTabPosition(this));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                SettingManager.setTabPosition(EditorialListWithNavActivity.this, position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
     }
 
 
@@ -1192,7 +1226,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 if (sortCategoryIndex > -1 || sortSourceIndex > -1 || sortByDate) {
                     sortCategoryIndex = -1;
                     sortSourceIndex = -1;
-                    sortDateMillis=-1;
+                    sortDateMillis = -1;
                     sortByDate = false;
 
                     spinner.setSelection(0);
@@ -1204,7 +1238,6 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                     currentAffairListFragment.fetchCurrentAffairs();
                     editorialAnalysisFragment.fetchCurrentAffairs();
-
 
 
                     try {
@@ -1239,10 +1272,23 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
 
-            /*case R.id.action_refresh:
-                // help action
-                onSortByDate();
-                return true;*/
+            case R.id.action_go_adsFree:
+                onGoAdsFreeClick(tabLayout);
+                return true;
+
+
+            case R.id.action_aspirant_world:
+                onAspirantWorld();
+                return true;
+
+            case R.id.action_daily_vocabulary:
+                onDailyVocabularyClick(tabLayout);
+                return true;
+
+            case R.id.action_setting:
+                onSignInOpenClick();
+                return true;
+
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -1275,8 +1321,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
 
             case R.id.nav_bookmark:
-                //onBookMark();
-                openMainActivity();
+                onBookMark();
+                //openMainActivity();
                 break;
 
             case R.id.nav_day_mode:
@@ -1346,6 +1392,10 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                 onEnglishGrammer();
                 break;
 
+            case R.id.nav_aspirant_world:
+                onAspirantWorld();
+                break;
+
         }
 
 
@@ -1364,6 +1414,15 @@ public class EditorialListWithNavActivity extends AppCompatActivity
     private void onEnglishGrammer() {
         try {
             String link = "https://play.google.com/store/apps/details?id=app.english.grammar.craftystudio.englishgrammar";
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onAspirantWorld() {
+        try {
+            String link = "http://aspirantworld.in/";
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } catch (Exception e) {
             e.printStackTrace();
@@ -1559,7 +1618,7 @@ public class EditorialListWithNavActivity extends AppCompatActivity
 
                 //fetchEditorialGeneralList();
 
-                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex,sortCategoryIndex,sortDateMillis);
+                editorialListFragment.fetchEditorialGeneralList(sortSourceIndex, sortCategoryIndex, sortDateMillis);
 
 
             }
@@ -1611,8 +1670,8 @@ public class EditorialListWithNavActivity extends AppCompatActivity
             @Override
             public void onCancel(DialogInterface dialogInterface) {
 
-                sortCategoryIndex=-1;
-                sortSourceIndex=-1;
+                sortCategoryIndex = -1;
+                sortSourceIndex = -1;
                 sortByDate = false;
                 sortDateMillis = -1;
 

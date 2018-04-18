@@ -60,6 +60,11 @@
                 android:icon="@drawable/ic_action_sign_in"
                 android:title="Settings (Sign in)" />
 
+            <item
+                android:id="@+id/nav_aspirant_world"
+                android:icon="@drawable/ic_action_vocabulary"
+                android:title="Aspirant World Website" />
+
 
         </menu>
     </item>

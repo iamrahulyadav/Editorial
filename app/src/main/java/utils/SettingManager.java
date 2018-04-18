@@ -95,4 +95,28 @@ public class SettingManager {
 
     }
 
+
+    public static void setTabPosition(Context mContext , int position) {
+        SharedPreferences prefs = mContext.getSharedPreferences("settings", 0);
+
+
+        SharedPreferences.Editor editor = prefs.edit();
+
+
+        editor.putInt("tabposition", position);
+
+
+
+        editor.apply();
+    }
+
+    public static int getTabPosition(Context mContext ) {
+        SharedPreferences prefs = mContext.getSharedPreferences("settings", 0);
+
+        return prefs.getInt("tabposition", 1);
+
+    }
+
+
+
 }

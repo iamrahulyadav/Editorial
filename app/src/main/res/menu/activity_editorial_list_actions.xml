@@ -5,11 +5,24 @@
 
 
 
-   <!-- <item android:id="@+id/action_refresh"
+    <item android:id="@+id/action_go_adsFree"
         android:icon="@drawable/ic_action_refresh"
-        android:title="Refresh"
-        app:showAsAction="always" />
+        android:title="Go Ads free"
+        app:showAsAction="never" />
 
--->
+   <item android:id="@+id/action_aspirant_world"
+       android:icon="@drawable/ic_action_refresh"
+       android:title="Visit Web site"
+       app:showAsAction="never" />
+
+   <item android:id="@+id/action_daily_vocabulary"
+       android:icon="@drawable/ic_action_refresh"
+       android:title="Daily Vocabulary"
+       app:showAsAction="never" />
+
+   <item android:id="@+id/action_setting"
+       android:icon="@drawable/ic_action_refresh"
+       android:title="Settings"
+       app:showAsAction="never" />
 
 </menu>

@@ -37,7 +37,7 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public class CurrentAffairsViewHolder extends RecyclerView.ViewHolder {
-        public TextView headingTextView, dateTextView, sourceTextView, subHeadingTextView;
+        public TextView headingTextView, dateTextView, sourceTextView, subHeadingTextView, tagTextView;
 
         ImageView readMaskImageView;
         CardView backGroundCard;
@@ -50,9 +50,10 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             sourceTextView = view.findViewById(R.id.currentAffairs_source_textView);
             subHeadingTextView = view.findViewById(R.id.currentAffairs_subheading_textView);
 
-            backGroundCard= view.findViewById(R.id.currentAffairs_background_card);
-            readMaskImageView=view.findViewById(R.id.currentAffairs_isReadMask_imageView);
+            backGroundCard = view.findViewById(R.id.currentAffairs_background_card);
+            readMaskImageView = view.findViewById(R.id.currentAffairs_isReadMask_imageView);
 
+            tagTextView = view.findViewById(R.id.currentAffairs_tag_textView);
 
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +83,7 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             cardView = (CardView) itemView.findViewById(R.id.nativeExpress_background_cardView);
 
-            recommendedTextView =(TextView)itemView.findViewById(R.id.nativeExpress_recommended_textView);
+            recommendedTextView = (TextView) itemView.findViewById(R.id.nativeExpress_recommended_textView);
 
         }
     }
@@ -96,7 +97,6 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
 
 
         switch (viewType) {
@@ -121,7 +121,6 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
 
 
         int viewType = getItemViewType(position);
@@ -183,18 +182,18 @@ public class CurrentAffairsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder.subHeadingTextView.setText(currentAffairs.getSubHeading());
 
 
-                if (currentAffairs.isReadStatus()){
+                if (currentAffairs.isReadStatus()) {
                     viewHolder.backGroundCard.setCardElevation(0);
                     viewHolder.readMaskImageView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     viewHolder.backGroundCard.setCardElevation(16);
                     viewHolder.readMaskImageView.setVisibility(View.GONE);
                 }
 
+                viewHolder.tagTextView.setText(currentAffairs.getTag());
+
 
         }
-
-
 
 
     }

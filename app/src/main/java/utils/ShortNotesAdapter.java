@@ -7,8 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
+import com.facebook.ads.NativeAdViewAttributes;
 import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.List;
@@ -50,9 +54,20 @@ public class ShortNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout linearLayout;
+        CardView cardView;
+
+        TextView recommendedTextView;
 
         public NativeExpressAdViewHolder(View itemView) {
             super(itemView);
+
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.nativeExpress_container_linearLayout);
+
+            cardView = (CardView) itemView.findViewById(R.id.nativeExpress_background_cardView);
+
+            recommendedTextView =(TextView)itemView.findViewById(R.id.nativeExpress_recommended_textView);
+
         }
     }
 
@@ -104,17 +119,42 @@ public class ShortNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (viewType) {
 
             case AD_VIEW_TYPE:
-                ShortNotesAdapter.NativeExpressAdViewHolder nativeExpressAdViewHolder = (ShortNotesAdapter.NativeExpressAdViewHolder) holder;
-                NativeExpressAdView adView = (NativeExpressAdView) shortNotesArrayList.get(position);
-                ViewGroup adCardView = (ViewGroup) nativeExpressAdViewHolder.itemView;
-                adCardView.removeAllViews();
+              ShortNotesAdapter.NativeExpressAdViewHolder adView = (ShortNotesAdapter.NativeExpressAdViewHolder) holder;
+                boolean nightMode = NightModeManager.getNightMode(context);
 
-                if (adView.getParent() != null) {
-                    ((ViewGroup) adView.getParent()).removeView(adView);
-                }
+                NativeAd nativeAd = (NativeAd) shortNotesArrayList.get(position);
+                if (nativeAd.isAdLoaded()) {
+                    adView.cardView.setVisibility(View.VISIBLE);
+                    adView.recommendedTextView.setVisibility(View.VISIBLE);
+                    View view;
+                    if (nightMode) {
 
-                if (checkShowAds) {
-                    adCardView.addView(adView);
+                        NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                                .setBackgroundColor(Color.parseColor("#28292e"))
+                                .setTitleTextColor(Color.WHITE)
+                                .setButtonTextColor(Color.WHITE)
+                                .setDescriptionTextColor(Color.WHITE)
+                                .setButtonColor(Color.parseColor("#F44336"));
+
+                        view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120, viewAttributes);
+                    } else {
+                        NativeAdViewAttributes viewAttributes = new NativeAdViewAttributes()
+                                .setButtonTextColor(Color.WHITE)
+                                .setButtonColor(Color.parseColor("#F44336"));
+
+                        view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120, viewAttributes);
+                    }
+
+
+                    adView.linearLayout.removeAllViews();
+                    adView.linearLayout.addView(view);
+
+                } else {
+
+                    adView.cardView.setVisibility(View.GONE);
+                    adView.recommendedTextView.setVisibility(View.GONE);
+
+
                 }
                 break;
 

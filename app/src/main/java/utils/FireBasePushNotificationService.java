@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import app.articles.vacabulary.editorial.gamefever.editorial.CurrentAffairsFeedActivity;
 import app.articles.vacabulary.editorial.gamefever.editorial.EditorialFeedActivity;
 import app.articles.vacabulary.editorial.gamefever.editorial.R;
 
@@ -25,6 +26,7 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
     String editorialID;
 
     Intent intent;
+    private int contentType=0;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -48,15 +50,35 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
                 e.printStackTrace();
             }
 
-            editorialID = remoteMessage.getData().get("editorial");
+            try {
+                 contentType = Integer.valueOf(remoteMessage.getData().get("contentType"));
 
 
-            intent = new Intent(this, EditorialFeedActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("editorialID", editorialID);
-            intent.putExtra("isPushNotification", true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
+            if (contentType!=0) {
+
+                CurrentAffairs currentAffairs = new CurrentAffairs();
+                currentAffairs.setId(Integer.valueOf(remoteMessage.getData().get("id")));
+                currentAffairs.setTitle(remoteMessage.getData().get("notificationT"));
+
+                intent = new Intent(this, CurrentAffairsFeedActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("news", currentAffairs);
+                intent.putExtra("isPushNotification", true);
+            }else{
+
+                editorialID = remoteMessage.getData().get("editorial");
+
+                intent = new Intent(this, EditorialFeedActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("editorialID", editorialID);
+                intent.putExtra("isPushNotification", true);
+
+            }
 
             showNotification(remoteMessage.getData().get("notificationT"), remoteMessage.getData().get("notificationB"));
 

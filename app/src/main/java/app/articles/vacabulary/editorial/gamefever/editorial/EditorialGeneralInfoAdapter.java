@@ -157,6 +157,9 @@ public class EditorialGeneralInfoAdapter extends RecyclerView.Adapter<RecyclerVi
             case AD_VIEW_TYPE:
                 NativeExpressAdViewHolder adView = (NativeExpressAdViewHolder) holder;
 
+                if (context==null){
+                    break;
+                }
 
                 NativeAd nativeAd = (NativeAd) editorialGeneralInfoList.get(position);
                 if (nativeAd.isAdLoaded()) {

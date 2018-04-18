@@ -55,6 +55,21 @@
                 android:visibility="visible">
 
                 <TextView
+                    android:id="@+id/currentAffairsFeed_articleType_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:fontFamily="monospace"
+                    android:text="Editorial"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="8dp"
+                    />
+
+
+                <TextView
                     android:id="@+id/editorial_heading_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -143,19 +158,20 @@
                     android:orientation="vertical">
 
 
-                    <com.google.android.gms.ads.NativeExpressAdView
-                        android:id="@+id/editorialFeed_top_nativeAds"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:descendantFocusability="blocksDescendants"
-                        android:visibility="gone"
-                        app:adSize="320x132"
-                        app:adUnitId="ca-app-pub-8455191357100024/9929021950">
 
-                    </com.google.android.gms.ads.NativeExpressAdView>
 
                 </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/editorialfeed_top_admob_cardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                >
 
             </android.support.v7.widget.CardView>
 
@@ -168,7 +184,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"
-                android:autoLink="all"
+                android:autoLink="web"
                 android:fontFamily="sans-serif"
                 android:lineSpacingMultiplier="1.2"
                 android:text=""

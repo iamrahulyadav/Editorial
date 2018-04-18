@@ -1524,30 +1524,50 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     }
 
     private void initializeTopNativeAds() {
-        NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.editorialFeed_top_nativeAds);
-        adView.setVisibility(View.VISIBLE);
 
-        AdRequest request = new AdRequest.Builder().build();
-        adView.loadAd(request);
+        try {
+            final AdView adView = new AdView(this);
+            adView.setAdSize(AdSize.BANNER);
+            adView.setAdUnitId("ca-app-pub-8455191357100024/8580640678");
 
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-            }
 
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                try {
-                    Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
-                            .putCustomAttribute("Placement", "top Native small").putCustomAttribute("errorType", i));
+            AdRequest request = new AdRequest.Builder().build();
+            adView.loadAd(request);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+            adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+
+                    try {
+                        Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                .putCustomAttribute("Placement", "Feed native bottom").putCustomAttribute("errorType", i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+
+                    CardView cardView = findViewById(R.id.editorialfeed_top_admob_cardView);
+                    cardView.setVisibility(View.VISIBLE);
+
+                    cardView.removeAllViews();
+                    cardView.addView(adView);
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void initializeTopNativeAds(boolean isFacebook) {

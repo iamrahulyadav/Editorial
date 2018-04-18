@@ -100,8 +100,8 @@ public class CurrentAffairListFragment extends Fragment {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            String afterDateString = dateFormat.format(sortDateMillis) + "T05:30:00";
-            String beforeDateString = dateFormat.format((sortDateMillis + 86400000l)) + "T05:30:00";
+            String afterDateString = dateFormat.format(sortDateMillis) + "T00:00:00";
+            String beforeDateString = dateFormat.format((sortDateMillis + 86400000l)) + "T00:00:00";
 
 
             url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category + "&after=" + afterDateString + "&before=" + beforeDateString;
@@ -211,8 +211,8 @@ public class CurrentAffairListFragment extends Fragment {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        String afterDateString = dateFormat.format(sortDateMillis) + "T05:30:00";
-        String beforeDateString = dateFormat.format((sortDateMillis + 86400000l)) + "T05:30:00";
+        String afterDateString = dateFormat.format(sortDateMillis) + "T00:00:00";
+        String beforeDateString = dateFormat.format((sortDateMillis + 86400000l)) + "T00:00:00";
 
 
         String url = "http://aspirantworld.in/wp-json/wp/v2/posts?categories=" + category + "&after=" + afterDateString + "&before=" + beforeDateString;
@@ -357,8 +357,13 @@ public class CurrentAffairListFragment extends Fragment {
                 if (!recyclerView.canScrollVertically(1)) {
 
                     if (!isLoading) {
-                        downloadMoreArticleList();
-                        Toast.makeText(getContext(), "Loading", Toast.LENGTH_SHORT).show();
+
+                        if (sortDateMillis > 1) {
+
+                        } else {
+                            downloadMoreArticleList();
+                            Toast.makeText(getContext(), "Loading", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                 }

@@ -133,7 +133,7 @@ public class NotesActivity extends AppCompatActivity {
                     }
 
 
-                    addNativeExpressAds();
+                    addNativeExpressAds(true);
                     mAdapter.notifyDataSetChanged();
                 }
 
@@ -278,30 +278,64 @@ public class NotesActivity extends AppCompatActivity {
 
     }
 
-    private void addNativeExpressAds() {
+    private void addNativeExpressAds(boolean loadAd) {
+
+
+
 
         boolean checkShowAds = AdsSubscriptionManager.checkShowAds(this);
 
-        //main function where ads is merged in editorial list as an object
 
-        for (int i = 0; i < (shortNotesArrayList.size()); i += 8) {
-            if (shortNotesArrayList.get(i).getClass() != NativeExpressAdView.class) {
-                final NativeExpressAdView adView = new NativeExpressAdView(this);
+        for (int i = 0; i < (shortNotesArrayList.size()); i += AdsSubscriptionManager.ADSPOSITION_COUNT) {
+            if (shortNotesArrayList.get(i) != null) {
+                if (shortNotesArrayList.get(i).getClass() != NativeAd.class) {
 
-                adView.setAdUnitId("ca-app-pub-8455191357100024/8254824112");
-                adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
-                adView.setAdSize(new AdSize(320, 132));
-                if (checkShowAds) {
-                    adView.loadAd(new AdRequest.Builder().build());
+                    NativeAd nativeAd = new NativeAd(this, "113079036048193_119892505366846");
+                    nativeAd.setAdListener(new com.facebook.ads.AdListener() {
+
+                        @Override
+                        public void onError(Ad ad, AdError error) {
+                            // Ad error callback
+                            try {
+                                Answers.getInstance().logCustom(new CustomEvent("Ad failed to load")
+                                        .putCustomAttribute("Placement", "List native").putCustomAttribute("errorType", error.getErrorMessage()).putCustomAttribute("Source", "Facebook"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onAdLoaded(Ad ad) {
+                            // Ad loaded callback
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAdClicked(Ad ad) {
+                            // Ad clicked callback
+                        }
+
+                        @Override
+                        public void onLoggingImpression(Ad ad) {
+                            // Ad impression logged callback
+                        }
+                    });
+
+                    // Request an ad
+                    if (checkShowAds && loadAd) {
+                        nativeAd.loadAd();
+                    }
+
+                    shortNotesArrayList.add(i, nativeAd);
+
                 }
-                shortNotesArrayList.add(i, adView);
-
             }
         }
 
 
     }
+
 /*
 
     private void addNativeExpressAds() {

@@ -32,6 +32,6 @@
         android:id="@+id/nav_header_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Best Editorial App" />
+        android:text="From Aspirant World" />
 
 </LinearLayout>

@@ -635,7 +635,6 @@ public class EditorialFeedWebViewActivity extends AppCompatActivity implements
         webView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                webView.getSettings().setJavaScriptEnabled(true);
                 getSelectedWord(500);
                 return false;
             }
@@ -659,6 +658,8 @@ public class EditorialFeedWebViewActivity extends AppCompatActivity implements
 
     private void callJavaScript() {
         if (Build.VERSION.SDK_INT >= 19) {
+            webView.getSettings().setJavaScriptEnabled(true);
+
             webView.evaluateJavascript("(function(){  if(window.getSelection) { return window.getSelection().toString(); }\n" +
                             "        else if(document.getSelection) { return document.getSelection().toString(); }\n" +
                             "        else {var selection = document.selection && document.selection.createRange();\n" +

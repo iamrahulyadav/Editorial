@@ -11,8 +11,8 @@ import java.util.Date;
 
 public class CurrentAffairs implements Serializable {
 
-    String title, content, link, date, category, subHeading;
-    int id, categoryIndex;
+    String title, content, link, date, category, subHeading, articleType,tag;
+    int id, categoryIndex, tagIndex;
 
     boolean readStatus;
 
@@ -94,6 +94,65 @@ public class CurrentAffairs implements Serializable {
         this.readStatus = readStatus;
     }
 
+    public String getArticleType() {
+        return articleType;
+    }
+
+    public void setArticleType(String articleType) {
+        this.articleType = articleType;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public int getTagIndex() {
+        return tagIndex;
+    }
+
+    public void setTagIndex(int tagIndex) {
+        this.tagIndex = tagIndex;
+        resolveTag();
+    }
+
+    private void resolveTag() {
+
+        switch (tagIndex) {
+
+            case 22:
+                setTag("International Relation");
+                break;
+            case 21:
+                setTag("Economics");
+                break;
+            case 23:
+                setTag("Polity");
+                break;
+            case 24:
+                setTag("Science & Tech");
+                break;
+            case 25:
+                setTag("Environment");
+                break;
+            case 26:
+                setTag("National");
+                break;
+            case 27:
+                setTag("Awards");
+                break;
+
+            default:
+                setCategory("");
+                break;
+
+
+        }
+    }
+
     public void resolveCategory() {
 
 
@@ -101,46 +160,61 @@ public class CurrentAffairs implements Serializable {
 
             case 2:
                 setCategory("Editorial Analysis");
+                setArticleType("Editorial Analysis");
                 break;
             case 3:
                 setCategory("Current Affairs");
+                setArticleType("Current Affairs");
                 break;
             case 5:
                 setCategory("The Hindu");
+                setArticleType("Editorial Analysis");
                 break;
             case 6:
                 setCategory("Indian Express");
+                setArticleType("Editorial Analysis");
                 break;
             case 7:
                 setCategory("The Hindu");
+                setArticleType("Current Affairs");
+
                 break;
             case 8:
                 setCategory("Indian Express");
+                setArticleType("Current Affairs");
                 break;
             case 9:
                 setCategory("Live Mint");
+                setArticleType("Current Affairs");
                 break;
             case 10:
                 setCategory("PIB");
+                setArticleType("Current Affairs");
                 break;
             case 11:
                 setCategory("Times of India");
+                setArticleType("Current Affairs");
                 break;
             case 12:
                 setCategory("Economic Times");
+                setArticleType("Current Affairs");
                 break;
             case 13:
                 setCategory("Important Dates");
+                setArticleType("Current Affairs");
                 break;
             case 14:
                 setCategory("News");
+                setArticleType("Current Affairs");
                 break;
             case 15:
                 setCategory("Live Mint");
+                setArticleType("Editorial Analysis");
                 break;
 
             default:
                 setCategory("Others");
+                setArticleType("Editorial Analysis");
                 break;
 
 
@@ -159,9 +233,9 @@ public class CurrentAffairs implements Serializable {
 
         subHeading = content.substring(0, endIndex);
 
-        subHeading = subHeading.replaceAll("<p>", "\n");
+        subHeading = subHeading.replaceAll("<p>", "");
         subHeading = subHeading.replaceAll("</p>", "\n");
-        subHeading = subHeading.replaceAll("<br>", "\n");
+        subHeading = subHeading.replaceAll("<br>", "");
         subHeading = subHeading + "..";
 
 
@@ -196,8 +270,8 @@ public class CurrentAffairs implements Serializable {
 
     public void resolveContent() {
         String str = content;
-        str = str.replaceAll("<p>", "\n");
-        str = str.replaceAll("</p>", "");
+        str = str.replaceAll("<p>", "");
+        str = str.replaceAll("</p>", "\n");
         str = str.replaceAll("<br>", "\n");
 
         setContent(str);
