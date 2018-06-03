@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import app.articles.vacabulary.editorial.gamefever.editorial.Comment;
+
 /**
  * Created by bunny on 06/04/18.
  */
@@ -145,6 +147,37 @@ public class JsonParser {
         }
 
         return currentAffairs;
+
+    }
+
+    public ArrayList<Comment> parseCommentList(JSONArray response) {
+
+
+        ArrayList<Comment> commentArrayList = new ArrayList<>();
+
+        try {
+
+            Comment comment;
+
+            for (int i = 0; i < response.length(); i++) {
+
+                comment = new Comment();
+
+                JSONObject jsonObject = response.getJSONObject(i);
+
+                comment.setCommentText(jsonObject.getJSONObject("content").getString("rendered"));
+
+                comment.resolveCommentText();
+
+                commentArrayList.add(comment);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return commentArrayList;
 
     }
 

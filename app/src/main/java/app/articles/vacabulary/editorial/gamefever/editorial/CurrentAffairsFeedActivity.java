@@ -17,7 +17,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -35,6 +39,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +49,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
@@ -69,10 +75,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.BreakIterator;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TreeMap;
 
 import utils.AdsSubscriptionManager;
+import utils.CommentAdapter;
 import utils.CurrentAffairs;
 import utils.CurrentAffairsAdapter;
 import utils.JsonParser;
@@ -87,7 +99,6 @@ import static android.content.ContentValues.TAG;
 public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
     CurrentAffairs currentAffairs;
-
 
     TextView headingTextView, dateTextView, sourceTextView, contentTextView, notesTextView, sourceLinkTextView, articleTypeTextView, tagTextView;
 
@@ -107,6 +118,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
     private TextToSpeech textToSpeech;
     int voiceReaderChunk = 0;
+
 
 
     @Override
@@ -177,7 +189,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
         try {
 
-            if (currentAffairs.getArticleType()!=null) {
+            if (currentAffairs.getArticleType() != null) {
                 getSupportActionBar().setTitle(currentAffairs.getArticleType());
             }
 
@@ -188,6 +200,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
                     .putContentName(currentAffairs.getTitle())
                     .putCustomAttribute("Mode", "Current Affairs")
             );
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,7 +219,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         contentTextView.setText(currentAffairs.getContent());
         init(currentAffairs.getContent());
 
-        sourceLinkTextView.setText("Website Link : "+currentAffairs.getLink());
+        sourceLinkTextView.setText("Website Link : " + currentAffairs.getLink());
 
         articleTypeTextView.setText(currentAffairs.getArticleType());
 
@@ -345,12 +358,20 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
 
         try {
 
+            //content = Html.fromHtml(content).toString();
+
             contentTextView.setTextIsSelectable(false);
             contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            //contentTextView.setText(Html.fromHtml(content), TextView.BufferType.SPANNABLE);
             contentTextView.setText(content, TextView.BufferType.SPANNABLE);
 
+
             setTextSize(contentTextView);
+
+
             SpannableString spans = (SpannableString) contentTextView.getText();
+
+
             BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
             iterator.setText(content);
             int start = iterator.first();
@@ -523,7 +544,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        },this);
     }
 
     private void fetchWordMeaning() {
@@ -861,7 +882,6 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         builder.show();
     }
 
-
     public void initializeNativeAds() {
 
 
@@ -1063,7 +1083,7 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         try {
             final AdView adView = new AdView(this);
             adView.setAdSize(AdSize.BANNER);
-            adView.setAdUnitId("ca-app-pub-8455191357100024/8580640678");
+            adView.setAdUnitId("ca-app-pub-8455191357100024/5236952455");
 
 
             AdRequest request = new AdRequest.Builder().build();
@@ -1104,7 +1124,6 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         }
 
     }
-
 
     public void initializeTopNativeAds(boolean isFacebook) {
 
@@ -1174,8 +1193,111 @@ public class CurrentAffairsFeedActivity extends AppCompatActivity {
         nativeAd.loadAd();
     }
 
-
     public void onShareClick(View view) {
         onShareClick();
     }
+
+
+    /*public void fetchComments() {
+
+
+        String url = "http://aspirantworld.in/wp-json/wp/v2/comments?post=" + currentAffairs.getId();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d(TAG, "onResponse: " + response);
+
+
+                        commentList = new JsonParser().parseCommentList(response);
+
+                        initializeCommentList();
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.d(TAG, "onErrorResponse: " + error);
+
+                    }
+                });
+
+
+        jsonArrayRequest.setShouldCache(true);
+
+        VolleyManager.getInstance().addToRequestQueue(jsonArrayRequest, "Group request");
+
+
+    }
+
+    private void initializeCommentList() {
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.editorialFeed_comments_recyclerView);
+        mCommentAdapter = new CommentAdapter(commentList, this);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        DividerItemDecorator dividerItemDecorator = new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST);
+        recyclerView.addItemDecoration(dividerItemDecorator);
+
+
+        recyclerView.setAdapter(mCommentAdapter);
+
+
+    }
+
+
+    public void insertCommentBtnClick(View view) {
+
+        EditText editText2 = findViewById(R.id.editorialFeed_commenttext_edittext);
+        final String commentString = editText2.getText().toString();
+
+        String url = "http://aspirantworld.in/wp-json/wp/v2/comments";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d(TAG, "onResponse: " + response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d(TAG, "onResponse: " + error);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("content", commentString);
+                params.put("post", String.valueOf(currentAffairs.getId()));
+                params.put("author", String.valueOf(3));
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+        VolleyManager.getInstance().addToRequestQueue(stringRequest, "post comment");
+
+
+    }
+    */
 }

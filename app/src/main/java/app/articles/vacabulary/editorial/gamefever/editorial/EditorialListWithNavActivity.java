@@ -268,12 +268,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
                                     return;
                                 }
 
-                                if (transactionDetails.purchaseInfo.purchaseData.purchaseState == PurchaseState.PurchasedSuccessfully) {
+                                if (transactionDetails.purchaseInfo.purchaseData.autoRenewing) {
                                     AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, true);
                                     Answers.getInstance().logCustom(new CustomEvent("Subscribed user enter"));
                                 } else {
                                     AdsSubscriptionManager.setSubscription(EditorialListWithNavActivity.this, false);
                                 }
+
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -618,6 +620,14 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.mainActivity_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+
+        try {
+            if (AdsSubscriptionManager.checkSubscriptionDialog(EditorialListWithNavActivity.this)) {
+                showSubscriptionDialog(EditorialListWithNavActivity.this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -2152,6 +2162,76 @@ public class EditorialListWithNavActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+
+    public void showSubscriptionDialog(final Context mContext) {
+
+        try {
+            final SharedPreferences prefs = mContext.getSharedPreferences("adsmanager", 0);
+
+            final SharedPreferences.Editor editor = prefs.edit();
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("Go Ads Free");
+
+            builder.setMessage("Remove all the ads by going Ads free for just Rs. 30 per month.\nThe app is free for everyone but to maintain the app content and development ads are integrated. You can get rid of all the ads for just Rs. 1 per day. \n\n(In case of any problem you can contact us at acraftystudio@gmail.com)\n\n Press Subscribe to proceed.")
+                    .setPositiveButton("Subscribe", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            if (bp != null) {
+                                bp.subscribe(EditorialListWithNavActivity.this, SUBSCRIPTION_ID);
+
+                                Answers.getInstance().logCustom(new CustomEvent("Subscription Flow").putCustomAttribute("Selection", "yes"));
+
+                            }
+
+
+                            if (editor != null) {
+                                editor.putLong("date_firstlaunch", System.currentTimeMillis());
+                                editor.commit();
+
+                            }
+                            dialog.dismiss();
+
+                        }
+                    })
+                    .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            if (editor != null) {
+                                editor.putBoolean("dontshowagain", true);
+                                editor.commit();
+                            }
+
+
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNeutralButton("Later", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            if (editor != null) {
+                                editor.putLong("date_firstlaunch", System.currentTimeMillis());
+                                editor.commit();
+
+                            }
+
+                            dialogInterface.dismiss();
+
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.create();
+            builder.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 

@@ -1,5 +1,8 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
+import android.os.Build;
+import android.text.Html;
+
 /**
  * Created by gamef on 05-03-2017.
  */
@@ -52,4 +55,23 @@ public class Comment {
                 ", commentText='" + commentText + '\'' +
                 '}';
     }
+
+
+    public void resolveCommentText() {
+        String str = commentText;
+
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            str = Html.fromHtml(str,Html.FROM_HTML_MODE_COMPACT).toString();
+        } else {
+            str = Html.fromHtml(str).toString();
+        }
+
+        str = str.replaceAll("\n\n","");
+
+        setCommentText(str);
+
+
+    }
+
 }

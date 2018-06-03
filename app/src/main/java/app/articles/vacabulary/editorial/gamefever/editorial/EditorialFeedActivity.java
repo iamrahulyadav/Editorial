@@ -479,7 +479,12 @@ public class EditorialFeedActivity extends AppCompatActivity implements
 
 
         Translation translation = new Translation(mWord);
-        translation.fetchTranslation(this);
+        translation.fetchTranslation(new Translation.TranslateListener() {
+            @Override
+            public void onTranslate(Translation translation) {
+                updateTranslateText(translation);
+            }
+        }, this);
 
         translateText.setText(mWord);
         selectedWord = mWord;
@@ -1326,7 +1331,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         return true;
     }
 
-
     public void initializeNativeAds() {
 
 
@@ -1528,7 +1532,7 @@ public class EditorialFeedActivity extends AppCompatActivity implements
         try {
             final AdView adView = new AdView(this);
             adView.setAdSize(AdSize.BANNER);
-            adView.setAdUnitId("ca-app-pub-8455191357100024/8580640678");
+            adView.setAdUnitId("ca-app-pub-8455191357100024/5236952455");
 
 
             AdRequest request = new AdRequest.Builder().build();
@@ -2084,7 +2088,6 @@ public class EditorialFeedActivity extends AppCompatActivity implements
     public void setTextSize(TextView tv, int size) {
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
     }
-
 
     public void onTakeNotesButtonClick(View view) {
         onTakeNotesClick();

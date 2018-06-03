@@ -1,6 +1,7 @@
 package app.articles.vacabulary.editorial.gamefever.editorial;
 
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -28,6 +29,8 @@ public class Translation {
     String word ;
     String wordTranslation;
     EditorialFeedActivity editorialFeedActivity;
+    Context context;
+
     TranslateListener translateListener;
 
     public Translation(String word) {
@@ -55,21 +58,23 @@ public class Translation {
     }
 
 
-    public void fetchTranslation(EditorialFeedActivity activity){
+    public void fetchTranslation(Context context){
 
 
         //new Hinditranslation().execute();
-        editorialFeedActivity =activity;
+        Translation.this.context =context;
         translate();
 
         Log.d("tag", "fetchTranslation: After fetching translation");
 
     }
 
-    public void fetchTranslation(TranslateListener translateListener){
+    public void fetchTranslation(TranslateListener translateListener, Context context){
 
 
         Translation.this.translateListener=translateListener;
+        Translation.this.context = context;
+
         translate();
 
         Log.d("tag", "fetchTranslation: After fetching translation");
@@ -193,7 +198,7 @@ public class Translation {
 // Tag used to cancel the request
         String tag_string_req = "string_req";
 
-        final String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170221T102515Z.fc9649d041fb5960.9c4e8caa31a36d7eb789cb3fae48c0e4c2cafd46&text="+getWord().trim()+"&lang="+ LanguageManager.getLanguageCode(editorialFeedActivity)+"&[format=html]&[options=1]";
+        final String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170221T102515Z.fc9649d041fb5960.9c4e8caa31a36d7eb789cb3fae48c0e4c2cafd46&text="+getWord().trim()+"&lang="+ LanguageManager.getLanguageCode(context)+"&[format=html]&[options=1]";
 
 
 

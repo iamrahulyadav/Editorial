@@ -524,6 +524,9 @@ public class EditorialFeedWebViewActivity extends AppCompatActivity implements
 
         webView.getSettings().setLoadsImagesAutomatically(true);
 
+
+
+
         webView.setWebViewClient(new WebViewClient() {
             @SuppressWarnings("deprecation")
             @Override
@@ -706,7 +709,7 @@ public class EditorialFeedWebViewActivity extends AppCompatActivity implements
                 }
 
             }
-        });
+        },this);
     }
 
     private void fetchWordMeaning() {

@@ -1,5 +1,8 @@
 package utils;
 
+import android.os.Build;
+import android.text.Html;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -270,9 +273,20 @@ public class CurrentAffairs implements Serializable {
 
     public void resolveContent() {
         String str = content;
-        str = str.replaceAll("<p>", "");
-        str = str.replaceAll("</p>", "\n");
-        str = str.replaceAll("<br>", "\n");
+        //str = str.replaceAll("<p>", "");
+        //str = str.replaceAll("</p>", "\n");
+        //str = str.replaceAll("<br>", "\n");
+        str = str.replaceAll("<h3>", "==> ");
+        str = str.replaceAll("</h3>", "");
+
+
+
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            str = Html.fromHtml(str,Html.FROM_HTML_MODE_LEGACY).toString();
+        } else {
+            str = Html.fromHtml(str).toString();
+        }
 
         setContent(str);
 

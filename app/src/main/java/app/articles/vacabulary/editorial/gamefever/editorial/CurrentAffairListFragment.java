@@ -475,7 +475,11 @@ if (getContext()==null){
                         @Override
                         public void onAdLoaded(Ad ad) {
                             // Ad loaded callback
-                            currentAffairsAdapter.notifyDataSetChanged();
+                            try {
+                                currentAffairsAdapter.notifyDataSetChanged();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override

@@ -60,10 +60,15 @@ public class FireBasePushNotificationService extends FirebaseMessagingService {
 
 
             if (contentType!=0) {
-
                 CurrentAffairs currentAffairs = new CurrentAffairs();
-                currentAffairs.setId(Integer.valueOf(remoteMessage.getData().get("id")));
-                currentAffairs.setTitle(remoteMessage.getData().get("notificationT"));
+
+                try {
+
+                    currentAffairs.setId(Integer.valueOf(remoteMessage.getData().get("id")));
+                    currentAffairs.setTitle(remoteMessage.getData().get("notificationT"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 intent = new Intent(this, CurrentAffairsFeedActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

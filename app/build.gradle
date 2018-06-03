@@ -22,8 +22,8 @@ android {
         applicationId "app.craftystudio.vocabulary.dailyeditorial"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 27
-        versionName "1.27"
+        versionCode 30
+        versionName "1.30"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
